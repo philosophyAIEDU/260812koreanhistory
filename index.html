@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>독립운동가 인물 사전 퀴즈</title>
+<style>
+:root{
+  font-size:18px;
+  --navy:#1b2a41;
+  --navy-soft:#2c4160;
+  --ink:#23272c;
+  --ink-soft:#5b626b;
+  --paper:#ffffff;
+  --bg:#f3f4f6;
+  --line:#d7dbe0;
+  --line-soft:#e8eaee;
+  --red:#8c2f2f;
+  --blue:#2f4f7a;
+  --ok-bg:#eef3ee;
+  --ok-line:#7d9a7d;
+  --no-bg:#f6efef;
+  --no-line:#b08585;
+}
+html.big{font-size:27px;}
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  padding:0 0 7.5rem 0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:"Malgun Gothic","맑은 고딕",AppleGothic,"Apple SD Gothic Neo",
+              "Nanum Gothic",Dotum,sans-serif;
+  font-size:1rem;
+  line-height:1.7;
+  -webkit-text-size-adjust:100%;
+}
+.wrap{max-width:46rem;margin:0 auto;padding:1rem;}
+.screen{display:none;}
+.screen.on{display:block;}
+
+/* ── 머리말 ───────────────────────────── */
+.top{
+  display:flex;align-items:center;justify-content:space-between;gap:.75rem;
+  background:var(--navy);color:#fff;padding:.85rem 1rem;
+}
+.top h1{font-size:1.15rem;margin:0;font-weight:700;letter-spacing:-.01em;}
+.top .sub{font-size:.72rem;opacity:.8;font-weight:400;display:block;margin-top:.15rem;}
+.bigbtn{
+  background:transparent;color:#fff;border:1px solid rgba(255,255,255,.55);
+  border-radius:.35rem;padding:.45rem .7rem;font-size:.78rem;cursor:pointer;
+  font-family:inherit;white-space:nowrap;
+}
+.bigbtn:hover{background:rgba(255,255,255,.12);}
+.bigbtn[aria-pressed="true"]{background:#fff;color:var(--navy);font-weight:700;}
+
+/* ── 카드/블록 ────────────────────────── */
+.card{
+  background:var(--paper);border:1px solid var(--line);border-radius:.5rem;
+  padding:1.25rem;margin-bottom:1rem;
+}
+h2{font-size:1.2rem;margin:0 0 .8rem;color:var(--navy);letter-spacing:-.01em;}
+h3{font-size:1rem;margin:1.2rem 0 .5rem;color:var(--navy-soft);}
+p{margin:.5rem 0;}
+.hint{color:var(--ink-soft);font-size:.85rem;line-height:1.6;}
+
+/* ── 버튼 ─────────────────────────────── */
+.btn{
+  display:inline-block;font-family:inherit;font-size:1rem;
+  padding:.9rem 1.5rem;border-radius:.4rem;border:1px solid var(--navy);
+  background:var(--navy);color:#fff;cursor:pointer;font-weight:700;
+}
+.btn:hover{background:var(--navy-soft);}
+.btn:disabled{opacity:.45;cursor:not-allowed;}
+.btn.ghost{background:var(--paper);color:var(--navy);}
+.btn.ghost:hover{background:#eef1f5;}
+.btn.wide{width:100%;}
+.btnrow{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1rem;}
+.btnrow .btn{flex:1 1 12rem;}
+
+/* ── 선택 버튼 (학년/범위/계열) ───────── */
+.pickgrid{display:flex;gap:.6rem;flex-wrap:wrap;}
+.pick{
+  flex:1 1 8rem;font-family:inherit;font-size:1rem;text-align:center;
+  padding:1.1rem .6rem;border-radius:.45rem;border:2px solid var(--line);
+  background:var(--paper);color:var(--ink);cursor:pointer;line-height:1.4;
+}
+.pick:hover{border-color:var(--navy-soft);}
+.pick[aria-pressed="true"]{
+  border-color:var(--navy);background:var(--navy);color:#fff;font-weight:700;
+}
+.pick .cnt{display:block;font-size:.78rem;opacity:.75;margin-top:.2rem;font-weight:400;}
+.pick[aria-pressed="true"] .cnt{opacity:.9;}
+.chips{display:flex;gap:.4rem;flex-wrap:wrap;}
+.chip{
+  font-family:inherit;font-size:.85rem;padding:.45rem .75rem;border-radius:1.2rem;
+  border:1px solid var(--line);background:var(--paper);color:var(--ink-soft);cursor:pointer;
+}
+.chip[aria-pressed="true"]{background:var(--navy-soft);border-color:var(--navy-soft);color:#fff;}
+
+/* ── 인물 카드 ────────────────────────── */
+.person-name{font-size:1.5rem;font-weight:700;color:var(--navy);line-height:1.35;}
+.person-name .hanja{font-size:1rem;color:var(--ink-soft);font-weight:400;}
+.photo-box{margin:.9rem 0;text-align:center;}
+.photo-box img{
+  max-width:100%;width:13rem;border:1px solid var(--line);border-radius:.3rem;
+  background:#eceef1;display:block;margin:0 auto;
+}
+.photo-credit{font-size:.72rem;color:var(--ink-soft);margin-top:.4rem;line-height:1.5;}
+.photo-note{
+  font-size:.75rem;color:var(--navy-soft);background:#eef1f5;border-left:3px solid var(--navy-soft);
+  padding:.5rem .7rem;margin:.5rem auto 0;text-align:left;max-width:26rem;line-height:1.55;
+}
+dl.facts{display:grid;grid-template-columns:auto 1fr;gap:.4rem .9rem;margin:.9rem 0 0;}
+dl.facts dt{color:var(--ink-soft);font-size:.88rem;white-space:nowrap;}
+dl.facts dd{margin:0;}
+.body-text{
+  margin-top:.9rem;padding-top:.9rem;border-top:1px solid var(--line-soft);
+  font-size:.95rem;line-height:1.8;
+}
+.author{margin-top:.9rem;font-size:.75rem;color:var(--ink-soft);text-align:right;}
+.progress{font-size:.9rem;color:var(--ink-soft);margin-bottom:.5rem;}
+
+/* ── 퀴즈 ─────────────────────────────── */
+.q-text{font-size:1.15rem;font-weight:700;line-height:1.6;margin:.3rem 0 1rem;color:var(--navy);}
+.q-sub{font-size:.95rem;color:var(--ink);background:#eef1f5;border-radius:.35rem;
+       padding:.8rem 1rem;margin-bottom:1rem;line-height:1.75;}
+.choices{display:flex;flex-direction:column;gap:.55rem;}
+.choice{
+  display:flex;align-items:flex-start;gap:.7rem;width:100%;text-align:left;
+  font-family:inherit;font-size:1rem;padding:.85rem 1rem;border-radius:.4rem;
+  border:2px solid var(--line);background:var(--paper);color:var(--ink);cursor:pointer;
+  line-height:1.5;
+}
+.choice:hover:not(:disabled){border-color:var(--navy-soft);}
+.choice:disabled{cursor:default;}
+.choice .num{
+  flex:0 0 auto;width:1.6rem;height:1.6rem;border-radius:.25rem;background:#eceef1;
+  color:var(--ink-soft);font-size:.85rem;font-weight:700;display:flex;
+  align-items:center;justify-content:center;
+}
+.choice.correct{border-color:var(--ok-line);background:var(--ok-bg);}
+.choice.correct .num{background:var(--ok-line);color:#fff;}
+.choice.chosen-wrong{border-color:var(--no-line);background:var(--no-bg);}
+.choice.chosen-wrong .num{background:var(--no-line);color:#fff;}
+.verdict{margin-top:1rem;padding:.9rem 1rem;border-radius:.4rem;font-size:.95rem;line-height:1.7;}
+.verdict.ok{background:var(--ok-bg);border:1px solid var(--ok-line);}
+.verdict.no{background:var(--no-bg);border:1px solid var(--no-line);}
+.verdict .lead{font-weight:700;display:block;margin-bottom:.25rem;}
+.q-note{margin-top:.9rem;font-size:.75rem;color:var(--ink-soft);border-top:1px dotted var(--line);
+        padding-top:.6rem;line-height:1.6;}
+.keyhint{margin-top:.9rem;font-size:.75rem;color:var(--ink-soft);}
+
+/* ── 결과 ─────────────────────────────── */
+.score{font-size:2rem;font-weight:700;color:var(--navy);line-height:1.3;}
+.score small{font-size:1rem;font-weight:400;color:var(--ink-soft);}
+.tally{background:#eef1f5;border-radius:.4rem;padding:.9rem 1rem;font-size:.95rem;margin-top:.9rem;}
+
+/* ── 바닥 출처 ────────────────────────── */
+.foot{
+  position:fixed;left:0;right:0;bottom:0;background:var(--navy);color:rgba(255,255,255,.88);
+  font-size:.68rem;line-height:1.55;padding:.55rem 1rem;text-align:center;z-index:50;
+}
+.foot span{display:block;}
+.foot .warn{color:rgba(255,255,255,.68);}
+.notice{font-size:.78rem;color:var(--ink-soft);text-align:center;margin-top:1rem;line-height:1.6;}
+@media (max-width:34rem){
+  .top h1{font-size:1rem;}
+  .btnrow .btn{flex:1 1 100%;}
+}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <h1>독립운동가 인물 사전 퀴즈<span class="sub" id="baseDate"></span></h1>
+  <button class="bigbtn" id="bigToggle" aria-pressed="false">큰 화면 모드</button>
+</div>
+
+<div class="wrap">
+
+<!-- ═══ 화면 1 · 시작 ═══════════════════════════════ -->
+<section class="screen on" id="screen-start">
+  <div class="card">
+    <h2>1. 학년을 고르세요</h2>
+    <div class="pickgrid" id="gradePick">
+      <button class="pick" data-grade="elem">초등<span class="cnt">쉬운 말로</span></button>
+      <button class="pick" data-grade="mid">중등<span class="cnt">조직·사건까지</span></button>
+      <button class="pick" data-grade="high">고등<span class="cnt">본문·이명까지</span></button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>2. 학습 범위를 고르세요</h2>
+    <p class="hint">여러 개를 함께 고를 수 있습니다.</p>
+    <div class="pickgrid" id="orderPick"></div>
+  </div>
+
+  <div class="card">
+    <h2>3. 운동계열 (선택 사항)</h2>
+    <p class="hint">고르지 않으면 전체에서 출제됩니다.</p>
+    <div class="chips" id="movePick"></div>
+    <p class="hint" id="poolInfo" style="margin-top:.9rem;"></p>
+  </div>
+
+  <button class="btn wide" id="startBtn">학습 시작</button>
+  <p class="notice" id="startNotice"></p>
+</section>
+
+<!-- ═══ 화면 2 · 인물 카드 학습 ══════════════════════ -->
+<section class="screen" id="screen-card">
+  <p class="progress" id="cardProgress"></p>
+  <div class="card" id="cardBody"></div>
+  <div class="btnrow">
+    <button class="btn ghost" id="cardPrev">이전</button>
+    <button class="btn" id="cardNext">다음</button>
+  </div>
+</section>
+
+<!-- ═══ 화면 3 · 퀴즈 ═══════════════════════════════ -->
+<section class="screen" id="screen-quiz">
+  <p class="progress" id="quizProgress"></p>
+  <div class="card">
+    <div id="quizBody"></div>
+  </div>
+  <button class="btn wide" id="quizNext" style="display:none;">다음 문항</button>
+</section>
+
+<!-- ═══ 화면 4 · 결과 ═══════════════════════════════ -->
+<section class="screen" id="screen-result">
+  <div class="card">
+    <h2>학습을 마쳤습니다</h2>
+    <p class="score" id="scoreLine"></p>
+    <div class="tally" id="tallyLine"></div>
+  </div>
+  <div id="reviewArea"></div>
+  <div class="btnrow">
+    <button class="btn" id="againBtn">다시 하기</button>
+    <button class="btn ghost" id="otherBtn">다른 훈격 배우기</button>
+  </div>
+</section>
+
+</div>
+
+<div class="foot">
+  <span>자료 출처: 독립기념관 한국독립운동인명사전 (search.i815.or.kr) · 공공저작물</span>
+  <span class="warn">본문은 각 집필자의 학술적 견해이며 독립기념관의 공식 입장과 다를 수 있습니다.</span>
+  <span>사진 출처: 각 사진 하단 표기 참조</span>
+  <span>이 앱은 교육 목적의 비영리 학습 자료입니다.</span>
+</div>
+
+<script>
+"use strict";
+/* ══════════════════════════════════════════════════════════
+   자료 — 이 파일 안에 직접 들어 있습니다.
+   인터넷이 없어도 사진을 뺀 모든 기능이 작동합니다.
+   ══════════════════════════════════════════════════════════ */
+var DATA = {"collected_at":"2026-08-12","collected_at_ko":"2026년 8월 12일","source":"독립기념관 한국독립운동인명사전 (search.i815.or.kr)","people":[{"id":"강기동|姜基東|대통령장|1","name":"강기동","hanja":"姜基東","alias":"기주(基周)","movement":"의병","birthplace":"서울","order":"대통령장","awardYear":"1962"},{"id":"구춘선|具春先|대통령장|2","name":"구춘선","hanja":"具春先","movement":"만주방면","birthplace":"함북 온성(穩城)","order":"대통령장","awardYear":"1996"},{"id":"권동진|權東鎭|대통령장|3","name":"권동진","hanja":"權東鎭","alias":"호: 애당(愛堂), 우당(憂堂), 도호(道號): 실암(實菴)","movement":"3.1운동","birthplace":"충북 괴산(槐山)","order":"대통령장","awardYear":"1962"},{"id":"권병덕|權秉悳|대통령장|4","name":"권병덕","hanja":"權秉悳","alias":"자: 윤좌(潤佐), 호: 우운(又雲), 도호(道號): 청암(淸菴), 정암(貞菴)","movement":"3.1운동","birthplace":"충북 청주(淸州)","order":"대통령장","awardYear":"1962"},{"id":"김경천|金擎天|대통령장|5","name":"김경천","hanja":"金擎天","alias":"본명 : 김광서(金光瑞), 이명 : 김경천(金警天·金敬天), 김응천(金應天), 김현충(金顯忠)","movement":"만주방면","birthplace":"함남 북청(北靑)","order":"대통령장","awardYear":"1998"},{"id":"김동삼|金東三|대통령장|6","name":"김동삼","hanja":"金東三","alias":"초명: 긍식(肯植)·종식(宗植), 자: 한경(漢卿), 호: 일송(一松).","movement":"만주방면","birthplace":"경북 안동(安東)","order":"대통령장","awardYear":"1962"},{"id":"김병조|金秉祚|대통령장|7","name":"김병조","hanja":"金秉祚","alias":"자: 윤석(允錫), 호: 일재(一齋)","movement":"임시정부","birthplace":"평북 정주(定州)","order":"대통령장","awardYear":"1990"},{"id":"김붕준|金朋濬|대통령장|8","name":"김붕준","hanja":"金朋濬","alias":"김기원(金起元)","movement":"임시정부","birthplace":"평남 용강(龍岡)","order":"대통령장","awardYear":"1989"},{"id":"김상옥|金相玉|대통령장|9","name":"김상옥","hanja":"金相玉","alias":"호 : 한지(漢 竹+志:♣대죽변에 뜻지)","movement":"의열투쟁","birthplace":"서울","order":"대통령장","awardYear":"1962"},{"id":"김완규|金完圭|대통령장|10","name":"김완규","hanja":"金完圭","alias":"호: 송암(松巖)·송석(松石), 도호(道號): 법암(法菴)","movement":"3.1운동","birthplace":"서울","order":"대통령장","awardYear":"1962"},{"id":"김익상|金益相|대통령장|11","name":"김익상","hanja":"金益相","alias":"호: 추산(秋山), 이명: 김봉남(金鳳男)","movement":"중국방면","birthplace":"경기 고양(高陽)","order":"대통령장","awardYear":"1962"},{"id":"김지섭|金祉燮|대통령장|12","name":"김지섭","hanja":"金祉燮","movement":"중국방면","birthplace":"경북 안동(安東)","order":"대통령장","awardYear":"1962"},{"id":"김하락|金河洛|대통령장|13","name":"김하락","hanja":"金河洛","alias":"자 : 계삼(季三), 호 : 해운당(海雲堂), 초명 : 길주(吉周), 이명 : 일길(日吉), 길굴(吉窟)","movement":"의병","birthplace":"경북 의성(義城)","order":"대통령장","awardYear":"1982"},{"id":"나석주|羅錫疇|대통령장|14","name":"나석주","hanja":"羅錫疇","alias":"이명 : 나리(羅李), 김영일(金永一), 나석주(羅石柱), 마중덕(馬中德), 마중달(馬中達)","movement":"의열투쟁","birthplace":"황해 재령(載寧)","order":"대통령장","awardYear":"1962"},{"id":"나용환|羅龍煥|대통령장|15","name":"나용환","hanja":"羅龍煥","movement":"3.1운동","birthplace":"평남 성천(成川)","order":"대통령장","awardYear":"1962"},{"id":"나인협|羅仁協|대통령장|16","name":"나인협","hanja":"羅仁協","movement":"3.1운동","birthplace":"평남 성천(成川)","order":"대통령장","awardYear":"1962"},{"id":"남상덕|南相悳|대통령장|17","name":"남상덕","hanja":"南相悳","movement":"의병","birthplace":"경남 의령(宜寧)","order":"대통령장","awardYear":"1962"},{"id":"남자현|南慈賢|대통령장|18","name":"남자현","hanja":"南慈賢","movement":"만주방면","birthplace":"경북 영양(英陽)","order":"대통령장","awardYear":"1962"},{"id":"노백린|盧伯麟|대통령장|19","name":"노백린","hanja":"盧伯麟","alias":"자 : 경보(景輔), 호 : 계원(桂園), 이명 : 노진방(盧鎭邦)","movement":"임시정부","birthplace":"황해 풍천(豊川)","order":"대통령장","awardYear":"1962"},{"id":"뤼텐민|呂天民|대통령장|20","name":"뤼텐민","hanja":"呂天民","koAlias":"여천민","alias":"원명 : 점동(占東), 자 : 톈민(天民)","movement":"독립운동지원","birthplace":"외국 중국","order":"대통령장","awardYear":"1968"},{"id":"린썬|林森|대통령장|21","name":"린썬","hanja":"林森","koAlias":"임삼","alias":"자 : 자초(子超), 호 : 장인(長仁), 별서(別署) : 청지노인(靑芝老人)·백동산인(百洞山人)·호동노초(虎洞老樵)·소여려주인(嘯餘廬主人)","movement":"독립운동지원","birthplace":"외국 중국","order":"대통령장","awardYear":"1968"},{"id":"문창범|文昌範|대통령장|22","name":"문창범","hanja":"文昌範","movement":"만주방면","birthplace":"함북 경원(慶源)","order":"대통령장","awardYear":"1990"},{"id":"문태수|文泰洙|대통령장|23","name":"문태수","hanja":"文泰洙","alias":"본명 : 태진(泰珍), 자 : 태서(泰瑞)·봉진(鳳珍)","movement":"의병","birthplace":"경남 함양(咸陽)","order":"대통령장","awardYear":"1963"},{"id":"민긍호|閔肯鎬|대통령장|24","name":"민긍호","hanja":"閔肯鎬","movement":"의병","birthplace":"서울","order":"대통령장","awardYear":"1962"},{"id":"박동완|朴東完|대통령장|25","name":"박동완","hanja":"朴東完","alias":"槿谷, 槿谷生, 槿生","movement":"3.1운동","birthplace":"경기 양평(楊平)","order":"대통령장","awardYear":"1962"},{"id":"박승환|朴昇煥|대통령장|26","name":"박승환","hanja":"朴昇煥","alias":"성환(性煥), 자: 구여(九如), 호: 운파(雲坡)","movement":"계몽운동","birthplace":"서울","order":"대통령장","awardYear":"1962"},{"id":"박열|朴烈|대통령장|27","name":"박열","hanja":"朴烈","alias":"초명 : 혁식(赫植), 이명 : 박준식(朴準植)","movement":"일본방면","birthplace":"경북 문경(聞慶)","order":"대통령장","awardYear":"1989"},{"id":"박용만|朴容萬|대통령장|28","name":"박용만","hanja":"朴容萬","alias":"호 우성(又醒), 이명 한상량(韓相良)","movement":"미주방면","birthplace":"강원 철원(鐵原)","order":"대통령장","awardYear":"1995"},{"id":"박은식|朴殷植|대통령장|29","name":"박은식","hanja":"朴殷植","alias":"자 : 성칠(聖七), 호 : 겸곡(謙谷), 백암(白巖), 필명 : 박기정(朴箕貞), 태백광노(太白狂奴), 무치생(無恥生), 창해노방실(滄海老紡室), 백산포민(白山浦民)","movement":"임시정부","birthplace":"황해 황주(黃州)","order":"대통령장","awardYear":"1962"},{"id":"박준승|朴準承|대통령장|30","name":"박준승","hanja":"朴準承","alias":"자암(泚菴)","movement":"3.1운동","birthplace":"전북 임실(任實)","order":"대통령장","awardYear":"1962"},{"id":"백용성|白龍城|대통령장|31","name":"백용성","hanja":"白龍城","alias":"白相奎(속명), 白亨喆(족보명)","movement":"3.1운동","birthplace":"전북 장수(長水)","order":"대통령장","awardYear":"1962"},{"id":"신규식|申奎植|대통령장|32","name":"신규식","hanja":"申奎植","alias":"자: 공집(公執), 호: 예관(睨觀), 별호: 신성(申檉), 여서(餘胥), 일민(一民), 청구(靑丘), 한인(恨人)","movement":"임시정부","birthplace":"충북 문의(文義)","order":"대통령장","awardYear":"1962"},{"id":"신돌석|申乭石|대통령장|33","name":"신돌석","hanja":"申乭石","alias":"본명 : 태호(泰鎬), 자 : 순경(舜卿), 아명 : 돌선(乭先)","movement":"의병","birthplace":"경북 영덕(盈德)","order":"대통령장","awardYear":"1962"},{"id":"신석구|申錫九|대통령장|34","name":"신석구","hanja":"申錫九","alias":"자 : 윤재(允哉). 호 : 은재(殷哉)·죽촌(竹村)·춘정(春汀)","movement":"3.1운동","birthplace":"충북 청주(淸州)","order":"대통령장","awardYear":"1963"},{"id":"신채호|申采浩|대통령장|35","name":"신채호","hanja":"申采浩","movement":"계몽운동","birthplace":"충남 대덕(大德)","order":"대통령장","awardYear":"1962"},{"id":"신홍식|申洪植|대통령장|36","name":"신홍식","hanja":"申洪植","alias":"신홍식(申弘植), 호 : 동오(東吾)","movement":"3.1운동","birthplace":"충북 청주(淸州)","order":"대통령장","awardYear":"1962"},{"id":"쑨커|孫科|대통령장|37","name":"쑨커","hanja":"孫科","koAlias":"손과","alias":"자 : 철생(哲生)","movement":"독립운동지원","birthplace":"외국 중국","order":"대통령장","awardYear":"1970"},{"id":"쑹자오런|宋敎仁|대통령장|38","name":"쑹자오런","hanja":"宋敎仁","koAlias":"송교인","alias":"자 : 둔초(遯初·鈍初), 호 : 도원어부(桃源漁父), 이명 : 송련(宋鍊)","movement":"독립운동지원","birthplace":"외국 중국","order":"대통령장","awardYear":"1968"},{"id":"안재홍|安在鴻|대통령장|39","name":"안재홍","hanja":"安在鴻","alias":"호 : 민세(民世), 필명 : 저산(樗山), 저음(樗陰), 규당(逵堂), 사암(竢庵), 응암(應庵)","movement":"국내항일","birthplace":"경기 진위(振威)","order":"대통령장","awardYear":"1989"},{"id":"양기탁|梁起鐸|대통령장|40","name":"양기탁","hanja":"梁起鐸","alias":"이명 : 의종(宜鍾), 자 : 자명(子明), 호 : 우강(雩崗), 필명 : 우강(于岡), 우강인(于岡人), 우강산인(于岡散人)","movement":"계몽운동","birthplace":"평남 평양(平壤)","order":"대통령장","awardYear":"1962"},{"id":"양전백|梁甸伯|대통령장|41","name":"양전백","hanja":"梁甸伯","alias":"양섭(梁燮), 호 : 격헌(格軒)","movement":"3.1운동","birthplace":"평북 의주(義州)","order":"대통령장","awardYear":"1962"},{"id":"양한묵|梁漢默|대통령장|42","name":"양한묵","hanja":"梁漢默","alias":"호 : 지강(芝江) 자 : 경조(景朝), 길중(吉仲)","movement":"3.1운동","birthplace":"전남 해남(海南)","order":"대통령장","awardYear":"1962"},{"id":"어네스트 토마스 베델|Ernest Thomas Bethell|대통령장|43","name":"어네스트 토마스 베델","koAlias":"Ernest Thomas Bethell","alias":"배설(裵說)","movement":"독립운동지원","birthplace":"외국 영국","order":"대통령장","awardYear":"1950"},{"id":"연기우|延基羽|대통령장|44","name":"연기우","hanja":"延基羽","alias":"초명 : 연민우(延敏宇), 이명 : 연기우(延起羽·延基宇), 연기호(延基浩), 연봉렬(延奉烈)","movement":"의병","birthplace":"경기 삭녕(朔寧)","order":"대통령장","awardYear":"1962"},{"id":"오세창|吳世昌|대통령장|45","name":"오세창","hanja":"吳世昌","alias":"자 : 중명(仲銘), 호 : 위창(葦滄, 韙傖)","movement":"3.1운동","birthplace":"서울","order":"대통령장","awardYear":"1962"},{"id":"오화영|吳華英|대통령장|46","name":"오화영","hanja":"吳華英","movement":"3.1운동","birthplace":"황해 평산(平山)","order":"대통령장","awardYear":"1989"},{"id":"위빈|于斌|대통령장|47","name":"위빈","hanja":"于斌","koAlias":"우빈","alias":"자 : 관오(冠五)，호 : 희악(希岳), 야성(野声), 세례명 : 바오로","movement":"독립운동지원","birthplace":"외국 중국","order":"대통령장","awardYear":"1969"},{"id":"유동열|柳東說|대통령장|48","name":"유동열","hanja":"柳東說","alias":"호 : 춘교(春郊), 이명 : 동열(東悅), 동열(東烈), 청송(靑松)","movement":"임시정부","birthplace":"평북 박천(博川)","order":"대통령장","awardYear":"1989"},{"id":"유여대|劉如大|대통령장|49","name":"유여대","hanja":"劉如大","alias":"호 : 낙포(樂圃)","movement":"3.1운동","birthplace":"평북 의주(義州)","order":"대통령장","awardYear":"1962"},{"id":"유인석|柳麟錫|대통령장|50","name":"유인석","hanja":"柳麟錫","alias":"자 : 여성(汝聖), 호 : 의암(毅菴)","movement":"의병","birthplace":"강원 춘천(春川)","order":"대통령장","awardYear":"1962"},{"id":"윤기섭|尹琦燮|대통령장|51","name":"윤기섭","hanja":"尹琦燮","alias":"자 : 중규(仲珪), 호 : 규운(虯雲)","movement":"임시정부","birthplace":"경기 파주(坡州)","order":"대통령장","awardYear":"1989"},{"id":"이갑성|李甲成|대통령장|52","name":"이갑성","hanja":"李甲成","movement":"3.1운동","birthplace":"경북 대구(大邱)","order":"대통령장","awardYear":"1962"},{"id":"이동녕|李東寧|대통령장|53","name":"이동녕","hanja":"李東寧","alias":"자 : 봉소(鳳所), 호 : 석오(石吾), 암산(巖山)","movement":"임시정부","birthplace":"충남 천안(天安)","order":"대통령장","awardYear":"1962"},{"id":"이동휘|李東輝|대통령장|54","name":"이동휘","hanja":"李東輝","alias":"호: 성재(誠齋), 모산(茅山), 이광(李光), 이명: 성삼(誠參), 성제(誠齊·猩濟·誠濟·誠薺), 각민(覺民), 대자유","movement":"임시정부","birthplace":"함남 단천(端川)","order":"대통령장","awardYear":"1995"},{"id":"이명룡|李明龍|대통령장|55","name":"이명룡","hanja":"李明龍","alias":"호 춘헌(春軒)","movement":"3.1운동","birthplace":"평북 철산(鐵山)","order":"대통령장","awardYear":"1962"},{"id":"이범석|李範奭|대통령장|56","name":"이범석","hanja":"李範奭","alias":"호 : 철기(鐵驥, 哲琦), 자 : 인남(麟男), 이명 : 이국근(李國根), 윤형권(尹衡權), 김광두(金光斗), 왕운산(王雲山), 왕모백(王慕白)","movement":"광복군","birthplace":"서울","order":"대통령장","awardYear":"1963"},{"id":"이범윤|李範允|대통령장|57","name":"이범윤","hanja":"李範允","movement":"의병","birthplace":"서울","order":"대통령장","awardYear":"1962"},{"id":"이봉창|李奉昌|대통령장|58","name":"이봉창","hanja":"李奉昌","alias":"기노시타 쇼죠(木下昌藏), 마쓰이 가즈오(松井一夫), 아사야마 쇼이치(朝山昌一)","movement":"의열투쟁","birthplace":"서울","order":"대통령장","awardYear":"1962"},{"id":"이상설|李相卨|대통령장|59","name":"이상설","hanja":"李相卨","movement":"계몽운동","birthplace":"충북 진천(鎭川)","order":"대통령장","awardYear":"1962"},{"id":"이상재|李商在|대통령장|60","name":"이상재","hanja":"李商在","alias":"호 : 월남(月南), 자 : 계호(季皓)","movement":"계몽운동","birthplace":"충남 서천(舒川)","order":"대통령장","awardYear":"1962"},{"id":"이승희|李承熙|대통령장|61","name":"이승희","hanja":"李承熙","alias":"자 : 계도(啓道), 호 : 강재(剛齋), 한계(韓溪) 개명 : 대하(大夏)","movement":"만주방면","birthplace":"경북 성주(星州)","order":"대통령장","awardYear":"1977"},{"id":"이위종|李瑋鍾|대통령장|62","name":"이위종","hanja":"李瑋鍾","alias":"이 블라디미르 세르게예비치(Ли Владимир Сергеевич)","movement":"계몽운동","birthplace":"서울","order":"대통령장","awardYear":"1962"},{"id":"이은찬|李殷瓚|대통령장|63","name":"이은찬","hanja":"李殷瓚","alias":"은찬(殷贊), 언찬(諺讚), 헌찬(憲讚)","movement":"의병","birthplace":"강원 원주(原州)","order":"대통령장","awardYear":"1962"},{"id":"이인영|李麟榮|대통령장|64","name":"이인영","hanja":"李麟榮","alias":"자는 공진(公振), 호는 중남(中南), 이명: 이인영(李寅榮), 이시영(李時榮)","movement":"의병","birthplace":"경기 여주(驪州)","order":"대통령장","awardYear":"1962"},{"id":"이재명|李在明|대통령장|65","name":"이재명","hanja":"李在明","alias":"이수길(李壽吉)","movement":"의열투쟁","birthplace":"평남 평양(平壤)","order":"대통령장","awardYear":"1962"},{"id":"이종일|李鍾一|대통령장|66","name":"이종일","hanja":"李鍾一","alias":"호 : 옥파(沃坡)·묵암(黙菴), 도호 : 천연자(天然子), 필명 : 중고산인(中皐散人), 중헌(中軒)","movement":"3.1운동","birthplace":"충남 태안(泰安)","order":"대통령장","awardYear":"1962"},{"id":"이종훈|李鍾勳|대통령장|67","name":"이종훈","hanja":"李鍾勳","alias":"자 : 진호(振浩), 초명 : 종구(鍾救), 도호 : 정암(正菴)","movement":"3.1운동","birthplace":"경기 광주(廣州)","order":"대통령장","awardYear":"1962"},{"id":"이필주|李弼柱|대통령장|68","name":"이필주","hanja":"李弼柱","movement":"3.1운동","birthplace":"서울","order":"대통령장","awardYear":"1962"},{"id":"임예환|林禮煥|대통령장|69","name":"임예환","hanja":"林禮煥","movement":"3.1운동","birthplace":"평남 중화(中和)","order":"대통령장","awardYear":"1962"},{"id":"장건상|張建相|대통령장|70","name":"장건상","hanja":"張建相","alias":"아명: 명상(明相), 이명: 건상(健相), 烽相(봉상), 도산(濤山), 자: 찬성(贊成), 아호: 소해(宵海)","movement":"임시정부","birthplace":"경북 칠곡(漆谷)","order":"대통령장","awardYear":"1986"},{"id":"장인환|張仁煥|대통령장|71","name":"장인환","hanja":"張仁煥","movement":"의열투쟁","birthplace":"평남 평양(平壤)","order":"대통령장","awardYear":"1962"},{"id":"전명운|田明雲|대통령장|72","name":"전명운","hanja":"田明雲","alias":"자 : 영선(永善), 호 : 죽암(竹嵒), 영문명 : Chun, Myeng Woon·맥 필즈(Mark Fields)","movement":"의열투쟁","birthplace":"서울","order":"대통령장","awardYear":"1962"},{"id":"전해산|全海山|대통령장|73","name":"전해산","hanja":"全海山","alias":"휘 : 기홍(基泓), 아명 : 종엽(鍾葉), 자 : 수용(垂鏞), 호 : 해산(海山)","movement":"의병","birthplace":"전북 임실(任實)","order":"대통령장","awardYear":"1962"},{"id":"정환직|鄭煥直|대통령장|74","name":"정환직","hanja":"鄭煥直","alias":"자 : 좌겸(左兼), 백온(伯溫), 호 : 우석(愚石), 열남(洌南), 동엄(東嚴), 초명 : 치우(致右), 치대(致大), 관직(寬直)","movement":"의병","birthplace":"경북 영천(永川)","order":"대통령장","awardYear":"1963"},{"id":"조성환|曺成煥|대통령장|75","name":"조성환","hanja":"曺成煥","alias":"이명 : 조욱(曺煜·曺旭), 호 : 청사(晴蓑)","movement":"임시정부","birthplace":"경기 여주(驪州)","order":"대통령장","awardYear":"1962"},{"id":"조완구|趙琬九|대통령장|76","name":"조완구","hanja":"趙琬九","alias":"자: 중담(仲淡), 호: 우천(藕泉)","movement":"임시정부","birthplace":"서울","order":"대통령장","awardYear":"1989"},{"id":"주시경|周時經|대통령장|77","name":"주시경","hanja":"周時經","alias":"주상호(商鎬)","movement":"계몽운동","birthplace":"황해 봉산(鳳山)","order":"대통령장","awardYear":"1980"},{"id":"주자화|朱家驊|대통령장|78","name":"주자화","hanja":"朱家驊","koAlias":"주가화","alias":"자 : 류선(騮先)·상린(湘麐)","movement":"독립운동지원","birthplace":"외국 중국","order":"대통령장","awardYear":"1977"},{"id":"지청천|池靑天|대통령장|79","name":"지청천","hanja":"池靑天","alias":"본명 : 석규(錫奎) · 대형(大亨), 아명 : 수봉(壽鳳), 이명 : 지대영(池大永) · 지청천(池靑天) · 이청천(李靑天), 지용기(池龍基), 이중용(李重鏞), 호 : 백산(白山)","movement":"광복군","birthplace":"서울","order":"대통령장","awardYear":"1962"},{"id":"채상덕|蔡相悳|대통령장|80","name":"채상덕","hanja":"蔡相悳","movement":"만주방면","birthplace":"황해","order":"대통령장","awardYear":"1995"},{"id":"천청|陳誠|대통령장|81","name":"천청","hanja":"陳誠","koAlias":"진성","alias":"자 : 사수(辭修), 별호 : 석수(石叟)·성백(誠伯)","movement":"독립운동지원","birthplace":"외국 중국","order":"대통령장","awardYear":"1966"},{"id":"최석순|崔碩淳|대통령장|82","name":"최석순","hanja":"崔碩淳","alias":"강기수(康記守), 필성공(必成功)","movement":"만주방면","birthplace":"미상","order":"대통령장","awardYear":"1995"},{"id":"최성모|崔聖模|대통령장|83","name":"최성모","hanja":"崔聖模","alias":"호 : 월당(月塘)","movement":"3.1운동","birthplace":"서울","order":"대통령장","awardYear":"1962"},{"id":"탕지야오|唐繼堯|대통령장|84","name":"탕지야오","hanja":"唐繼堯","koAlias":"당계요","alias":"당계요","movement":"독립운동지원","birthplace":"외국 중국","order":"대통령장","awardYear":"1968"},{"id":"편강렬|片康烈|대통령장|85","name":"편강렬","hanja":"片康烈","alias":"호 : 애사(愛史), 이명 : 편강우(片康宇)·김범오(金範五)","movement":"계몽운동","birthplace":"황해 연백(延白)","order":"대통령장","awardYear":"1962"},{"id":"홍기조|洪基兆|대통령장|86","name":"홍기조","hanja":"洪基兆","alias":"도호 : 유암(游菴)","movement":"3.1운동","birthplace":"평남 용강(龍岡)","order":"대통령장","awardYear":"1962"},{"id":"홍병기|洪秉箕|대통령장|87","name":"홍병기","hanja":"洪秉箕","alias":"자 : 운해(運晦), 도호 : 인암(仁菴)","movement":"3.1운동","birthplace":"경기 여주(驪州)","order":"대통령장","awardYear":"1962"},{"id":"황싱|黃興|대통령장|88","name":"황싱","hanja":"黃興","koAlias":"황흥","movement":"독립운동지원","birthplace":"외국 중국","order":"대통령장","awardYear":"1968"},{"id":"후한민|胡漢民|대통령장|89","name":"후한민","hanja":"胡漢民","koAlias":"호한민","movement":"독립운동지원","birthplace":"외국 중국","order":"대통령장","awardYear":"1968"},{"id":"강우규|姜宇奎|대한민국장|1","name":"강우규","hanja":"姜宇奎","alias":"자: 찬구(燦九), 호: 왈우(曰愚), 이명: 영일(寧一)·강녕(康寧)","movement":"의열투쟁","birthplace":"평남 덕천(德川)","order":"대한민국장","awardYear":"1962"},{"id":"김구|金九|대한민국장|2","name":"김구","hanja":"金九","alias":"자: 연상(蓮上), 호: 연하(蓮下), 백범(白凡), 초명: 창암(昌巖), 후에 창수(昌洙), 이명: 두래(斗來), 구(龜)","movement":"임시정부","birthplace":"황해 해주(海州)","order":"대한민국장","awardYear":"1962"},{"id":"김규식|金奎植|대한민국장|3","name":"김규식","hanja":"金奎植","alias":"호: 우사(尤史)·죽적(竹笛)·만호(晩湖)·서호(西湖), 이명: 김성(金成)· 김중문(金仲文)·김일민(金一民)·여일민(余一民)·왕개석(王介石)·한재강(韓再剛)·한중서(韓中書), 별칭: 변갑, 세례명: 요한(Johann)","movement":"임시정부","birthplace":"경남 동래(東萊)","order":"대한민국장","awardYear":"1989"},{"id":"김좌진|金佐鎭|대한민국장|4","name":"김좌진","hanja":"金佐鎭","alias":"자 : 명여(明汝), 호 : 백야(白冶)","movement":"만주방면","birthplace":"충남 홍성(洪城)","order":"대한민국장","awardYear":"1962"},{"id":"김창숙|金昌淑|대한민국장|5","name":"김창숙","hanja":"金昌淑","alias":"자 : 문좌(文佐), 호 : 직강(直岡), 심산(心山), 별호 : 벽옹(躄翁), 이명 : 우(愚)","movement":"임시정부","birthplace":"경북 성주(星州)","order":"대한민국장","awardYear":"1962"},{"id":"민영환|閔泳煥|대한민국장|6","name":"민영환","hanja":"閔泳煥","alias":"자 : 문약(文若), 호 : 계정(桂庭)","movement":"계몽운동","birthplace":"서울","order":"대한민국장","awardYear":"1962"},{"id":"서재필|徐載弼|대한민국장|7","name":"서재필","hanja":"徐載弼","alias":"호: 송재(松齋), 영어명: Philip Jaisohn","movement":"계몽운동","birthplace":"전남 보성(寶城)","order":"대한민국장","awardYear":"1977"},{"id":"손병희|孫秉熙|대한민국장|8","name":"손병희","hanja":"孫秉熙","alias":"초명 : 응구(應九), 개명 : 규동(奎東), 자 : 상현(相鉉), 호 : 소소(笑笑), 도호 : 의암(義菴), 이명 : 이상헌(李祥憲)","movement":"3.1운동","birthplace":"충북 청주(淸州)","order":"대한민국장","awardYear":"1962"},{"id":"신익희|申翼熙|대한민국장|9","name":"신익희","hanja":"申翼熙","alias":"호: 해공(海公), 이명 : 왕해공(王海公)·왕방오(王邦午)","movement":"임시정부","birthplace":"경기 광주(廣州)","order":"대한민국장","awardYear":"1962"},{"id":"쑨원|孫文|대한민국장|10","name":"쑨원","hanja":"孫文","koAlias":"손문","movement":"독립운동지원","birthplace":"외국 중국","order":"대한민국장","awardYear":"1968"},{"id":"쑹메이링|宋美齡|대한민국장|11","name":"쑹메이링","hanja":"宋美齡","koAlias":"송미령","movement":"독립운동지원","birthplace":"외국 중국","order":"대한민국장","awardYear":"1966"},{"id":"안중근|安重根|대한민국장|12","name":"안중근","hanja":"安重根","alias":"응칠, 아명 자임","movement":"의열투쟁","birthplace":"황해 해주(海州)","order":"대한민국장","awardYear":"1962"},{"id":"안창호|安昌浩|대한민국장|13","name":"안창호","hanja":"安昌浩","alias":"안광택","movement":"임시정부","birthplace":"평남 강서(江西)","order":"대한민국장","awardYear":"1962"},{"id":"여운형|呂運亨|대한민국장|14","name":"여운형","hanja":"呂運亨","alias":"자 : 호 : 몽양(夢陽) 초명 : 이명 : 여광(呂光)","movement":"임시정부","birthplace":"경기 양근(楊根)","order":"대한민국장","awardYear":"2008"},{"id":"오동진|吳東振|대한민국장|15","name":"오동진","hanja":"吳東振","alias":"호 : 송암(松菴), 순천(順天)","movement":"만주방면","birthplace":"평북 의주(義州)","order":"대한민국장","awardYear":"1962"},{"id":"유관순|柳寬順|대한민국장|16","name":"유관순","hanja":"柳寬順","alias":"冠順","movement":"3.1운동","birthplace":"충남 천안(天安)","order":"대한민국장","awardYear":"2019"},{"id":"윤봉길|尹奉吉|대한민국장|17","name":"윤봉길","hanja":"尹奉吉","alias":"본명: 우의(禹儀), 호: 매헌(梅軒)","movement":"의열투쟁","birthplace":"충남 예산(禮山)","order":"대한민국장","awardYear":"1962"},{"id":"이강년|李康秊|대한민국장|18","name":"이강년","hanja":"李康秊","alias":"자 : 낙인(樂寅), 호 : 운강(雲崗 또는 雲岡)","movement":"의병","birthplace":"경북 문경(聞慶)","order":"대한민국장","awardYear":"1962"},{"id":"이승만|李承晩|대한민국장|19","name":"이승만","hanja":"李承晩","alias":"초명 : 승룡(承龍), 호 : 우남(雩南)","movement":"임시정부","birthplace":"황해 평산(平山)","order":"대한민국장","awardYear":"1949"},{"id":"이승훈|李昇薰|대한민국장|20","name":"이승훈","hanja":"李昇薰","alias":"아명 : 승일(昇日), 본명 : 인환(寅煥), 호 : 남강(南岡)","movement":"3.1운동","birthplace":"평북 정주(定州)","order":"대한민국장","awardYear":"1962"},{"id":"이시영|李始榮|대한민국장|21","name":"이시영","hanja":"李始榮","alias":"본명 : 성흡(聖翕), 자 : 성흡(城翕), 성옹(聖翁), 호 : 성재(省齋), 시림산인(始林山人)","movement":"임시정부","birthplace":"서울","order":"대한민국장","awardYear":"1949"},{"id":"이준|李儁|대한민국장|22","name":"이준","hanja":"李儁","alias":"자 : 순칠(舜七), 호 : 일성(一醒)·해사(海史)·청하(靑霞)·해옥(海玉), 초명 : 성재(性在)·선재(璿在)","movement":"계몽운동","birthplace":"함남 북청(北靑)","order":"대한민국장","awardYear":"1962"},{"id":"임병직|林炳稷|대한민국장|23","name":"임병직","hanja":"林炳稷","alias":"호 : 소죽(小竹)","movement":"미주방면","birthplace":"충남 부여(扶餘)","order":"대한민국장","awardYear":"1976"},{"id":"장제스|蔣介石|대한민국장|24","name":"장제스","hanja":"蔣介石","koAlias":"장개석","movement":"독립운동지원","birthplace":"외국 중국","order":"대한민국장","awardYear":"1953"},{"id":"조만식|曺晩植|대한민국장|25","name":"조만식","hanja":"曺晩植","movement":"문화운동","birthplace":"평남 평양(平壤)","order":"대한민국장","awardYear":"1970"},{"id":"조병세|趙秉世|대한민국장|26","name":"조병세","hanja":"趙秉世","alias":"자 : 치현(稚顯·穉顯), 호 : 산재(山齋), 시호 : 충정(忠正)","movement":"계몽운동","birthplace":"경기 가평(加平)","order":"대한민국장","awardYear":"1962"},{"id":"조소앙|趙素昻|대한민국장|27","name":"조소앙","hanja":"趙素昻","alias":"본명: 용은(鏞殷), 자: 경중(敬仲), 호: 아은(亞隱), 소앙(嘯卬·蘇卬·素卬·素昻), 소해(嘯海), 상담생(嘗膽生), 한살림(韓薩任), 아나가야후인(阿那伽倻後人)","movement":"임시정부","birthplace":"경기 교하(交河)","order":"대한민국장","awardYear":"1989"},{"id":"천궈푸|陳果夫|대한민국장|28","name":"천궈푸","hanja":"陳果夫","koAlias":"진과부","movement":"독립운동지원","birthplace":"외국 중국","order":"대한민국장","awardYear":"1966"},{"id":"천치메이|陳其美|대한민국장|29","name":"천치메이","hanja":"陳其美","koAlias":"진기미","movement":"독립운동지원","birthplace":"외국 중국","order":"대한민국장","awardYear":"1968"},{"id":"최익현|崔益鉉|대한민국장|30","name":"최익현","hanja":"崔益鉉","alias":"자 : 찬겸(贊謙), 호 : 면암(勉菴)","movement":"의병","birthplace":"경기 포천(抱川)","order":"대한민국장","awardYear":"1962"},{"id":"한용운|韓龍雲|대한민국장|31","name":"한용운","hanja":"韓龍雲","alias":"자 : 정옥(貞玉), 속명 : 유천(裕天), 계명 : 봉완(奉玩), 법호 : 만해(萬海)","movement":"3.1운동","birthplace":"충남 홍성(洪城)","order":"대한민국장","awardYear":"1962"},{"id":"허위|許蔿|대한민국장|32","name":"허위","hanja":"許蔿","alias":"자 : 계형(季馨), 호 : 왕산(旺山)","movement":"의병","birthplace":"경북 선산(善山)","order":"대한민국장","awardYear":"1962"},{"id":"홍범도|洪範圖|대한민국장|33","name":"홍범도","hanja":"洪範圖","alias":"호: 여천(汝千)","movement":"만주방면","birthplace":"평남 양덕(陽德)","order":"대한민국장","awardYear":"2021"},{"id":"강경선|康景善|독립장|1","name":"강경선","hanja":"康景善","alias":"호 : 극재(克齋), 이명 : 원경(元景)·원경(元卿)","movement":"중국방면","birthplace":"평북 정주(定州)","order":"독립장","awardYear":"1995"},{"id":"강기덕|康基德|독립장|2","name":"강기덕","hanja":"康基德","alias":"자 : 춘곡(春谷), 호 : 덕재(德齋)","movement":"국내항일","birthplace":"함남 원산(元山)","order":"독립장","awardYear":"1990"},{"id":"강기운|姜基云|독립장|3","name":"강기운","hanja":"姜基云","movement":"만주방면","birthplace":"함북 회령(會寧)","order":"독립장","awardYear":"1993"},{"id":"강명규|姜明奎|독립장|4","name":"강명규","hanja":"姜明奎","alias":"호: 위석(渭石), 이명: 복원(復元)·승원(承園)·양원(陽園)","movement":"만주방면","birthplace":"황해 봉산(鳳山)","order":"독립장","awardYear":"1963"},{"id":"강무경|姜武景|독립장|5","name":"강무경","hanja":"姜武景","alias":"강무경(姜武京), 강현수(姜鉉秀)","movement":"의병","birthplace":"전북 무주(茂州)","order":"독립장","awardYear":"1962"},{"id":"강상모|姜尙模|독립장|6","name":"강상모","hanja":"姜尙模","movement":"만주방면","birthplace":"함남 이원(利原)","order":"독립장","awardYear":"1977"},{"id":"강순필|姜順必|독립장|7","name":"강순필","hanja":"姜順必","alias":"자 : 영숙(泳叔), 호 : 신암(信菴), 이명 : 강병수(姜炳洙·姜秉秀·姜秉洙·姜炳修)·강순필(姜順弼)","movement":"국내항일","birthplace":"경북 함창(咸昌)","order":"독립장","awardYear":"1963"},{"id":"강영소|姜永韶|독립장|8","name":"강영소","hanja":"姜永韶","alias":"호 : 창해(滄海)","movement":"미주방면","birthplace":"평남 강서(江西)","order":"독립장","awardYear":"2011"},{"id":"강원형|姜遠馨|독립장|9","name":"강원형","hanja":"姜遠馨","alias":"자 : 성윤(聖允), 호 : 혜사(蕙社)","movement":"계몽운동","birthplace":"경북 칠곡(漆谷)","order":"독립장","awardYear":"1980"},{"id":"강윤희|姜允熙|독립장|10","name":"강윤희","hanja":"姜允熙","alias":"강성집(姜聖集), 강선집(姜善執)","movement":"의병","birthplace":"경기 가평(加平)","order":"독립장","awardYear":"1996"},{"id":"강이봉|康伊奉|독립장|11","name":"강이봉","hanja":"康伊奉","movement":"의병","birthplace":"전북 금산(錦山)","order":"독립장","awardYear":"1995"},{"id":"강익록|康益祿|독립장|12","name":"강익록","hanja":"康益祿","movement":"국내항일","birthplace":"평북 정주(定州)","order":"독립장","awardYear":"2015"},{"id":"강인수|姜人壽|독립장|13","name":"강인수","hanja":"姜人壽","alias":"양검(楊儉)·강팔수(姜八壽)","movement":"중국방면","birthplace":"경남 밀양(密陽)","order":"독립장","awardYear":"1980"},{"id":"강제하|康濟河|독립장|14","name":"강제하","hanja":"康濟河","alias":"강기수(康記守), 필성공(必成功)","movement":"만주방면","birthplace":"평북 창성(昌城)","order":"독립장","awardYear":"1995"},{"id":"강진원|姜震遠|독립장|15","name":"강진원","hanja":"姜震遠","alias":"자 : 형원(亨遠), 호 : 성산(聖山). 이명 : 강진원(姜振遠), 강승우(姜承宇), 강승우(姜勝宇), 강승지(姜承旨), 강여명(姜汝明), 강의연(姜義淵), 강형오(姜亨吾), 강형오(姜炯吾)","movement":"의병","birthplace":"전남 승주(昇州)","order":"독립장","awardYear":"1977"},{"id":"강진해|姜鎭海|독립장|16","name":"강진해","hanja":"姜鎭海","alias":"강포해(姜捕海), 강진해(姜振海)","movement":"만주방면","birthplace":"함남 단천(端川)","order":"독립장","awardYear":"1995"},{"id":"강창제|姜昌濟|독립장|17","name":"강창제","hanja":"姜昌濟","alias":"호 : 창산(蒼山), 이명 : 정명희(鄭明熙)·강동욱(姜東旭)·여순지(呂順之)·강창선(姜昌善)·강화조(姜華祖)·강홍주(姜弘周)","movement":"임시정부","birthplace":"평북 창성(昌城)","order":"독립장","awardYear":"1963"},{"id":"계봉우|桂奉瑀|독립장|18","name":"계봉우","hanja":"桂奉瑀","alias":"북우(北愚), 뒤바보, 사방자(四方子)","movement":"임시정부","birthplace":"함남 영흥(永興)","order":"독립장","awardYear":"1995"},{"id":"계화|桂和|독립장|19","name":"계화","hanja":"桂和","alias":"호: 백연(白淵, 白囦) 이명: 계활(桂活)","movement":"만주방면","birthplace":"평북 선천(宣川)","order":"독립장","awardYear":"1963"},{"id":"고광순|高光洵|독립장|20","name":"고광순","hanja":"高光洵","alias":"자 : 서백(瑞伯) 호 : 녹천(鹿川)","movement":"의병","birthplace":"전남 담양(潭陽)","order":"독립장","awardYear":"1962"},{"id":"고두환|高斗煥|독립장|21","name":"고두환","hanja":"高斗煥","movement":"만주방면","birthplace":"함남 북청(北靑)","order":"독립장","awardYear":"1962"},{"id":"고운기|高雲起|독립장|22","name":"고운기","hanja":"高雲起","alias":"호: 학은(鶴隱) 이명: 공진원(公震遠), 흥원(興遠)","movement":"광복군","birthplace":"함남 문천(文川)","order":"독립장","awardYear":"1963"},{"id":"고이허|高而虛|독립장|23","name":"고이허","hanja":"高而虛","alias":"본명 : 최용성(崔容成), 이명 : 고의부(高義府)","movement":"만주방면","birthplace":"황해 수안(遂安)","order":"독립장","awardYear":"1968"},{"id":"고인덕|高仁德|독립장|24","name":"고인덕","hanja":"高仁德","movement":"의열투쟁","birthplace":"경남 밀양(密陽)","order":"독립장","awardYear":"1990"},{"id":"고제량|高濟亮|독립장|25","name":"고제량","hanja":"高濟亮","alias":"자 : 성필(聖弼), 호 : 인봉(麟峯)","movement":"의병","birthplace":"전남 담양(潭陽)","order":"독립장","awardYear":"1963"},{"id":"고지형|高志亨|독립장|26","name":"고지형","hanja":"高志亨","movement":"3.1운동","birthplace":"평남 대동(大同)","order":"독립장","awardYear":"2006"},{"id":"고창일|高昌一|독립장|27","name":"고창일","hanja":"高昌一","alias":"니콜라이 키릴로비치 고가이 (Nikolai Kirilovich Kogai)","movement":"노령방면","birthplace":"함북 경원(慶原)","order":"독립장","awardYear":"1989"},{"id":"고평|高平|독립장|28","name":"고평","hanja":"高平","alias":"고고찬(高高鑽), 고인석(高仁石)","movement":"만주방면","birthplace":"전북 정읍(井邑)","order":"독립장","awardYear":"1992"},{"id":"곽재기|郭在驥|독립장|29","name":"곽재기","hanja":"郭在驥","alias":"자: 경(敬), 이명 : 김광삼(金光三), 김재만(金在萬)","movement":"의열투쟁","birthplace":"충북 청주(淸州)","order":"독립장","awardYear":"1963"},{"id":"곽종석|郭鍾錫|독립장|30","name":"곽종석","hanja":"郭鍾錫","alias":"자 : 명원(鳴遠)‧연길(淵吉), 호 : 회와(晦窩)·면우(俛宇), 아명 : 석산(石山)·돌뫼, 아호 : 유석(幼石), 이명 : 도(鋾)","movement":"3.1운동","birthplace":"경남 산청(山淸)","order":"독립장","awardYear":"1963"},{"id":"곽중규|郭重奎|독립장|31","name":"곽중규","hanja":"郭重奎","alias":"곽헌(郭憲), 곽송원(郭松園), 곽사평(郭士平), 곽석귀(郭錫貴)","movement":"임시정부","birthplace":"충북 옥천(沃川)","order":"독립장","awardYear":"1992"},{"id":"구연영|具然英|독립장|32","name":"구연영","hanja":"具然英","alias":"자 : 춘경(春景)","movement":"국내항일","birthplace":"경기 광주(廣州)","order":"독립장","awardYear":"1963"},{"id":"궈타이치|郭泰棋|독립장|33","name":"궈타이치","hanja":"郭泰棋","koAlias":"곽태기","alias":"자 : 복초(複初)·보동(葆東)","movement":"독립운동지원","birthplace":"외국 중국","order":"독립장","awardYear":"1968"},{"id":"권기옥|權基玉|독립장|34","name":"권기옥","hanja":"權基玉","movement":"중국방면","birthplace":"평남 평양(平壤)","order":"독립장","awardYear":"1977"},{"id":"권석도|權錫燾|독립장|35","name":"권석도","hanja":"權錫燾","alias":"권명구(權命九), 윤일이(尹一二)","movement":"의병","birthplace":"경남 함양(咸陽)","order":"독립장","awardYear":"1986"},{"id":"권순명|權順明|독립장|36","name":"권순명","hanja":"權順明","movement":"의병","birthplace":"충북 제천(堤川)","order":"독립장","awardYear":"1995"},{"id":"권영만|權寧萬|독립장|37","name":"권영만","hanja":"權寧萬","alias":"호: 각헌(覺軒)","movement":"국내항일","birthplace":"경북 영양(英陽)","order":"독립장","awardYear":"1963"},{"id":"권오설|權五卨|독립장|38","name":"권오설","hanja":"權五卨","alias":"호: 오서(五敍), 이명: 권일(權一), 권부덕(權富德), 권형신(權亨信)","movement":"국내항일","birthplace":"경북 안동(安東)","order":"독립장","awardYear":"2005"},{"id":"권용일|權用佾|독립장|39","name":"권용일","hanja":"權用佾","alias":"자 : 경로(敬魯), 호 : 청은(淸隱)","movement":"의병","birthplace":"충북 제천(堤川)","order":"독립장","awardYear":"1963"},{"id":"권인규|權仁圭|독립장|40","name":"권인규","hanja":"權仁圭","alias":"초명 : 헌규(獻圭), 자 : 경행(景行), 호 : 동빈(東濱), 소운(巢雲), 소은(巢隱)","movement":"의병","birthplace":"강원 강릉(江陵)","order":"독립장","awardYear":"1980"},{"id":"권준|權俊|독립장|41","name":"권준","hanja":"權俊","movement":"의병","birthplace":"경기 적성(積城)","order":"독립장","awardYear":"1995"},{"id":"권준|權晙|독립장|42","name":"권준","hanja":"權晙","alias":"호 : 백인(百忍), 이명 : 권중환(權重煥), 권중석(權重錫), 강병수(姜炳秀), 진민각(陳民覺), 장종화(張從化), 장수화(張樹華), 양무(楊武)","movement":"중국방면","birthplace":"경북 상주(尙州)","order":"독립장","awardYear":"1968"},{"id":"권쾌복|權快福|독립장|43","name":"권쾌복","hanja":"權快福","movement":"학생운동","birthplace":"경북 칠곡(漆谷)","order":"독립장","awardYear":"1963"},{"id":"금기철|琴基哲|독립장|44","name":"금기철","hanja":"琴基哲","movement":"의병","birthplace":"경북 봉화(奉化)","order":"독립장","awardYear":"1995"},{"id":"금달연|琴達淵|독립장|45","name":"금달연","hanja":"琴達淵","alias":"금참봉(琴參奉)","movement":"의병","birthplace":"경북 영주(榮州)","order":"독립장","awardYear":"1980"},{"id":"기산도|奇山度|독립장|46","name":"기산도","hanja":"奇山度","alias":"奇山濤","movement":"의열투쟁","birthplace":"전남 장성(長城)","order":"독립장","awardYear":"1963"},{"id":"기삼연|奇參衍|독립장|47","name":"기삼연","hanja":"奇參衍","alias":"자 : 경로(景魯), 호 : 성재(省齋)","movement":"의병","birthplace":"전남 장성(長城)","order":"독립장","awardYear":"1962"},{"id":"기우만|奇宇萬|독립장|48","name":"기우만","hanja":"奇宇萬","alias":"자 : 회일(會一), 호 : 송사(松沙), 이명 : 기참봉, 기산림(奇山林)","movement":"의병","birthplace":"전남 장성(長城)","order":"독립장","awardYear":"1980"},{"id":"길선주|吉善宙|독립장|49","name":"길선주","hanja":"吉善宙","alias":"자 : 윤열(潤悅), 호 : 영계(靈溪)","movement":"3.1운동","birthplace":"평남 안주(安州)","order":"독립장","awardYear":"2009"},{"id":"김갑|金甲|독립장|50","name":"김갑","hanja":"金甲","alias":"진원(瑨源)","movement":"임시정부","birthplace":"경남 동래(東萊)","order":"독립장","awardYear":"1986"},{"id":"김강|金剛|독립장|51","name":"김강","hanja":"金剛","alias":"본명: 송재길(宋在吉)","movement":"만주방면","birthplace":"평안","order":"독립장","awardYear":"1995"},{"id":"김경운|金景云|독립장|52","name":"김경운","hanja":"金景云","alias":"김윤서(金允西)","movement":"의병","birthplace":"경기 통진(通津)","order":"독립장","awardYear":"1995"},{"id":"김경태|金敬泰|독립장|53","name":"김경태","hanja":"金敬泰","alias":"김영근(金永根)","movement":"국내항일","birthplace":"충남 청양(靑陽)","order":"독립장","awardYear":"1963"},{"id":"김관오|金冠五|독립장|54","name":"김관오","hanja":"金冠五","alias":"호 : 우당(愚堂), 이명 : 김관오(金官五)","movement":"광복군","birthplace":"서울","order":"독립장","awardYear":"1963"},{"id":"김광진|金光振|독립장|55","name":"김광진","hanja":"金光振","alias":"김광해(金廣海)","movement":"만주방면","birthplace":"평북 의주(義州)","order":"독립장","awardYear":"1963"},{"id":"김교헌|金敎獻|독립장|56","name":"김교헌","hanja":"金敎獻","alias":"자 : 백유(伯猷), 호 : 무원(茂園), 당호 : 보화(普和), 교명(敎名) : 헌(獻)","movement":"만주방면","birthplace":"경기 수원(水原)","order":"독립장","awardYear":"1977"},{"id":"김규면|金圭冕|독립장|57","name":"김규면","hanja":"金圭冕","alias":"호: 백추(白秋), 이명: 김규면(金規免), 학봉(學奉), 김수천(金洙千), 김기삼(金基三), 남칠(南七)","movement":"노령방면","birthplace":"함북 경흥(慶興)","order":"독립장","awardYear":"2002"},{"id":"김규식|金圭植|독립장|58","name":"김규식","hanja":"金圭植","alias":"호 : 노은(蘆隱)","movement":"만주방면","birthplace":"경기 양주(楊州)","order":"독립장","awardYear":"1963"},{"id":"김기한|金起漢|독립장|59","name":"김기한","hanja":"金起漢","alias":"이명: 김기택(金杞澤), 호: 직재(直齋)","movement":"만주방면","birthplace":"평남 덕천(德川)","order":"독립장","awardYear":"1963"},{"id":"김기형|金基瀅|독립장|60","name":"김기형","hanja":"金基瀅","alias":"김현구(金鉉九, 金玄九)","movement":"임시정부","birthplace":"황해 안악(安岳)","order":"독립장","awardYear":"1968"},{"id":"김난섭|金蘭燮|독립장|61","name":"김난섭","hanja":"金蘭燮","movement":"만주방면","birthplace":"황해 은율(殷栗)","order":"독립장","awardYear":"1995"},{"id":"김대규|金大圭|독립장|62","name":"김대규","hanja":"金大圭","alias":"호 : 학남(鶴南)","movement":"의병","birthplace":"경북 안동(安東)","order":"독립장","awardYear":"1977"},{"id":"김대지|金大池|독립장|63","name":"김대지","hanja":"金大池","alias":"호 : 일봉(一峰), 이명 : 김태일(金太一), 김치환(金致煥), 김자중(金子重), 김인식(金仁植), 김정창(金丁昌)","movement":"임시정부","birthplace":"경남 밀양(密陽)","order":"독립장","awardYear":"1980"},{"id":"김덕순|金德順|독립장|64","name":"김덕순","hanja":"金德順","movement":"의병","birthplace":"경기 강화(江華)","order":"독립장","awardYear":"1995"},{"id":"김덕제|金德濟|독립장|65","name":"김덕제","hanja":"金德濟","movement":"의병","birthplace":"서울","order":"독립장","awardYear":"1962"},{"id":"김덕흥|金德興|독립장|66","name":"김덕흥","hanja":"金德興","movement":"의병","birthplace":"강원 양구(楊口)","order":"독립장","awardYear":"1995"},{"id":"김도원|金道源|독립장|67","name":"김도원","hanja":"金道源","alias":"김인우(金仁優)","movement":"국내항일","birthplace":"평북 선천(宣川)","order":"독립장","awardYear":"1962"},{"id":"김도현|金道鉉|독립장|68","name":"김도현","hanja":"金道鉉","alias":"자 : 명옥(明玉), 호 : 벽산(碧山), 이명 : 김도현(金燾鉉)","movement":"의병","birthplace":"경북 영양(英陽)","order":"독립장","awardYear":"1962"},{"id":"김동수|金東洙|독립장|69","name":"김동수","hanja":"金東洙","movement":"의병","birthplace":"전남 광주(光州)","order":"독립장","awardYear":"1995"},{"id":"김동수|金東洙|독립장|70","name":"김동수","hanja":"金東洙","alias":"김강(金剛)","movement":"광복군","birthplace":"경기 인천(仁川)","order":"독립장","awardYear":"1963"},{"id":"김동신|金東臣|독립장|71","name":"김동신","hanja":"金東臣","alias":"자 : 원표(元表) 호 : 청암(淸庵)","movement":"의병","birthplace":"충남 회덕(懷德)","order":"독립장","awardYear":"1977"},{"id":"김두만|金斗萬|독립장|72","name":"김두만","hanja":"金斗萬","movement":"임시정부","birthplace":"평북 의주(義州)","order":"독립장","awardYear":"1963"},{"id":"김마리아|金瑪利亞|독립장|73","name":"김마리아","hanja":"金瑪利亞","alias":"본명 : 상진(常眞), 이명 : 근포(槿圃)","movement":"국내항일","birthplace":"황해 장연(長淵)","order":"독립장","awardYear":"1962"},{"id":"김만수|金萬秀|독립장|74","name":"김만수","hanja":"金萬秀","alias":"자 : 회일(會一)","movement":"만주방면","birthplace":"경북 안동(安東)","order":"독립장","awardYear":"1963"},{"id":"김명권|金明權|독립장|75","name":"김명권","hanja":"金明權","movement":"의열투쟁","birthplace":"평남 덕천(德川)","order":"독립장","awardYear":"1968"},{"id":"김문희|金文熙|독립장|76","name":"김문희","hanja":"金文熙","alias":"김문희(金文凞), 김해산(金海山)","movement":"임시정부","birthplace":"평북 초산(楚山)","order":"독립장","awardYear":"1995"},{"id":"김범이|金範伊|독립장|77","name":"김범이","hanja":"金範伊","movement":"의병","birthplace":"경기 광주(廣州)","order":"독립장","awardYear":"1995"},{"id":"김법린|金法隣|독립장|78","name":"김법린","hanja":"金法隣","alias":"본명 : 김진린(金振隣), 호 : 범산(梵山)","movement":"국내항일","birthplace":"경북 영천(永川)","order":"독립장","awardYear":"1995"},{"id":"김병로|金炳魯|독립장|79","name":"김병로","hanja":"金炳魯","alias":"호 : 가인(街人)","movement":"문화운동","birthplace":"전북 순창(淳昌)","order":"독립장","awardYear":"1963"},{"id":"김병록|金丙錄|독립장|80","name":"김병록","hanja":"金丙錄","alias":"초명 : 사차(四次), 자 : 병선(丙善)","movement":"의열투쟁","birthplace":"평남 평양(平壤)","order":"독립장","awardYear":"1963"},{"id":"김병조|金炳朝|독립장|81","name":"김병조","hanja":"金炳朝","alias":"김병도(金炳道),김영호(金永浩)･이준열(李峻烈)","movement":"중국방면","birthplace":"평남 대동(大同)","order":"독립장","awardYear":"1995"},{"id":"김병태|金餠泰|독립장|82","name":"김병태","hanja":"金餠泰","alias":"김빈(金斌, 金彬), 김평국(金平國), 조국동(曺國棟, 趙國東), 조빈(曺斌)","movement":"의열투쟁","birthplace":"경남 동래(東萊)","order":"독립장","awardYear":"1995"},{"id":"김복한|金福漢|독립장|83","name":"김복한","hanja":"金福漢","alias":"자 : 원오(元吾), 호 : 지산(志山)","movement":"의병","birthplace":"충남 홍주(洪州)","order":"독립장","awardYear":"1963"},{"id":"김봉규|金奉奎|독립장|84","name":"김봉규","hanja":"金奉奎","alias":"자: 공삼(公三)","movement":"의병","birthplace":"전남 광산(光山)","order":"독립장","awardYear":"1995"},{"id":"김봉수|金奉秀|독립장|85","name":"김봉수","hanja":"金奉秀","alias":"김봉수(金鳳秀)","movement":"만주방면","birthplace":"평북 의주(義州)","order":"독립장","awardYear":"1963"},{"id":"김봉식|金鳳植|독립장|86","name":"김봉식","hanja":"金鳳植","movement":"만주방면","birthplace":"평북 영변(寧邊)","order":"독립장","awardYear":"1968"},{"id":"김봉원|金鳳源|독립장|87","name":"김봉원","hanja":"金鳳源","movement":"만주방면","birthplace":"평남 강동(江東)","order":"독립장","awardYear":"1980"},{"id":"김봉학|金奉學|독립장|88","name":"김봉학","hanja":"金奉學","movement":"계몽운동","birthplace":"황해 황주(黃州)","order":"독립장","awardYear":"1962"},{"id":"김상길|金相吉|독립장|89","name":"김상길","hanja":"金相吉","alias":"호 : 민곡(旼谷)","movement":"학생운동","birthplace":"경북 대구(大邱)","order":"독립장","awardYear":"1963"},{"id":"김상덕|金尙德|독립장|90","name":"김상덕","hanja":"金尙德","alias":"자 : 현여(玄汝), 호 : 영주(令洲), 이명 : 김상철(金相徹)·김재두(金在斗)","movement":"임시정부","birthplace":"경북 고령(高靈)","order":"독립장","awardYear":"1990"},{"id":"김상옥|金尙沃|독립장|91","name":"김상옥","hanja":"金尙沃","alias":"김상옥(金尙玉·金相沃)","movement":"만주방면","birthplace":"평북 선천(宣川)","order":"독립장","awardYear":"1968"},{"id":"김상태|金尙台|독립장|92","name":"김상태","hanja":"金尙台","alias":"본명 : 김상호(金相鎬), 자 : 경륙(景六)·정륙(正陸), 아호 : 백우(白愚)","movement":"의병","birthplace":"충북 영춘(永春)","order":"독립장","awardYear":"1963"},{"id":"김석진|金奭鎭|독립장|93","name":"김석진","hanja":"金奭鎭","alias":"자 : 경소(景召), 호 : 오천(梧泉)","movement":"계몽운동","birthplace":"경기 광주(廣州)","order":"독립장","awardYear":"1962"},{"id":"김석창|金錫昌|독립장|94","name":"김석창","hanja":"金錫昌","alias":"준명(俊明), 준선(濬宣)","movement":"만주방면","birthplace":"평북 철산(鐵山)","order":"독립장","awardYear":"1963"},{"id":"김석황|金錫璜|독립장|95","name":"김석황","hanja":"金錫璜","alias":"김윤황(金潤璜)","movement":"임시정부","birthplace":"황해 봉산(鳳山)","order":"독립장","awardYear":"1982"},{"id":"김선여|金善汝|독립장|96","name":"김선여","hanja":"金善汝","movement":"의병","birthplace":"전북 순창(淳昌)","order":"독립장","awardYear":"1995"},{"id":"김성범|金成範|독립장|97","name":"김성범","hanja":"金成範","alias":"성범(聖範)","movement":"만주방면","birthplace":"평북 초산(楚山)","order":"독립장","awardYear":"1995"},{"id":"김성수|金聖壽|독립장|98","name":"김성수","hanja":"金聖壽","alias":"김지강(金芝江), 주열(朱烈)","movement":"중국방면","birthplace":"경남 밀양(密陽)","order":"독립장","awardYear":"1977"},{"id":"김성숙|金星淑|독립장|99","name":"김성숙","hanja":"金星淑","alias":"초명: 규광(奎光), 호: 운암(雲巖), 법명 태허(太虛), 성숙(星淑), 이명: 충창(忠昌), 창숙(昌淑), 성암(星巖)","movement":"임시정부","birthplace":"평북 철산(鐵山)","order":"독립장","awardYear":"1982"},{"id":"김성엽|金聖燁|독립장|100","name":"김성엽","hanja":"金聖燁","alias":"金成燁","movement":"만주방면","birthplace":"평북 의주(義州)","order":"독립장","awardYear":"1963"},{"id":"김성택|金聖澤|독립장|101","name":"김성택","hanja":"金聖澤","alias":"김인성(金仁成)","movement":"만주방면","birthplace":"평남 안주(安州)","order":"독립장","awardYear":"1968"},{"id":"김성호|金聖灝|독립장|102","name":"김성호","hanja":"金聖灝","alias":"김성호(金成浩)","movement":"만주방면","birthplace":"평북 선천(宣川)","order":"독립장","awardYear":"1963"},{"id":"김세환|金世煥|독립장|103","name":"김세환","hanja":"金世煥","movement":"3.1운동","birthplace":"경기 수원(水原)","order":"독립장","awardYear":"1963"},{"id":"김수곡|金水谷|독립장|104","name":"김수곡","hanja":"金水谷","movement":"의병","birthplace":"경북 신령(新寧)","order":"독립장","awardYear":"1995"},{"id":"김수민|金秀敏|독립장|105","name":"김수민","hanja":"金秀敏","alias":"수민(守民), 수민(洙敏)","movement":"의병","birthplace":"경기 장단(長湍)","order":"독립장","awardYear":"1962"},{"id":"김순애|金淳愛|독립장|106","name":"김순애","hanja":"金淳愛","movement":"임시정부","birthplace":"황해 장연(長淵)","order":"독립장","awardYear":"1977"},{"id":"김승곤|金勝坤|독립장|107","name":"김승곤","hanja":"金勝坤","alias":"황민(黃民), 호영(胡英), 김해(金海)","movement":"광복군","birthplace":"전남 담양(潭陽)","order":"독립장","awardYear":"1977"},{"id":"김승만|金承萬|독립장|108","name":"김승만","hanja":"金承萬","alias":"호 : 죽림(竹林)","movement":"만주방면","birthplace":"평북 의주(義州)","order":"독립장","awardYear":"1963"},{"id":"김승학|金承學|독립장|109","name":"김승학","hanja":"金承學","alias":"자 : 우경(愚卿), 호 : 희산(希山), 이명 : 김탁(金鐸)","movement":"임시정부","birthplace":"평북 의주(義州)","order":"독립장","awardYear":"1962"},{"id":"김시중|金時中|독립장|110","name":"김시중","hanja":"金時中","alias":"호 : 희산(希山)","movement":"의병","birthplace":"강원 정선(旌善)","order":"독립장","awardYear":"1968"},{"id":"김약연|金躍淵|독립장|111","name":"김약연","hanja":"金躍淵","alias":"자 : 용구(龍九), 호 : 규암(圭巖)","movement":"만주방면","birthplace":"함북 회령(會寧)","order":"독립장","awardYear":"1977"},{"id":"김영란|金永蘭|독립장|112","name":"김영란","hanja":"金永蘭","movement":"국내항일","birthplace":"평남 순천(順川)","order":"독립장","awardYear":"1995"},{"id":"김영렬|金泳烈|독립장|113","name":"김영렬","hanja":"金泳烈","movement":"만주방면","birthplace":"평북 벽동(碧潼)","order":"독립장","awardYear":"1995"},{"id":"김영백|金永伯|독립장|114","name":"김영백","hanja":"金永伯","movement":"의병","birthplace":"전남 장성(長城)","order":"독립장","awardYear":"1982"},{"id":"김영숙|金永肅|독립장|115","name":"김영숙","hanja":"金永肅","alias":"호: 백주(白舟), 이명: 김진(金振), 김형(金衡), 김백(金白), 김병우(金秉羽)","movement":"만주방면","birthplace":"충남 논산(論山)","order":"독립장","awardYear":"1963"},{"id":"김영철|金榮哲|독립장|116","name":"김영철","hanja":"金榮哲","movement":"만주방면","birthplace":"평남 평양(平壤))","order":"독립장","awardYear":"1963"},{"id":"김영현|金寧炫|독립장|117","name":"김영현","hanja":"金寧炫","movement":"만주방면","birthplace":"전북 옥구(沃溝)","order":"독립장","awardYear":"1986"},{"id":"김예진|金禮鎭|독립장|118","name":"김예진","hanja":"金禮鎭","movement":"중국방면","birthplace":"평남 대동(大同)","order":"독립장","awardYear":"1962"},{"id":"김용대|金容大|독립장|119","name":"김용대","hanja":"金容大","alias":"김농대(金瀧大), 김용대(金用大·金龍大·金溶大), 백두산인(白頭山人)","movement":"만주방면","birthplace":"함남 풍산(豊山)","order":"독립장","awardYear":"1995"},{"id":"김용성|金容成|독립장|120","name":"김용성","hanja":"金容成","alias":"Arthur Y. S. Kim","movement":"미주방면","birthplace":"평남 평양(平壤)","order":"독립장","awardYear":"1998"},{"id":"김용재|金容宰|독립장|121","name":"김용재","hanja":"金容宰","alias":"김준(金俊), 김종(金鍾), 김종(金宗), 김복돌(金卜乭)","movement":"광복군","birthplace":"전남 담양(潭陽)","order":"독립장","awardYear":"1977"},{"id":"김우근|金宇根|독립장|122","name":"김우근","hanja":"金宇根","alias":"자: 동욱(東郁), 호: 화산(華山), 이명: 김기봉(金基奉)","movement":"만주방면","birthplace":"평남 안주(安州)","order":"독립장","awardYear":"1963"},{"id":"김원국|金元國|독립장|123","name":"김원국","hanja":"金元國","alias":"김창림(金昌林), 김창식(金昌植)","movement":"만주방면","birthplace":"평북 벽동(碧潼)","order":"독립장","awardYear":"1995"},{"id":"김원국|金元國|독립장|124","name":"김원국","hanja":"金元國","alias":"본명: 창섭(昌燮), 호: 석포(石浦), 이명: 원국(元局)","movement":"의병","birthplace":"전남 광주(光州)","order":"독립장","awardYear":"1963"},{"id":"김원범|金元範|독립장|125","name":"김원범","hanja":"金元範","alias":"김원범(金元凡·金源凡)","movement":"의병","birthplace":"전남 광주(光州)","order":"독립장","awardYear":"1968"},{"id":"김원벽|金元璧|독립장|126","name":"김원벽","hanja":"金元璧","movement":"3.1운동","birthplace":"황해 은율(殷栗)","order":"독립장","awardYear":"1962"},{"id":"김원식|金元植|독립장|127","name":"김원식","hanja":"金元植","alias":"자: 계서(繼緖), 호: 소창(笑蒼)","movement":"만주방면","birthplace":"경북 안동(安東)","order":"독립장","awardYear":"1968"},{"id":"김원식|金元植|독립장|128","name":"김원식","hanja":"金元植","movement":"의병","birthplace":"강원 평강(平康)","order":"독립장","awardYear":"1995"},{"id":"김원조|金遠祚|독립장|129","name":"김원조","hanja":"金遠祚","alias":"김원조(金元祚)","movement":"국내항일","birthplace":"경기 이천(利川)","order":"독립장","awardYear":"1963"},{"id":"김율|金聿|독립장|130","name":"김율","hanja":"金聿","alias":"호: 청봉(靑峰), 이명: 김율(金律)","movement":"의병","birthplace":"전남 나주(羅州)","order":"독립장","awardYear":"1995"},{"id":"김응백|金應伯|독립장|131","name":"김응백","hanja":"金應伯","movement":"의병","birthplace":"전남 광양(光陽)","order":"독립장","awardYear":"1995"},{"id":"김의한|金毅漢|독립장|132","name":"김의한","hanja":"金毅漢","alias":"호: 성엄(省俺), 이명: 재한(載漢)·의환(毅煥)","movement":"임시정부","birthplace":"서울","order":"독립장","awardYear":"1990"},{"id":"김이섭|金利燮|독립장|133","name":"김이섭","hanja":"金利燮","movement":"만주방면","birthplace":"함남 홍원(洪原)","order":"독립장","awardYear":"1995"},{"id":"김이직|金理直|독립장|134","name":"김이직","hanja":"金理直","alias":"김정일(본명), 金利稷","movement":"만주방면","birthplace":"평남 용강(龍岡)","order":"독립장","awardYear":"1977"},{"id":"김인전|金仁全|독립장|135","name":"김인전","hanja":"金仁全","alias":"호: 경재(鏡齋·經齋), 이명: 김인옥(金仁玉)","movement":"임시정부","birthplace":"충남 서천(舒川)","order":"독립장","awardYear":"1980"},{"id":"김일곤|金逸坤|독립장|136","name":"김일곤","hanja":"金逸坤","alias":"문명철(文明哲), 한광(韓光)","movement":"중국방면","birthplace":"전남 담양(潭陽)","order":"독립장","awardYear":"1990"},{"id":"김일두|金一斗|독립장|137","name":"김일두","hanja":"金一斗","alias":"호: 추산(秋山), 이명: 김진동(金鎭東)·김환(金煥)","movement":"임시정부","birthplace":"전북 순창(淳昌)","order":"독립장","awardYear":"1980"},{"id":"김일봉|金一鳳|독립장|138","name":"김일봉","hanja":"金一鳳","movement":"만주방면","birthplace":"평북 덕천(德川)","order":"독립장","awardYear":"1995"},{"id":"김일원|金日元|독립장|139","name":"김일원","hanja":"金日元","movement":"의병","birthplace":"경북 영덕(盈德)","order":"독립장","awardYear":"1995"},{"id":"김정련|金正連|독립장|140","name":"김정련","hanja":"金正連","alias":"김정연(金正淵), 김광한(金光韓), 김유춘(金柳春), 호 : 진혼(震魂)","movement":"중국방면","birthplace":"평북 용천(龍川)","order":"독립장","awardYear":"1962"},{"id":"김정원|金正元|독립장|141","name":"김정원","hanja":"金正元","movement":"의병","birthplace":"미상","order":"독립장","awardYear":"1995"},{"id":"김정익|金貞益|독립장|142","name":"김정익","hanja":"金貞益","movement":"의열투쟁","birthplace":"평남 평양(平壤)","order":"독립장","awardYear":"1962"},{"id":"김종철|金鍾鐵|독립장|143","name":"김종철","hanja":"金鍾鐵","alias":"본명: 김종환(金鍾桓)·김종환(金鍾煥), 이명: 김광옥(金光玉)·김종철(金鍾鐵)","movement":"의병","birthplace":"경북 봉화(麟蹄)","order":"독립장","awardYear":"1995"},{"id":"김준승|金俊承|독립장|144","name":"김준승","hanja":"金俊承","alias":"金俊成","movement":"만주방면","birthplace":"평북 영변(寧邊)","order":"독립장","awardYear":"1963"},{"id":"김준택|金俊澤|독립장|145","name":"김준택","hanja":"金俊澤","alias":"호 : 보안(普安), 이명 : 김보안(金輔安·金保安), 김관융(金官戎·金冠戎·金寬戎), 김관웅(金寬雄)","movement":"만주방면","birthplace":"평남 순천(順川)","order":"독립장","awardYear":"1995"},{"id":"김중건|金中建|독립장|146","name":"김중건","hanja":"金中建","alias":"호 : 소래(笑來), 별호 : 몰나(沒那)·불폐(不吠), 법명 : 마루진","movement":"만주방면","birthplace":"함남 영흥(永興)","order":"독립장","awardYear":"1977"},{"id":"김지환|金智煥|독립장|147","name":"김지환","hanja":"金智煥","alias":"호 : 일천(一泉)","movement":"3.1운동","birthplace":"평북 정주(定州郡)","order":"독립장","awardYear":"1963"},{"id":"김진만|金鎭萬|독립장|148","name":"김진만","hanja":"金鎭萬","alias":"호 : 긍석(肯石)","movement":"국내항일","birthplace":"경북 대구(大邱)","order":"독립장","awardYear":"1977"},{"id":"김진묵|金溱默|독립장|149","name":"김진묵","hanja":"金溱默","alias":"김진묵(金鎭黙)","movement":"의병","birthplace":"평북 창성(昌城)","order":"독립장","awardYear":"1962"},{"id":"김진성|金振聲|독립장|150","name":"김진성","hanja":"金振聲","alias":"왕운기(王雲起), 김택기(金澤基)","movement":"만주방면","birthplace":"황해 곡산(谷山)","order":"독립장","awardYear":"1968"},{"id":"김진준|金珍俊|독립장|151","name":"김진준","hanja":"金珍俊","alias":"김진준(金鎭俊), 이인순(李仁淳), 이영걸(李永傑), 송인수(宋仁洙)","movement":"만주방면","birthplace":"평남 대동(大同)","order":"독립장","awardYear":"1968"},{"id":"김찬수|金燦洙|독립장|152","name":"김찬수","hanja":"金燦洙","movement":"만주방면","birthplace":"서울","order":"독립장","awardYear":"1998"},{"id":"김창곤|金昌坤|독립장|153","name":"김창곤","hanja":"金昌坤","movement":"만주방면","birthplace":"평북 의주(義州)","order":"독립장","awardYear":"1963"},{"id":"김창균|金昌均|독립장|154","name":"김창균","hanja":"金昌均","alias":"김동윤(金東允)","movement":"만주방면","birthplace":"평북 위원(渭原)","order":"독립장","awardYear":"1995"},{"id":"김창근|金昌根|독립장|155","name":"김창근","hanja":"金昌根","alias":"김쇠동(金釗同)","movement":"중국방면","birthplace":"서울","order":"독립장","awardYear":"1963"},{"id":"김창헌|金昌憲|독립장|156","name":"김창헌","hanja":"金昌憲","alias":"김문거(金文擧, 金文居)","movement":"만주방면","birthplace":"평북 창성(昌城)","order":"독립장","awardYear":"2010"},{"id":"김창환|金昌煥|독립장|157","name":"김창환","hanja":"金昌煥","alias":"호 : 추당(秋堂), 이명 : 김석주(金石柱)","movement":"만주방면","birthplace":"서울","order":"독립장","awardYear":"1963"},{"id":"김천성|金天成|독립장|158","name":"김천성","hanja":"金天成","alias":"최중천(崔仲天)","movement":"광복군","birthplace":"평북","order":"독립장","awardYear":"1968"},{"id":"김천익|金天益|독립장|159","name":"김천익","hanja":"金天益","movement":"만주방면","birthplace":"평남 평원(平原)","order":"독립장","awardYear":"1963"},{"id":"김철|金澈|독립장|160","name":"김철","hanja":"金澈","alias":"김중청(金重淸), 김영탁(金永澤)","movement":"임시정부","birthplace":"전남 함평(咸平)","order":"독립장","awardYear":"1962"},{"id":"김철남|金鐵男|독립장|161","name":"김철남","hanja":"金鐵男","alias":"이명 : 김병두(金炳斗), 갈자(喝者)","movement":"임시정부","birthplace":"황해 신천(信川)","order":"독립장","awardYear":"1992"},{"id":"김철수|金錣洙|독립장|162","name":"김철수","hanja":"金錣洙","alias":"호 : 지운(芝雲, 遲耘), 초봉(初峰), 이명 : 김원백(金元白), 김창수(金昌洙), 김동재(金銅再, 金東宰), 김창률(金昌律), 김창근(金昌根), 김상근(金相根)","movement":"국내항일","birthplace":"전북 부안(扶安)","order":"독립장","awardYear":"2005"},{"id":"김최명|金最明|독립장|163","name":"김최명","hanja":"金最明","alias":"호 : 선우(仙愚), 이명 : 한동근(韓東根)","movement":"만주방면","birthplace":"평북 선천(宣川)","order":"독립장","awardYear":"1963"},{"id":"김춘배|金春培|독립장|164","name":"김춘배","hanja":"金春培","alias":"김상배(金相培·金尙培), 김길동(金吉同), 정춘산(鄭春山), 한중해(韓仲海)","movement":"만주방면","birthplace":"전북 전주(全州)","order":"독립장","awardYear":"1990"},{"id":"김치보|金致寶|독립장|165","name":"김치보","hanja":"金致寶","alias":"김감리(金監理), 김치보(金致甫), 김성준(金聖俊)","movement":"노령방면","birthplace":"평남 평양(平壤)","order":"독립장","awardYear":"1996"},{"id":"김치홍|金致洪|독립장|166","name":"김치홍","hanja":"金致洪","alias":"김치홍(金致弘), 김동필(金東弼)","movement":"의병","birthplace":"전남 영암(靈巖)","order":"독립장","awardYear":"1990"},{"id":"김태연|金泰淵|독립장|167","name":"김태연","hanja":"金泰淵","movement":"만주방면","birthplace":"평북 삭주(朔州)","order":"독립장","awardYear":"1968"},{"id":"김태연|金泰淵|독립장|168","name":"김태연","hanja":"金泰淵","alias":"김단야(金丹冶), 김규(金圭), 김추성(金秋星), 김주(金柱)","movement":"국내항일","birthplace":"경북 김천(金泉)","order":"독립장","awardYear":"2005"},{"id":"김태연|金泰淵|독립장|169","name":"김태연","hanja":"金泰淵","alias":"호 : 용암(容庵)","movement":"중국방면","birthplace":"황해 장연(長淵)","order":"독립장","awardYear":"1995"},{"id":"김태오|金泰午|독립장|170","name":"김태오","hanja":"金泰午","alias":"태오(泰吳), 태호(泰昊)","movement":"3.1운동","birthplace":"충남 논산(論山)","order":"독립장","awardYear":"1963"},{"id":"김태원|金泰元|독립장|171","name":"김태원","hanja":"金泰元","alias":"호 : 죽봉(竹峰), 이명 : 김준(金準), 김태중(金太仲)","movement":"의병","birthplace":"전남 나주(羅州)","order":"독립장","awardYear":"1962"},{"id":"김태원|金泰元|독립장|172","name":"김태원","hanja":"金泰元","alias":"자 : 춘백(春伯), 호 : 집의당(集義堂)","movement":"의병","birthplace":"서울","order":"독립장","awardYear":"1993"},{"id":"김태원|金泰源|독립장|173","name":"김태원","hanja":"金泰源","movement":"만주방면","birthplace":"평북 의주(義州)","order":"독립장","awardYear":"1963"},{"id":"김평식|金平植|독립장|174","name":"김평식","hanja":"金平植","movement":"만주방면","birthplace":"평북 의주(義州)","order":"독립장","awardYear":"1963"},{"id":"김학규|金學奎|독립장|175","name":"김학규","hanja":"金學奎","alias":"호 : 백파(白波), 동이(東耳)","movement":"광복군","birthplace":"평남 평원(平原)","order":"독립장","awardYear":"1962"},{"id":"김학무|金學武|독립장|176","name":"김학무","hanja":"金學武","alias":"김준길(金俊吉), 김원길(金元吉)","movement":"중국방면","birthplace":"함북 온성(穩城)","order":"독립장","awardYear":"2001"},{"id":"김학섭|金學燮|독립장|177","name":"김학섭","hanja":"金學燮","alias":"김광(金光)","movement":"만주방면","birthplace":"함북 경원(慶源)","order":"독립장","awardYear":"1968"},{"id":"김한|金翰|독립장|178","name":"김한","hanja":"金翰","alias":"김자홍(金子弘), 김상엽(金相燁), 호 : 제관(霽觀)","movement":"중국방면","birthplace":"경기 고양(高陽)","order":"독립장","awardYear":"2005"},{"id":"김한종|金漢鍾|독립장|179","name":"김한종","hanja":"金漢鍾","alias":"자 : 경수(敬受), 호 : 일우(一宇)","movement":"국내항일","birthplace":"충남 예산(禮山)","order":"독립장","awardYear":"1963"},{"id":"김혁|金赫|독립장|180","name":"김혁","hanja":"金赫","alias":"본명 : 학소(學韶), 자 : 순익(舜翼), 호 : 오석(吾石, 烏石)","movement":"만주방면","birthplace":"경기 용인(龍仁)","order":"독립장","awardYear":"1963"},{"id":"김형빈|金亨彬|독립장|181","name":"김형빈","hanja":"金亨彬","movement":"만주방면","birthplace":"평북 초산(楚山)","order":"독립장","awardYear":"1990"},{"id":"김호|金虎|독립장|182","name":"김호","hanja":"金虎","alias":"호 : 소림(嘯林), 이명 : 호익(虎翼)","movement":"만주방면","birthplace":"함남 이원(利原)","order":"독립장","awardYear":"2010"},{"id":"김호|金乎|독립장|183","name":"김호","hanja":"金乎","alias":"본명 : 김정진(金廷鎭·金庭鎭), 호 : 한사(漢槎), 미국명 : Charles Ho Kim","movement":"미주방면","birthplace":"서울","order":"독립장","awardYear":"1997"},{"id":"김홍서|金弘敍|독립장|184","name":"김홍서","hanja":"金弘敍","alias":"김홍서(金弘瑞), 김지강(金志剛)","movement":"임시정부","birthplace":"평남 함종(咸從)","order":"독립장","awardYear":"1968"},{"id":"김홍일|金弘壹|독립장|185","name":"김홍일","hanja":"金弘壹","alias":"호 : 일서(逸曙), 초명 : 홍일(弘日), 이명 : 왕웅(王雄), 왕일서(王逸曙), 왕복고(王復高), 최세평(崔世平)","movement":"광복군","birthplace":"평북 용천(龍川)","order":"독립장","awardYear":"1962"},{"id":"김훈|金勳|독립장|186","name":"김훈","hanja":"金勳","alias":"김춘식(金春植)·양림(楊林)·양녕(楊寧)·양주평(楊州平)·베스티(畢士悌)·주동무(老周)","movement":"만주방면","birthplace":"평북","order":"독립장","awardYear":"1995"},{"id":"나병삼|羅炳三|독립장|187","name":"나병삼","hanja":"羅炳三","movement":"만주방면","birthplace":"평남 덕천(德川)","order":"독립장","awardYear":"1995"},{"id":"나시운|羅時雲|독립장|188","name":"나시운","hanja":"羅時雲","movement":"의병","birthplace":"강원 평창(平昌)","order":"독립장","awardYear":"1995"},{"id":"나월환|羅月煥|독립장|189","name":"나월환","hanja":"羅月煥","alias":"호: 송죽(松竹), 이명 : 나월한(羅月漢)","movement":"광복군","birthplace":"전남 나주(羅州)","order":"독립장","awardYear":"1963"},{"id":"나정구|羅正龜|독립장|190","name":"나정구","hanja":"羅正龜","alias":"나정규(羅正奎)","movement":"만주방면","birthplace":"평북 태천(泰川)","order":"독립장","awardYear":"1995"},{"id":"나중소|羅仲昭|독립장|191","name":"나중소","hanja":"羅仲昭","alias":"자 : 영훈(泳薰), 호 : 포석(抛石)","movement":"만주방면","birthplace":"경기 고양(高陽)","order":"독립장","awardYear":"1963"},{"id":"나창헌|羅昌憲|독립장|192","name":"나창헌","hanja":"羅昌憲","alias":"세웅(世雄), 강우규(姜宇圭), 왕성준(王成俊)","movement":"임시정부","birthplace":"평북 희천(熙川)","order":"독립장","awardYear":"1963"},{"id":"나철|羅喆|독립장|193","name":"나철","hanja":"羅喆","alias":"자 : 문경(文卿), 호 : 경전(耕田, 經田)·홍암(弘巖), 초명 : 두영(斗永), 이명 : 나인영(羅寅永)","movement":"의열투쟁","birthplace":"전남 낙안(樂安)","order":"독립장","awardYear":"1962"},{"id":"나태섭|羅泰燮|독립장|194","name":"나태섭","hanja":"羅泰燮","alias":"왕중량(王仲良), 나태철(羅泰喆)","movement":"광복군","birthplace":"황해 안악(安岳)","order":"독립장","awardYear":"1977"},{"id":"남공선|南公善|독립장|195","name":"남공선","hanja":"南公善","alias":"남성우(南性祐), 호: 수천(脩泉)","movement":"만주방면","birthplace":"함남 원산(元山)","order":"독립장","awardYear":"1996"},{"id":"남궁억|南宮檍|독립장|196","name":"남궁억","hanja":"南宮檍","alias":"자: 치만(致萬), 호: 한서(翰西)","movement":"문화운동","birthplace":"강원 홍천(洪川)","order":"독립장","awardYear":"1977"},{"id":"남석인|南錫仁|독립장|197","name":"남석인","hanja":"南錫仁","alias":"자 : 우팔(禹八), 이명 : 우팔(又八)","movement":"의병","birthplace":"경북 청송(靑松)","order":"독립장","awardYear":"1977"},{"id":"남정각|南廷珏|독립장|198","name":"남정각","hanja":"南廷珏","alias":"호 : 오산(午山), 아명 : 남영득(南英得·南寧得)이명 : 김석진(金錫鎭), 정섭(丁燮), 우각(迂玨)","movement":"중국방면","birthplace":"경기 용인(龍仁)","order":"독립장","awardYear":"1963"},{"id":"노기용|盧企容|독립장|199","name":"노기용","hanja":"盧企容","alias":"자 : 공옥(孔玉), 호 : 우전(雨田), 이명 : 노학준(盧學俊)","movement":"국내항일","birthplace":"경남 합천(陜川)","order":"독립장","awardYear":"1963"},{"id":"노병대|盧炳大|독립장|200","name":"노병대","hanja":"盧炳大","alias":"자 : 상요(相堯), 호 : 금포(錦圃), 초명 : 병직(炳稷)","movement":"의병","birthplace":"경북 상주(尙州)","order":"독립장","awardYear":"1968"},{"id":"노복선|盧福善|독립장|201","name":"노복선","hanja":"盧福善","alias":"노원일(盧元一)","movement":"광복군","birthplace":"평남 진남포(鎭南浦)","order":"독립장","awardYear":"1963"},{"id":"노원섭|盧元燮|독립장|202","name":"노원섭","hanja":"盧元燮","alias":"자 : 대재(大哉), 호 : 송암(松菴), 이명 : 노진섭(盧震燮)","movement":"의병","birthplace":"충남 공주(公州)","order":"독립장","awardYear":"1977"},{"id":"노을룡|盧乙龍|독립장|203","name":"노을룡","hanja":"盧乙龍","alias":"월룡(月龍)·일룡(一龍)·운룡(雲龍)·흥국(興國)·백전(伯前)·원청백완(元淸伯琓)·병원(炳元)·담(擔)","movement":"중국방면","birthplace":"충남 홍성(洪城)","order":"독립장","awardYear":"1995"},{"id":"노응규|盧應奎|독립장|204","name":"노응규","hanja":"盧應奎","alias":"호 : 신암(愼菴), 자 : 성오(聖五)·경오(景五)","movement":"의병","birthplace":"경남 함양(咸陽)","order":"독립장","awardYear":"1977"},{"id":"노임수|盧琳壽|독립장|205","name":"노임수","hanja":"盧琳壽","alias":"노공수(盧共壽), 노인선(盧仁先)","movement":"의병","birthplace":"전남 곡성(谷城)","order":"독립장","awardYear":"1977"},{"id":"노종균|盧鍾均|독립장|206","name":"노종균","hanja":"盧鍾均","alias":"백운서(白雲瑞), 김동우(金東宇), 양동오(楊東五) 김동오(金東吾(五))","movement":"중국방면","birthplace":"황해 안악(安岳)","order":"독립장","awardYear":"1995"},{"id":"노태준|盧泰俊|독립장|207","name":"노태준","hanja":"盧泰俊","alias":"본명: 노아경(盧亞敬), 이명: 이무웅(李武雄)·노화경(盧和敬)·화향(和鄕)·조향(祖鄕)","movement":"광복군","birthplace":"서울","order":"독립장","awardYear":"1968"},{"id":"다이리|戴笠|독립장|208","name":"다이리","hanja":"戴笠","koAlias":"대립","alias":"춘펑(春風)","movement":"독립운동지원","birthplace":"외국 중국","order":"독립장","awardYear":"1968"},{"id":"로버트 그리어슨|Robert Grierson|독립장|209","name":"로버트 그리어슨","koAlias":"Robert Grierson","alias":"구예선(具禮善)","movement":"독립운동지원","birthplace":"외국 캐나다","order":"독립장","awardYear":"1968"},{"id":"류인식|柳寅植|독립장|210","name":"류인식","hanja":"柳寅植","alias":"자 : 성래(聖來), 호 : 동산(東山)","movement":"문화운동","birthplace":"경북 안동(安東)","order":"독립장","awardYear":"1982"},{"id":"리우용야오|劉詠堯|독립장|211","name":"리우용야오","hanja":"劉詠堯","koAlias":"유영요","movement":"독립운동지원","birthplace":"외국 중국","order":"독립장","awardYear":"1968"},{"id":"마수리|馬樹禮|독립장|212","name":"마수리","hanja":"馬樹禮","koAlias":"마수례","movement":"독립운동지원","birthplace":"외국 중국","order":"독립장","awardYear":"1968"},{"id":"마진|馬晉|독립장|213","name":"마진","hanja":"馬晉","alias":"본명 : 마문호(馬文鎬), 호 : 백동(白東), 자 : 희병(熙炳)","movement":"만주방면","birthplace":"함북 길주(吉州)","order":"독립장","awardYear":"1980"},{"id":"명제세|明濟世|독립장|214","name":"명제세","hanja":"明濟世","movement":"임시정부","birthplace":"평북 영변(寧邊)","order":"독립장","awardYear":"1990"},{"id":"모더후이|莫德惠|독립장|215","name":"모더후이","hanja":"莫德惠","koAlias":"막덕혜","alias":"자 : 유침(柳忱)","movement":"독립운동지원","birthplace":"외국 중국","order":"독립장","awardYear":"1968"},{"id":"모리스 윌리엄|Maurice William|독립장|216","name":"모리스 윌리엄","koAlias":"Maurice William","movement":"독립운동지원","birthplace":"외국 러시아","order":"독립장","awardYear":"1950"},{"id":"문상익|文相翊|독립장|217","name":"문상익","hanja":"文相翊","movement":"3.1운동","birthplace":"경기 수원(水原)","order":"독립장","awardYear":"1977"},{"id":"문석봉|文錫鳳|독립장|218","name":"문석봉","hanja":"文錫鳳","alias":"자 : 이필(而弼), 호 : 의산(義山), 본명 : 봉각(鳳珏)","movement":"의병","birthplace":"경북 현풍(玄風)","order":"독립장","awardYear":"1993"},{"id":"문양목|文讓穆|독립장|219","name":"문양목","hanja":"文讓穆","alias":"자 : 승렬(承烈), 이명 : 문양목(文良穆), 문성렬(文聖烈)","movement":"미주방면","birthplace":"충남 서산(瑞山)","order":"독립장","awardYear":"1995"},{"id":"문일민|文一民|독립장|220","name":"문일민","hanja":"文一民","alias":"호: 무강(武剛), 본명 : 희석(熙錫) 이명 : 문강(文剛)·문일민(文逸民)·문현철(文賢哲), 중국명: 왕량(王良)","movement":"임시정부","birthplace":"평남 강서(江西)","order":"독립장","awardYear":"1962"},{"id":"문일평|文一平|독립장|221","name":"문일평","hanja":"文一平","alias":"본명: 명회(明會), 아명: 정곤(正坤), 자: 일평(一平), 호: 호암(虎巖), 호암산인(虎巖山人), 호암생(湖巖生), 호암(湖巖)","movement":"중국방면","birthplace":"평북 의주(義州)","order":"독립장","awardYear":"1995"},{"id":"문창숙|文昌淑|독립장|222","name":"문창숙","hanja":"文昌淑","alias":"이명 : 김석산(金石山), 김기준(金基準), 김승숙(金勝淑)","movement":"만주방면","birthplace":"황해 신계(新溪)","order":"독립장","awardYear":"1977"},{"id":"문창학|文昌學|독립장|223","name":"문창학","hanja":"文昌學","alias":"문언준(文彦俊)","movement":"만주방면","birthplace":"함북 온성(穩城)","order":"독립장","awardYear":"1968"},{"id":"민강|閔橿|독립장|224","name":"민강","hanja":"閔橿","alias":"민소광(閔小光)","movement":"국내항일","birthplace":"충북 보은(報恩)","order":"독립장","awardYear":"1963"},{"id":"민양기|閔良基|독립장|225","name":"민양기","hanja":"閔良基","movement":"만주방면","birthplace":"황해 해주(海州)","order":"독립장","awardYear":"1962"},{"id":"민영구|閔泳玖|독립장|226","name":"민영구","hanja":"閔泳玖","movement":"광복군","birthplace":"서울","order":"독립장","awardYear":"1963"},{"id":"민용호|閔龍鎬|독립장|227","name":"민용호","hanja":"閔龍鎬","alias":"호 : 복재(復齋), 자 : 문현(文賢), 이명 : 민진호(閔晋鎬)","movement":"의병","birthplace":"경남 산청(山淸)","order":"독립장","awardYear":"1977"},{"id":"민필호|閔弼鎬|독립장|228","name":"민필호","hanja":"閔弼鎬","alias":"자 : 중우(仲禹), 호 : 석린(石麟), 이명 : 린동판(林東潘)·왕량청(王良誠)","movement":"임시정부","birthplace":"서울","order":"독립장","awardYear":"1963"},{"id":"민효식|閔孝植|독립장|229","name":"민효식","hanja":"閔孝植","alias":"호 : 석촌(石村)","movement":"의병","birthplace":"황해 연백(延白)","order":"독립장","awardYear":"1994"},{"id":"박건병|朴健秉|독립장|230","name":"박건병","hanja":"朴健秉","alias":"호 : 맹천(孟泉)","movement":"중국방면","birthplace":"강원 철원(鐵原)","order":"독립장","awardYear":"1993"},{"id":"박건웅|朴健雄|독립장|231","name":"박건웅","hanja":"朴健雄","alias":"이명 : 박건웅(朴建雄), 김건웅(金建雄), 김정우(金政友), 김세보(金世寶)","movement":"임시정부","birthplace":"평북 의주(義州)","order":"독립장","awardYear":"1990"},{"id":"박경순|朴敬淳|독립장|232","name":"박경순","hanja":"朴敬淳","alias":"호: 예천(禮川), 이명: 박경순(朴景淳)·복경순(濮敬純)","movement":"임시정부","birthplace":"서울","order":"독립장","awardYear":"1995"},{"id":"박기성|朴基成|독립장|233","name":"박기성","hanja":"朴基成","alias":"구양군(歐陽軍), 이수현(李守鉉), 이수현(李壽鉉)","movement":"광복군","birthplace":"충북 진천(鎭川)","order":"독립장","awardYear":"1963"},{"id":"박기한|朴基寒|독립장|234","name":"박기한","hanja":"朴基寒","movement":"만주방면","birthplace":"평북 창성(昌城)","order":"독립장","awardYear":"1963"},{"id":"박도경|朴道京|독립장|235","name":"박도경","hanja":"朴道京","alias":"호 : 경화(朴京化,), 자 : 화옥(朴化玉), 본명 : 박경래(朴慶來), 별칭 : 박포대(朴砲大)","movement":"의병","birthplace":"전북 고창(高敞)","order":"독립장","awardYear":"1968"},{"id":"박문용|朴文鎔|독립장|236","name":"박문용","hanja":"朴文鎔","alias":"박환(朴桓)·박해춘(朴海春)","movement":"임시정부","birthplace":"전남 보성(寶城)","order":"독립장","awardYear":"1980"},{"id":"박민항|朴敏杭|독립장|237","name":"박민항","hanja":"朴敏杭","alias":"호 : 춘산","movement":"만주방면","birthplace":"황해 안악(安岳)","order":"독립장","awardYear":"1963"},{"id":"박봉석|朴奉石|독립장|238","name":"박봉석","hanja":"朴奉石","alias":"없음","movement":"의병","birthplace":"전남 광주(光州)","order":"독립장","awardYear":"1990"},{"id":"박사화|朴士化|독립장|239","name":"박사화","hanja":"朴士化","alias":"박사과(朴士過), 박사홍(朴士弘)","movement":"의병","birthplace":"전남 나주(羅州)","order":"독립장","awardYear":"1998"},{"id":"박상진|朴尙鎭|독립장|240","name":"박상진","hanja":"朴尙鎭","alias":"호 : 고헌(固軒), 자 : 기백(璣伯)","movement":"국내항일","birthplace":"경남 울산(蔚山)","order":"독립장","awardYear":"1963"},{"id":"박세건|朴世健|독립장|241","name":"박세건","hanja":"朴世健","alias":"박세건(朴世鍵)","movement":"만주방면","birthplace":"평북 선천(宣川)","order":"독립장","awardYear":"1963"},{"id":"박세화|朴世和|독립장|242","name":"박세화","hanja":"朴世和","alias":"자 : 연길(年吉), 호 : 의당(毅堂), 곤남산인(崑南山人), 묵암(黙菴), 도솔산인(道率山人), 의당노인(毅堂老人), 불억산인(茀億山人), 불억산노우(茀億山老友), 해좌췌생(海左贅生), 해동(海東), 유민(遺民), 황명유민(皇明遺民), 희현재주인(希賢齋主人)","movement":"의병","birthplace":"함남 고원(高原)","order":"독립장","awardYear":"1962"},{"id":"박승길|朴昇吉|독립장|243","name":"박승길","hanja":"朴昇吉","alias":"호 : 철마(鐵馬), 이명 : 박덕수(朴德洙), 박재근(朴才根),","movement":"만주방면","birthplace":"함북 온성(穩城)","order":"독립장","awardYear":"1977"},{"id":"박시창|朴始昌|독립장|244","name":"박시창","hanja":"朴始昌","movement":"광복군","birthplace":"경기 시흥(始興)","order":"독립장","awardYear":"1963"},{"id":"박여성|朴汝成|독립장|245","name":"박여성","hanja":"朴汝成","alias":"박성렬(朴成烈)","movement":"의병","birthplace":"충북 제천(堤川)","order":"독립장","awardYear":"1990"},{"id":"박연백|朴淵伯|독립장|246","name":"박연백","hanja":"朴淵伯","alias":"자 : 응구(應九), 호 : 암재(巖齋)·암제(岩齊), 이명 : 박연백(朴淵白)","movement":"의병","birthplace":"경북 의성(義城)","order":"독립장","awardYear":"1963"},{"id":"박영|朴泳|독립장|247","name":"박영","hanja":"朴泳","alias":"박진(朴鎭), 박근성(朴根星), 박영(朴英·朴永), 박성남, 박몽각(朴夢覺)","movement":"만주방면","birthplace":"함북 경흥(慶興)","order":"독립장","awardYear":"2006"},{"id":"박영준|朴英俊|독립장|248","name":"박영준","hanja":"朴英俊","movement":"광복군","birthplace":"경기 파주","order":"독립장","awardYear":"1977"},{"id":"박영희|朴寧熙|독립장|249","name":"박영희","hanja":"朴寧熙","alias":"아호 : 정헌(靜軒)·검추(劍秋)·금추(琴秋), 이명 : 박두희(朴斗熙)·박영섭(朴寧燮)·박초섭(朴草燮)","movement":"만주방면","birthplace":"충남 부여(扶餘)","order":"독립장","awardYear":"1977"},{"id":"박응백|朴應伯|독립장|250","name":"박응백","hanja":"朴應伯","alias":"이명 : 박용빈(朴鏞彬), 박송우(朴松雨)","movement":"만주방면","birthplace":"평북 삭주(朔州)","order":"독립장","awardYear":"1963"},{"id":"박인항|朴仁恒|독립장|251","name":"박인항","hanja":"朴仁恒","alias":"목호인항(木戶仁恒)","movement":"국내항일","birthplace":"평북 선천(宣川)","order":"독립장","awardYear":"1977"},{"id":"박인호|朴寅浩|독립장|252","name":"박인호","hanja":"朴寅浩","alias":"아명 : 용호(龍浩), 자 : 도일(道一), 이명 : 남수(南壽), 도호 : 춘암(春菴), 존호 : 상사(上師)","movement":"3.1운동","birthplace":"충남 덕산(德山)","order":"독립장","awardYear":"1990"},{"id":"박인화|朴仁和|독립장|253","name":"박인화","hanja":"朴仁和","alias":"박인화(朴仁花), 박처사(朴處士)","movement":"의병","birthplace":"경북 영양(英陽)","order":"독립장","awardYear":"1968"},{"id":"박장호|朴長浩|독립장|254","name":"박장호","hanja":"朴長浩","alias":"호 : 화남(華南), 자 : 양직(養直)","movement":"만주방면","birthplace":"경기 가평(加平)","order":"독립장","awardYear":"1962"},{"id":"박재혁|朴載赫|독립장|255","name":"박재혁","hanja":"朴載赫","alias":"이명 : 박재혁(朴載爀, 朴在赫, 朴在爀)","movement":"중국방면","birthplace":"경남 부산(釜山)","order":"독립장","awardYear":"1962"},{"id":"박중서|朴重緖|독립장|256","name":"박중서","hanja":"朴重緖","movement":"만주방면","birthplace":"평북 박천(博川)","order":"독립장","awardYear":"1963"},{"id":"박차정|朴次貞|독립장|257","name":"박차정","hanja":"朴次貞","alias":"박철애(朴哲愛), 임철애(林哲愛), 임철산(林哲山)","movement":"중국방면","birthplace":"경남 동래(東萊)","order":"독립장","awardYear":"1995"},{"id":"박찬익|朴贊翊|독립장|258","name":"박찬익","hanja":"朴贊翊","movement":"임시정부","birthplace":"경기 파주(坡州)","order":"독립장","awardYear":"1963"},{"id":"박창철|朴昌鐵|독립장|259","name":"박창철","hanja":"朴昌鐵","alias":"박응서(朴應瑞)·박국빈(朴國彬)·박유빈(朴有彬, 朴囿彬)","movement":"만주방면","birthplace":"평북 의주(義州)","order":"독립장","awardYear":"2013"},{"id":"박춘실|朴春實|독립장|260","name":"박춘실","hanja":"朴春實","alias":"본명 : 박동식(朴東植), 이명 : 박충실(朴忠實)","movement":"의병","birthplace":"전북 장수(長水)","order":"독립장","awardYear":"1977"},{"id":"박치의|朴治毅|독립장|261","name":"박치의","hanja":"朴治毅","alias":"호 : 청헌(淸軒)","movement":"만주방면","birthplace":"평북 선천(宣川)","order":"독립장","awardYear":"1962"},{"id":"박치화|朴致化|독립장|262","name":"박치화","hanja":"朴致化","alias":"박치화(朴致華)","movement":"만주방면","birthplace":"평북 의주(義州)","order":"독립장","awardYear":"1993"},{"id":"박태열|朴泰烈|독립장|263","name":"박태열","hanja":"朴泰烈","alias":"박운서(朴雲瑞), 박원진(朴元進), 박원식(朴元植), 박종식(朴棕植), 박종오(朴棕梧), 박원도(朴元道), 장운서(張雲瑞), 박태을(朴太乙), 박대욱(朴大郁), 장원식(張元直), 박원달(朴元達)","movement":"만주방면","birthplace":"황해 은율(殷栗)","order":"독립장","awardYear":"1968"},{"id":"박희광|朴喜光|독립장|264","name":"박희광","hanja":"朴喜光","alias":"박상만(朴相萬, 朴相晩)","movement":"만주방면","birthplace":"경북 선산(善山)","order":"독립장","awardYear":"1968"},{"id":"반하경|潘夏慶|독립장|265","name":"반하경","hanja":"潘夏慶","alias":"반학영(潘學榮)","movement":"계몽운동","birthplace":"전남 장성(長城)","order":"독립장","awardYear":"1962"},{"id":"방순희|方順熙|독립장|266","name":"방순희","hanja":"方順熙","alias":"방순희(方順嬉), 방순이(方順伊), 방희(方姬)","movement":"임시정부","birthplace":"함남 원산(元山)","order":"독립장","awardYear":"1963"},{"id":"백기준|白基俊|독립장|267","name":"백기준","hanja":"白基俊","alias":"운계(雲溪)","movement":"임시정부","birthplace":"평북 의주(義州)","order":"독립장","awardYear":"1963"},{"id":"백낙주|白樂疇|독립장|268","name":"백낙주","hanja":"白樂疇","alias":"호: 세창(世昌), 자: 학범(學範), 이명: 백운기(白雲起), 별칭: 백호대장","movement":"만주방면","birthplace":"평북 정주(定州)","order":"독립장","awardYear":"1963"},{"id":"백남규|白南奎|독립장|269","name":"백남규","hanja":"白南奎","alias":"없음","movement":"의병","birthplace":"충북 중원(中原)","order":"독립장","awardYear":"1963"},{"id":"백남준|白南俊|독립장|270","name":"백남준","hanja":"白南俊","alias":"이명 : 백신일(白信一), 백우광(白愚狂), 백경옥(白京玉)","movement":"만주방면","birthplace":"평북 운산(雲山)","order":"독립장","awardYear":"2014"},{"id":"백삼규|白三圭|독립장|271","name":"백삼규","hanja":"白三圭","alias":"호 : 온당(溫堂), 이명 : 백삼규(白三奎)","movement":"만주방면","birthplace":"평북 태천(泰川)","order":"독립장","awardYear":"1968"},{"id":"백시찬|白時瓚|독립장|272","name":"백시찬","hanja":"白時瓚","movement":"만주방면","birthplace":"평북 선천(宣川)","order":"독립장","awardYear":"1963"},{"id":"백운한|白雲翰|독립장|273","name":"백운한","hanja":"白雲翰","alias":"李雲谷","movement":"만주방면","birthplace":"평북 용천(龍川)","order":"독립장","awardYear":"1963"},{"id":"백일규|白一圭|독립장|274","name":"백일규","hanja":"白一圭","alias":"백일규(白日奎), 백윤조(白允祖)","movement":"미주방면","birthplace":"평남 증산(甑山)","order":"독립장","awardYear":"1997"},{"id":"백정기|白貞基|독립장|275","name":"백정기","hanja":"白貞基","alias":"호 : 구파(鷗波·九波)","movement":"중국방면","birthplace":"전북 정읍(井邑)","order":"독립장","awardYear":"1962"},{"id":"변춘식|邊春植|독립장|276","name":"변춘식","hanja":"邊春植","movement":"만주방면","birthplace":"황해 연백(延白)","order":"독립장","awardYear":"1963"},{"id":"변학기|邊鶴基|독립장|277","name":"변학기","hanja":"邊鶴基","movement":"의병","birthplace":"경북 봉화(奉化)","order":"독립장","awardYear":"1962"},{"id":"서병희|徐炳熙|독립장|278","name":"서병희","hanja":"徐炳熙","alias":"이명 : 서병희(徐丙熙)","movement":"의병","birthplace":"경남 양산(梁山)","order":"독립장","awardYear":"1990"},{"id":"서상교|徐尙敎|독립장|279","name":"서상교","hanja":"徐尙敎","alias":"호 : 목민(木民), 창씨명 : 대달상교(大達尙敎)","movement":"학생운동","birthplace":"경북 대구(大邱)","order":"독립장","awardYear":"1963"},{"id":"서상렬|徐相烈|독립장|280","name":"서상렬","hanja":"徐相烈","alias":"자 : 경은(景殷, 敬殷), 호 : 경암(敬菴), 춘수당(春睡堂)","movement":"의병","birthplace":"충북 제천(堤川)","order":"독립장","awardYear":"1963"},{"id":"서상한|徐相漢|독립장|281","name":"서상한","hanja":"徐相漢","movement":"일본방면","birthplace":"경북 대구(大邱)","order":"독립장","awardYear":"1963"},{"id":"서영석|徐永錫|독립장|282","name":"서영석","hanja":"徐永錫","movement":"3.1운동","birthplace":"평남 대동(大同)","order":"독립장","awardYear":"1977"},{"id":"서원준|徐元俊|독립장|283","name":"서원준","hanja":"徐元俊","alias":"본명 : 서복손(徐福孫), 이명 : 김정일(金正一)","movement":"만주방면","birthplace":"평남 중화(中和)","order":"독립장","awardYear":"1968"},{"id":"서의배|徐義培|독립장|284","name":"서의배","hanja":"徐義培","alias":"서일배(徐一培)","movement":"국내항일","birthplace":"황해 서흥(瑞興)","order":"독립장","awardYear":"1968"},{"id":"서일|徐一|독립장|285","name":"서일","hanja":"徐一","alias":"호 : 백포(白圃), 초명 : 서정학(徐夔學), 이명 : 서희세(徐希世), 서학포(徐學圃)","movement":"만주방면","birthplace":"함북 경원(慶源)","order":"독립장","awardYear":"1962"},{"id":"서종채|徐鍾採|독립장|286","name":"서종채","hanja":"徐鍾採","alias":"이명 : 서응오(徐應五), 서종주(徐鍾珠)","movement":"의병","birthplace":"전북 고창(高敞)","order":"독립장","awardYear":"1980"},{"id":"성익현|成益鉉|독립장|287","name":"성익현","hanja":"成益鉉","alias":"성익현(成益顯·成益賢)","movement":"의병","birthplace":"강원 춘천(春川)","order":"독립장","awardYear":"1995"},{"id":"손기업|孫基業|독립장|288","name":"손기업","hanja":"孫基業","alias":"호 : 일정(一丁), 이명 : 손사봉(孫四奉)","movement":"만주방면","birthplace":"황해 장연(長淵)","order":"독립장","awardYear":"1963"},{"id":"손기혁|孫琪赫|독립장|289","name":"손기혁","hanja":"孫琪赫","alias":"손태옥(孫太玉·孫泰玉)","movement":"의병","birthplace":"경남 하동(河東)","order":"독립장","awardYear":"1992"},{"id":"손덕오|孫德五|독립장|290","name":"손덕오","hanja":"孫德五","alias":"손덕호(孫德浩)","movement":"의병","birthplace":"전남 보성(寶城)","order":"독립장","awardYear":"1990"},{"id":"손승억|孫承億|독립장|291","name":"손승억","hanja":"孫承億","movement":"3.1운동","birthplace":"충북 충주(忠州)","order":"독립장","awardYear":"1968"},{"id":"손양윤|孫亮尹|독립장|292","name":"손양윤","hanja":"孫亮尹","alias":"손양모(孫亮謨), 손백현(孫伯見)","movement":"만주방면","birthplace":"경북 달성(達城)","order":"독립장","awardYear":"1977"},{"id":"손영각|孫永珏|독립장|293","name":"손영각","hanja":"孫永珏","alias":"자: 내숙(迺叔), 호: 낙산(樂山)","movement":"의병","birthplace":"경북 경주","order":"독립장","awardYear":"1980"},{"id":"손정도|孫貞道|독립장|294","name":"손정도","hanja":"孫貞道","alias":"아호 : 해석(海石), 자 : 호건(浩乾)","movement":"임시정부","birthplace":"평남 강서(江西)","order":"독립장","awardYear":"1962"},{"id":"손창준|孫昌俊|독립장|295","name":"손창준","hanja":"孫昌俊","movement":"만주방면","birthplace":"경북 울진(蔚珍)","order":"독립장","awardYear":"1963"},{"id":"송계백|宋繼白|독립장|296","name":"송계백","hanja":"宋繼白","movement":"일본방면","birthplace":"평남 평원(平原)","order":"독립장","awardYear":"1962"},{"id":"송병선|宋秉璿|독립장|297","name":"송병선","hanja":"宋秉璿","alias":"자 : 화옥(華玉), 호 : 연재(淵齋)·동방일사(東方一士)","movement":"계몽운동","birthplace":"충남 회덕(懷德)","order":"독립장","awardYear":"1962"},{"id":"송병순|宋秉珣|독립장|298","name":"송병순","hanja":"宋秉珣","alias":"자 : 동옥(東玉), 호 : 심석재(心石齋)","movement":"계몽운동","birthplace":"충남 회덕(懷德)","order":"독립장","awardYear":"1977"},{"id":"송병조|宋秉祚|독립장|299","name":"송병조","hanja":"宋秉祚","alias":"호 : 신암(新岩), 이명 : 영석(永錫)","movement":"임시정부","birthplace":"평북 용천(龍川)","order":"독립장","awardYear":"1963"},{"id":"송종익|宋鍾翊|독립장|300","name":"송종익","hanja":"宋鍾翊","alias":"호 : 우강(友江), 본명 : 송종수(宋鍾壽)","movement":"미주방면","birthplace":"경북 대구(大邱)","order":"독립장","awardYear":"1995"},{"id":"송주면|宋宙勉|독립장|301","name":"송주면","hanja":"宋宙勉","alias":"자 : 정여(正汝), 호 : 규사(圭沙)","movement":"계몽운동","birthplace":"전남 화순(和順)","order":"독립장","awardYear":"1977"},{"id":"송중직|宋重稙|독립장|302","name":"송중직","hanja":"宋重稙","alias":"송중식(宋重植)","movement":"국내항일","birthplace":"황해 송화(松禾)","order":"독립장","awardYear":"2014"},{"id":"송진우|宋鎭禹|독립장|303","name":"송진우","hanja":"宋鎭禹","alias":"호 : 고하(古下), 초명: 옥윤(玉潤)","movement":"문화운동","birthplace":"전남 담양(潭陽)","order":"독립장","awardYear":"1963"},{"id":"송학선|宋學先|독립장|304","name":"송학선","hanja":"宋學先","alias":"송학선(宋學善), 송인수(宋仁秀)","movement":"의열투쟁","birthplace":"서울","order":"독립장","awardYear":"1962"},{"id":"송헌주|宋憲澍|독립장|305","name":"송헌주","hanja":"宋憲澍","alias":"송헌수(宋憲樹), 송헌위(宋憲尉), 송헌주(宋憲柱)","movement":"미주방면","birthplace":"경기 고양(高陽)","order":"독립장","awardYear":"1995"},{"id":"쉐웨|薛岳|독립장|306","name":"쉐웨","hanja":"薛岳","koAlias":"설악","alias":"쉐양웨(薛仰岳), 노호자(老虎仔)","movement":"독립운동지원","birthplace":"외국 중국","order":"독립장","awardYear":"1977"},{"id":"스탠리 해빌랜드 마틴|Stanley Haviland Martin|독립장|307","name":"스탠리 해빌랜드 마틴","koAlias":"Stanley Haviland Martin","movement":"독립운동지원","birthplace":"외국 캐나다","order":"독립장","awardYear":"1968"},{"id":"신건식|申健植|독립장|308","name":"신건식","hanja":"申健植","alias":"이명 : 두흥(斗興), 신환(申桓), 공칠(公七), 호 : 삼강(三岡)","movement":"임시정부","birthplace":"충북 청원(淸原)","order":"독립장","awardYear":"1977"},{"id":"신공제|辛公濟|독립장|309","name":"신공제","hanja":"辛公濟","alias":"호: 인산(仁山), 이명: 이광제(李光濟)","movement":"임시정부","birthplace":"평북 정주(定州)","order":"독립장","awardYear":"1963"},{"id":"신광삼|申光三|독립장|310","name":"신광삼","hanja":"申光三","movement":"만주방면","birthplace":"함북 경원(慶源)","order":"독립장","awardYear":"2010"},{"id":"신덕영|申德永|독립장|311","name":"신덕영","hanja":"申德永","alias":"호 : 하관(何觀), 이명 : 신덕영(申德榮), 신백한(申佰漢, 申伯漢, 申白漢), 이평(李平), 한부(韓扶), 이창록(李昌錄), 이백한(李伯漢), 신성림(申晟林)","movement":"만주방면","birthplace":"충북 음성(陰城)","order":"독립장","awardYear":"1963"},{"id":"신석우|申錫雨|독립장|312","name":"신석우","hanja":"申錫雨","alias":"호 : 우창(于蒼), 자 : 헌민(獻民), 이명 : 신헌민(申獻民)","movement":"임시정부","birthplace":"서울","order":"독립장","awardYear":"1995"},{"id":"신송식|申松植|독립장|313","name":"신송식","hanja":"申松植","alias":"진경성(陳敬誠), 송양호(宋洋浩), 신삼택(申三澤)","movement":"광복군","birthplace":"평남 안주(安州)","order":"독립장","awardYear":"1963"},{"id":"신숙|申肅|독립장|314","name":"신숙","hanja":"申肅","alias":"아명 : 연길(連吉), 초명 : 태봉(泰鳳), 호 : 강재(岡齋)·시정(是丁)·치정(癡丁), 이명 : 태련(泰鍊), 태치(泰癡)","movement":"만주방면","birthplace":"경기 가평(加平)","order":"독립장","awardYear":"1963"},{"id":"신언성|申彦聖|독립장|315","name":"신언성","hanja":"申彦聖","alias":"신광호(申光浩)","movement":"만주방면","birthplace":"황해 연백(延白)","order":"독립장","awardYear":"1977"},{"id":"신언준|申彦俊|독립장|316","name":"신언준","hanja":"申彦俊","alias":"호 : 은암(隱巖)","movement":"중국방면","birthplace":"평남 평원(平原)","order":"독립장","awardYear":"1987"},{"id":"신영삼|申榮三|독립장|317","name":"신영삼","hanja":"申榮三","alias":"호: 여방(汝舫), 이명: 신용재(申用才)","movement":"임시정부","birthplace":"평남 평원(平原)","order":"독립장","awardYear":"1963"},{"id":"신우여|申禹汝|독립장|318","name":"신우여","hanja":"申禹汝","alias":"본명 : 신대필(申大弼)","movement":"노령방면","birthplace":"함북 경흥(慶興)","order":"독립장","awardYear":"1999"},{"id":"신우현|申禹鉉|독립장|319","name":"신우현","hanja":"申禹鉉","alias":"호 : 자운(紫雲)","movement":"만주방면","birthplace":"평북 의주(義州)","order":"독립장","awardYear":"1963"},{"id":"신정백|申正栢|독립장|320","name":"신정백","hanja":"申正栢","alias":"자 : 정우(正宇), 호 : 남강(南崗), 이명 : 정우(正雨·正友)","movement":"의병","birthplace":"전남 곡성(谷城)","order":"독립장","awardYear":"1968"},{"id":"신창룡|申昌龍|독립장|321","name":"신창룡","hanja":"申昌龍","movement":"의병","birthplace":"경기 양주(楊州)","order":"독립장","awardYear":"1995"},{"id":"신창현|申昌鉉|독립장|322","name":"신창현","hanja":"申昌鉉","movement":"의병","birthplace":"서울","order":"독립장","awardYear":"1995"},{"id":"신태식|申泰植|독립장|323","name":"신태식","hanja":"申泰植","alias":"자: 열향(悅鄕), 호: 도암(島庵)·괴헌(槐軒), 이명: 신철회(申哲會)","movement":"의병","birthplace":"경북 문경(聞慶)","order":"독립장","awardYear":"1968"},{"id":"신팔균|申八均|독립장|324","name":"신팔균","hanja":"申八均","alias":"자 : 윤수(允壽), 호 : 동천(東川)","movement":"만주방면","birthplace":"서울","order":"독립장","awardYear":"1963"},{"id":"신현구|申鉉九|독립장|325","name":"신현구","hanja":"申鉉九","movement":"국내항일","birthplace":"충남 논산(論山)","order":"독립장","awardYear":"1968"},{"id":"신현규|申鉉圭|독립장|326","name":"신현규","hanja":"申鉉圭","alias":"신양춘(申陽春), 신현옥(申鉉玉), 신창균(申昌均), 신석현(申錫鉉)","movement":"국내항일","birthplace":"충북 괴산(槐山)","order":"독립장","awardYear":"2002"},{"id":"심남일|沈南一|독립장|327","name":"심남일","hanja":"沈南一","alias":"본명 : 수택(守澤), 자 : 덕홍(德弘), 호 : 남일(南一)","movement":"의병","birthplace":"전남 함평(咸平)","order":"독립장","awardYear":"1962"},{"id":"심용준|沈龍俊|독립장|328","name":"심용준","hanja":"沈龍俊","alias":"심용제(沈龍濟), 심사율(沈士律), 심학산(沈鶴山, 沈學山)","movement":"만주방면","birthplace":"평북 희천(熙川)","order":"독립장","awardYear":"1998"},{"id":"쓰투더|司徒德|독립장|329","name":"쓰투더","hanja":"司徒德","koAlias":"사도덕","alias":"자: 신원(慎元)","movement":"독립운동지원","birthplace":"외국 중국","order":"독립장","awardYear":"1980"},{"id":"아치볼드 해리슨 바커|Archibald Harrison Barker|독립장|330","name":"아치볼드 해리슨 바커","koAlias":"Archibald Harrison Barker","movement":"독립운동지원","birthplace":"외국 캐나다","order":"독립장","awardYear":"1968"},{"id":"안경근|安敬根|독립장|331","name":"안경근","hanja":"安敬根","alias":"호: 석천(石泉), 이명: 이관오(李冠五), 박양근(朴陽根), 안사준(安士俊), 마포곡(瑪蒲谷), 이석천(李石川)","movement":"임시정부","birthplace":"황해 신천(信川)","order":"독립장","awardYear":"1977"},{"id":"안경신|安敬信|독립장|332","name":"안경신","hanja":"安敬信","movement":"만주방면","birthplace":"평남 대동(大同)","order":"독립장","awardYear":"1962"},{"id":"안공근|安恭根|독립장|333","name":"안공근","hanja":"安恭根","alias":"호 : 신암(信庵), 세례명 : 요한, 이명 : 서이로(西利潞), 삼재(三才), 조한용(趙漢用), 장진구(張震球)","movement":"임시정부","birthplace":"황해 신천(信川)","order":"독립장","awardYear":"1995"},{"id":"안광조|安光祚|독립장|334","name":"안광조","hanja":"安光祚","movement":"의병","birthplace":"충남 연기(燕岐)","order":"독립장","awardYear":"1996"},{"id":"안국형|安國亨|독립장|335","name":"안국형","hanja":"安國亨","alias":"안명보(安明保), 전학송(全學松), 김자송(金字松)","movement":"만주방면","birthplace":"평북 구성(龜城)","order":"독립장","awardYear":"1995"},{"id":"안규홍|安圭洪|독립장|336","name":"안규홍","hanja":"安圭洪","alias":"호 : 담산(澹山), 이명: 계홍(桂洪), 기언(基彦), 제홍(濟弘), 계원(桂源), 덕봉(德峰), 담사리","movement":"의병","birthplace":"전남 보성(寶城)","order":"독립장","awardYear":"1963"},{"id":"안명근|安明根|독립장|337","name":"안명근","hanja":"安明根","alias":"호 : 매산(梅山)","movement":"계몽운동","birthplace":"황해 해주(海州)","order":"독립장","awardYear":"1962"},{"id":"안무|安武|독립장|338","name":"안무","hanja":"安武","alias":"본명 : 안병호(安秉鎬), 이명 : 이안무(李安武)","movement":"만주방면","birthplace":"함북 종성(鍾城)","order":"독립장","awardYear":"1980"},{"id":"안병무|安炳武|독립장|339","name":"안병무","hanja":"安炳武","alias":"호: 해암(海菴)","movement":"임시정부","birthplace":"중국","order":"독립장","awardYear":"1977"},{"id":"안병찬|安秉瓚|독립장|340","name":"안병찬","hanja":"安秉瓚","alias":"일사(一思), 성암(誠菴)","movement":"계몽운동","birthplace":"평북 의주(義州)","order":"독립장","awardYear":"1963"},{"id":"안상익|安相益|독립장|341","name":"안상익","hanja":"安相益","movement":"3.1운동","birthplace":"평남 강서(江西)","order":"독립장","awardYear":"1963"},{"id":"안세환|安世桓|독립장|342","name":"안세환","hanja":"安世桓","alias":"평안남도 순안(順按)","movement":"3.1운동","birthplace":"평남 순안(順按)","order":"독립장","awardYear":"1963"},{"id":"안승우|安承禹|독립장|343","name":"안승우","hanja":"安承禹","alias":"자 : 계현(繼賢), 호 : 하사(下沙)","movement":"의병","birthplace":"경기 지평(砥平)","order":"독립장","awardYear":"1962"},{"id":"안원규|安元奎|독립장|344","name":"안원규","hanja":"安元奎","movement":"미주방면","birthplace":"경기 파주(坡州)","order":"독립장","awardYear":"1995"},{"id":"안재환|安載煥|독립장|345","name":"안재환","hanja":"安載煥","movement":"중국방면","birthplace":"평남 안주(安州)","order":"독립장","awardYear":"1963"},{"id":"안정근|安定根|독립장|346","name":"안정근","hanja":"安定根","alias":"호: 청계(淸溪), 이명: 안청(安淸)·안정근(安正根), 영세명: 시릴로","movement":"임시정부","birthplace":"황해 신천(信川)","order":"독립장","awardYear":"1987"},{"id":"안지호|安智鎬|독립장|347","name":"안지호","hanja":"安智鎬","alias":"자 : 운익(雲翼), 호 : 우봉(藕峯), 이명 : 안지호(安知鎬)","movement":"3.1운동","birthplace":"경남 고성(固城)","order":"독립장","awardYear":"1963"},{"id":"안춘생|安椿生|독립장|348","name":"안춘생","hanja":"安椿生","alias":"호 : 악남(岳南) 이명 : 안응무(安應武), 안용춘(安容春), 몽고왕(蒙古王), 왕형(王衡)","movement":"광복군","birthplace":"황해 해주(海州)","order":"독립장","awardYear":"1963"},{"id":"안태국|安泰國|독립장|349","name":"안태국","hanja":"安泰國","alias":"호: 동오(東吾)","movement":"계몽운동","birthplace":"평남 중화(中和)","order":"독립장","awardYear":"1962"},{"id":"안현경|安顯景|독립장|350","name":"안현경","hanja":"安顯景","alias":"송지상(宋之相), 현경(賢慶·玄卿·賢敬), 영어 표기 : An, Hyen Kyeung","movement":"미주방면","birthplace":"서울","order":"독립장","awardYear":"1995"},{"id":"안희제|安熙濟|독립장|351","name":"안희제","hanja":"安熙濟","alias":"자 : 태약(泰若), 호 : 백산(白山)","movement":"계몽운동","birthplace":"경남 의령(宜寧)","order":"독립장","awardYear":"1962"},{"id":"양경학|梁景學|독립장|352","name":"양경학","hanja":"梁景學","movement":"의병","birthplace":"전북 순창(淳昌)","order":"독립장","awardYear":"1990"},{"id":"양근환|梁槿煥|독립장|353","name":"양근환","hanja":"梁槿煥","alias":"양삼성(梁三成), 양태환(梁泰煥)","movement":"일본방면","birthplace":"황해 연백(延白)","order":"독립장","awardYear":"1980"},{"id":"양기하|梁基瑕|독립장|354","name":"양기하","hanja":"梁基瑕","alias":"호 : 하산(荷山), 임창주(林昌周), 양인원(梁仁元), 양기하(梁基河)","movement":"만주방면","birthplace":"충남 논산(論山)","order":"독립장","awardYear":"1963"},{"id":"양세봉|梁世奉|독립장|355","name":"양세봉","hanja":"梁世奉","alias":"호 : 벽해(碧海), 본명 :양서봉(梁瑞鳳), 양윤봉(梁允奉)","movement":"만주방면","birthplace":"평북 철산(鐵山)","order":"독립장","awardYear":"1962"},{"id":"양승우|楊承雨|독립장|356","name":"양승우","hanja":"楊承雨","alias":"양세진(梁世振, 楊世振), 양세근(楊世根), 양승우(楊承祐)","movement":"만주방면","birthplace":"평남 평양(平壤)","order":"독립장","awardYear":"1968"},{"id":"양우조|楊宇朝|독립장|357","name":"양우조","hanja":"楊宇朝","alias":"본명 : 명진(明鎭), 호 : 소벽(少碧), 이명 : 양묵(楊墨), 이춘삼, 데이비드 영(David J. Young)","movement":"임시정부","birthplace":"평남 평양(平壤)","order":"독립장","awardYear":"1963"},{"id":"양윤숙|楊允淑|독립장|358","name":"양윤숙","hanja":"楊允淑","alias":"양춘영(楊春泳)·양인영(楊寅泳)·양연영(楊演泳) 호 : 춘계(春溪)","movement":"의병","birthplace":"전북 순창(淳昌)","order":"독립장","awardYear":"1980"},{"id":"양진여|梁振汝|독립장|359","name":"양진여","hanja":"梁振汝","alias":"자 : 진여(振汝), 호 : 서암(瑞菴), 휘 : 진영(振永), 이명 : 진여(鎭汝) , 박여진(朴汝鎭)","movement":"의병","birthplace":"전남 광주(光州)","order":"독립장","awardYear":"1977"},{"id":"양한규|梁漢奎|독립장|360","name":"양한규","hanja":"梁漢奎","alias":"월서(月瑞)·일월(日月), 초명 : 재윤(在潤), 자 : 문찬(文贊), 호 : 칙헌(則軒)·우졸헌(愚拙軒), 이명 : 양초계(梁草溪·梁初桂)","movement":"의병","birthplace":"전북 남원(南原)","order":"독립장","awardYear":"1968"},{"id":"엄순봉|嚴舜奉|독립장|361","name":"엄순봉","hanja":"嚴舜奉","alias":"엄형순(嚴亨淳)","movement":"중국방면","birthplace":"경북 영양(英陽)","order":"독립장","awardYear":"1963"},{"id":"엄주필|嚴柱弼|독립장|362","name":"엄주필","hanja":"嚴柱弼","alias":"엄주필(嚴周必, 嚴柱泌)","movement":"노령방면","birthplace":"함북 성진(城津)","order":"독립장","awardYear":"1995"},{"id":"엄항섭|嚴恒燮|독립장|363","name":"엄항섭","hanja":"嚴恒燮","alias":"호 : 일파(一波), 호적명 : 엄경민(嚴敬民), 이명 : 엄대형(嚴大衡), 엔칭밍, 예빗 엄, 스테니슬레이(Stanislas)","movement":"임시정부","birthplace":"경기 여주(驪州)","order":"독립장","awardYear":"1989"},{"id":"엄해윤|嚴海潤|독립장|364","name":"엄해윤","hanja":"嚴海潤","movement":"의병","birthplace":"강원 영월(寧越)","order":"독립장","awardYear":"1996"},{"id":"여순근|呂淳根|독립장|365","name":"여순근","hanja":"呂淳根","alias":"오순근(吳淳根), 여순근(呂順根), 여순근(Lö Swun-Kun)","movement":"만주방면","birthplace":"평남 중화(中和)","order":"독립장","awardYear":"1962"},{"id":"여준|呂準|독립장|366","name":"여준","hanja":"呂準","alias":"호 : 시당(時堂), 이명 : 여조현(呂祖鉉), 여성현(呂聲鉉)","movement":"만주방면","birthplace":"경기 용인(龍仁)","order":"독립장","awardYear":"1968"},{"id":"여행렬|呂行烈|독립장|367","name":"여행렬","hanja":"呂行烈","movement":"의열투쟁","birthplace":"평남 중화(中和)","order":"독립장","awardYear":"1963"},{"id":"연병호|延秉昊|독립장|368","name":"연병호","hanja":"延秉昊","alias":"호 : 원명(圓明), 초명 : 병학(秉學), 이명 : 연병준(延秉俊), 연도명(延圖明), 연원명(延圓明), 연병학(延秉學), 연순일(延順一), 연범구(延範九)","movement":"임시정부","birthplace":"충북 괴산(槐山)","order":"독립장","awardYear":"1963"},{"id":"염온동|廉溫東|독립장|369","name":"염온동","hanja":"廉溫東","alias":"호: 추정(秋汀)","movement":"임시정부","birthplace":"강원 김화(金化)","order":"독립장","awardYear":"1977"},{"id":"염인서|廉仁瑞|독립장|370","name":"염인서","hanja":"廉仁瑞","alias":"자(字): 인서(仁瑞), 본명: 재보(在輔), 별명: 염선달(廉先達)","movement":"의병","birthplace":"전남 보성(寶城)","order":"독립장","awardYear":"1990"},{"id":"오강표|吳剛杓|독립장|371","name":"오강표","hanja":"吳剛杓","alias":"자 : 명여(明汝), 호 : 무이재(無貳齋)","movement":"계몽운동","birthplace":"충남 공주(公州)","order":"독립장","awardYear":"1962"},{"id":"오광선|吳光鮮|독립장|372","name":"오광선","hanja":"吳光鮮","alias":"초명 : 성묵(性默), 호 : 취송(聚松)","movement":"만주방면","birthplace":"경기 용인(龍仁)","order":"독립장","awardYear":"1962"},{"id":"오광심|吳光心|독립장|373","name":"오광심","hanja":"吳光心","movement":"광복군","birthplace":"평북 선천(宣川)","order":"독립장","awardYear":"1977"},{"id":"오기호|吳基鎬|독립장|374","name":"오기호","hanja":"吳基鎬","alias":"호 : 손암(巽菴)","movement":"의열투쟁","birthplace":"전남 강진(康津)","order":"독립장","awardYear":"1962"},{"id":"오면직|吳冕稙|독립장|375","name":"오면직","hanja":"吳冕稙","alias":"양여주(楊汝舟), 마중량(馬仲良), 오철(吳哲), 송효춘(宋曉春)","movement":"중국방면","birthplace":"황해 안악(安岳)","order":"독립장","awardYear":"1963"},{"id":"오복원|吳復元|독립장|376","name":"오복원","hanja":"吳復元","movement":"의열투쟁","birthplace":"평남 강동(江東)","order":"독립장","awardYear":"1963"},{"id":"오상서|吳祥瑞|독립장|377","name":"오상서","hanja":"吳祥瑞","alias":"호: 청호(淸胡), 이명 : 오상세(吳尙世), 오상세(吳相世), 오상세(吳祥世)","movement":"만주방면","birthplace":"경기 장단(長湍)","order":"독립장","awardYear":"1963"},{"id":"오상원|吳相元|독립장|378","name":"오상원","hanja":"吳相元","movement":"의병","birthplace":"미상","order":"독립장","awardYear":"1995"},{"id":"오성술|吳成述|독립장|379","name":"오성술","hanja":"吳成述","alias":"휘 : 인수(仁洙), 호 : 죽파(竹坡), 이명: 오성술(吳聖述)","movement":"의병","birthplace":"전남 나주(羅州)","order":"독립장","awardYear":"1977"},{"id":"오영선|吳永善|독립장|380","name":"오영선","hanja":"吳永善","alias":"오윤길(吳允吉), 호 : 석농(石農), 기윤(基潤)","movement":"임시정부","birthplace":"경기 고양(高陽)","order":"독립장","awardYear":"1990"},{"id":"오운흥|吳雲興|독립장|381","name":"오운흥","hanja":"吳雲興","movement":"국내항일","birthplace":"황해 봉산(鳳山)","order":"독립장","awardYear":"1963"},{"id":"오의선|吳義善|독립장|382","name":"오의선","hanja":"吳義善","alias":"오희선(吳羲善), 우단우(禹丹宇), 오기선(吳基善)","movement":"임시정부","birthplace":"경기 용인(龍仁)","order":"독립장","awardYear":"1980"},{"id":"올리버 알 애비슨|Oliver R. Avison|독립장|383","name":"올리버 알 애비슨","koAlias":"Oliver R. Avison","alias":"어비신(魚丕信)","movement":"독립운동지원","birthplace":"외국 영국","order":"독립장","awardYear":"1952"},{"id":"왕광연|王光演|독립장|384","name":"왕광연","hanja":"王光演","alias":"왕국신(王國臣)","movement":"3.1운동","birthplace":"경기 수원(水原)","order":"독립장","awardYear":"1977"},{"id":"왕주이|汪竹一|독립장|385","name":"왕주이","hanja":"汪竹一","koAlias":"왕죽일","movement":"독립운동지원","birthplace":"외국 중국","order":"독립장","awardYear":"1980"},{"id":"왕회종|王會鍾|독립장|386","name":"왕회종","hanja":"王會鍾","alias":"왕영종(王榮鍾)","movement":"의병","birthplace":"경기 연천(漣川)","order":"독립장","awardYear":"1962"},{"id":"우동선|禹東鮮|독립장|387","name":"우동선","hanja":"禹東鮮","alias":"우창업(禹昌業), 우동선(禹東先)","movement":"의병","birthplace":"황해 문화(文化)","order":"독립장","awardYear":"1962"},{"id":"우승창|禹承昌|독립장|388","name":"우승창","hanja":"禹承昌","alias":"호 : 철봉(鐵棒)","movement":"만주방면","birthplace":"평남 성천(成川)","order":"독립장","awardYear":"1963"},{"id":"우재룡|禹在龍|독립장|389","name":"우재룡","hanja":"禹在龍","alias":"자 : 이견(利見), 호 : 백산(白山), 이명 : 우리견(禹利見)·우경옥(禹敬玉)·김경옥(金景玉)·김재수(金在洙)·김재서(金在瑞)·김상호(金尙浩)·김한조(金漢朝)","movement":"국내항일","birthplace":"경남 창녕(昌寧)","order":"독립장","awardYear":"1963"},{"id":"원세훈|元世勳|독립장|390","name":"원세훈","hanja":"元世勳","alias":"호 : 춘곡(春谷), 이명 : 주계훈(朱啓勳)","movement":"중국방면","birthplace":"함남 정평(定平)","order":"독립장","awardYear":"1989"},{"id":"원심창|元心昌|독립장|391","name":"원심창","hanja":"元心昌","alias":"원훈(元勳)","movement":"중국방면","birthplace":"경기 진위(振威)","order":"독립장","awardYear":"1977"},{"id":"유광흘|劉光屹|독립장|392","name":"유광흘","hanja":"劉光屹","alias":"유광흘(柳光屹)","movement":"만주방면","birthplace":"전북 고창(高敞)","order":"독립장","awardYear":"1995"},{"id":"유근|柳瑾|독립장|393","name":"유근","hanja":"柳瑾","alias":"자 : 경집(敬集), 호 : 석농(石儂)","movement":"계몽운동","birthplace":"경기 양지(陽智)","order":"독립장","awardYear":"1962"},{"id":"유기동|柳基東|독립장|394","name":"유기동","hanja":"柳基東","movement":"만주방면","birthplace":"경북 성주(星州)","order":"독립장","awardYear":"1963"},{"id":"유기석|柳基石|독립장|395","name":"유기석","hanja":"柳基石","alias":"유서(柳絮), 유수인(柳樹人), 청원(靑園)","movement":"중국방면","birthplace":"황해 금천(金川)","order":"독립장","awardYear":"2008"},{"id":"유도발|柳道發|독립장|396","name":"유도발","hanja":"柳道發","alias":"자 : 승수(承叟), 호 : 회은(晦隱)","movement":"계몽운동","birthplace":"경북 안동(安東)","order":"독립장","awardYear":"1962"},{"id":"유동하|劉東夏|독립장|397","name":"유동하","hanja":"劉東夏","alias":"유강로(柳江露), 유관오(劉寬五)","movement":"의열투쟁","birthplace":"함남 원산(元山)","order":"독립장","awardYear":"1988"},{"id":"유득신|劉得信|독립장|398","name":"유득신","hanja":"劉得信","alias":"홍익수(洪益洙)","movement":"국내항일","birthplace":"서울","order":"독립장","awardYear":"1968"},{"id":"유림|柳林|독립장|399","name":"유림","hanja":"柳林","alias":"호 : 월파(月波), 단주(旦洲), 이명 : 유화종(柳花宗), 유화영(柳華永), 고상진(高尙眞), 고자성(高自性), 하성기(河性基), 김영진(金永鎭)","movement":"임시정부","birthplace":"경북 안동(安東)","order":"독립장","awardYear":"1962"},{"id":"유명규|劉明奎|독립장|400","name":"유명규","hanja":"劉明奎","alias":"유명계(劉明啓)","movement":"의병","birthplace":"경기 통진(通津)","order":"독립장","awardYear":"1962"},{"id":"유민식|兪民植|독립장|401","name":"유민식","hanja":"兪民植","alias":"호 : 만송(晩松), 이명 : 유정근(兪政根)·유정진(兪政振)·유후단(兪后檀)","movement":"만주방면","birthplace":"충남 천안(天安)","order":"독립장","awardYear":"1977"},{"id":"유병기|劉秉淇|독립장|402","name":"유병기","hanja":"劉秉淇","alias":"원집(元執)","movement":"의병","birthplace":"전남 구례(求禮)","order":"독립장","awardYear":"1977"},{"id":"유상근|柳相根|독립장|403","name":"유상근","hanja":"柳相根","alias":"주천현(朱天懸)","movement":"의열투쟁","birthplace":"강원 통천(通川)","order":"독립장","awardYear":"1968"},{"id":"유상돈|劉尙敦|독립장|404","name":"유상돈","hanja":"劉尙敦","alias":"개명 : 유철(劉鐵), 가명 : 서택(徐澤), 이명 : 유상돈(劉尙燉, 劉相敦, 劉尙頓)","movement":"노령방면","birthplace":"평북 철산(鐵山)","order":"독립장","awardYear":"2011"},{"id":"유상렬|柳相烈|독립장|405","name":"유상렬","hanja":"柳相烈","movement":"임시정부","birthplace":"황해 평산(平山)","order":"독립장","awardYear":"1963"},{"id":"유석현|劉錫鉉|독립장|406","name":"유석현","hanja":"劉錫鉉","alias":"호 : 금산(錦山), 이명 : 김세진(金世震)","movement":"중국방면","birthplace":"충북 충주(忠州)","order":"독립장","awardYear":"1977"},{"id":"유성삼|劉成三|독립장|407","name":"유성삼","hanja":"劉成三","alias":"김희준(金凞俊)·장비(張飛)","movement":"만주방면","birthplace":"평남 강동(江東)","order":"독립장","awardYear":"1995"},{"id":"유시연|柳時淵|독립장|408","name":"유시연","hanja":"柳時淵","alias":"자: 박여(璞汝)·응만(應萬), 호: 성남(星南), 이명: 유시연(柳時然)·유승일(柳承一)·유시영(柳時榮)·유시종(柳時宗)","movement":"의병","birthplace":"경북 안동(安東)","order":"독립장","awardYear":"1962"},{"id":"유일한|柳一韓|독립장|409","name":"유일한","hanja":"柳一韓","movement":"미주방면","birthplace":"평남 평양(平壤)","order":"독립장","awardYear":"1995"},{"id":"유장렬|柳漳烈|독립장|410","name":"유장렬","hanja":"柳漳烈","alias":"유장렬(柳璋烈)","movement":"국내항일","birthplace":"전북 고창(高敞)","order":"독립장","awardYear":"1977"},{"id":"유지명|柳志明|독립장|411","name":"유지명","hanja":"柳志明","alias":"자 : 치방(致方), 이명 : 유지명(柳知明·柳池明)","movement":"의병","birthplace":"전북 고산(高山)","order":"독립장","awardYear":"1977"},{"id":"유찬희|柳纘熙|독립장|412","name":"유찬희","hanja":"柳纘熙","alias":"유찬희(劉讚凞, 柳讚凞, 劉贊凞, 柳贊凞, 柳瓚熙, 柳燦熙, 柳讚熙, 柳粲凞). 자 : 춘계(春溪)","movement":"만주방면","birthplace":"황해 금천(金川)","order":"독립장","awardYear":"2010"},{"id":"유창순|庾昌淳|독립장|413","name":"유창순","hanja":"庾昌淳","alias":"자 : 사원(四源), 호 : 송은(松隱)","movement":"국내항일","birthplace":"충남 천안(天安)","order":"독립장","awardYear":"1963"},{"id":"유택수|柳澤秀|독립장|414","name":"유택수","hanja":"柳澤秀","alias":"유돈수(柳淳秀)","movement":"만주방면","birthplace":"서울","order":"독립장","awardYear":"1968"},{"id":"유해준|兪海濬|독립장|415","name":"유해준","hanja":"兪海濬","movement":"광복군","birthplace":"충남 당진(唐津)","order":"독립장","awardYear":"1977"},{"id":"유흥수|柳興洙|독립장|416","name":"유흥수","hanja":"柳興洙","movement":"학생운동","birthplace":"충남 서산(瑞山)","order":"독립장","awardYear":"1963"},{"id":"윤덕보|尹德甫|독립장|417","name":"윤덕보","hanja":"尹德甫","alias":"윤병용(尹秉用), 윤병용(尹秉庸), 윤죽보(尹竹甫), 박시빈(朴時彬), 박시화(朴時和)","movement":"만주방면","birthplace":"함남 홍원(洪原)","order":"독립장","awardYear":"1995"},{"id":"윤동주|尹東柱|독립장|418","name":"윤동주","hanja":"尹東柱","alias":"아명 : 윤해환(尹海煥), 필명 : 윤동주(尹童舟), 창씨명 : 평소동주(平沼東柱)","movement":"학생운동","birthplace":"중국","order":"독립장","awardYear":"1990"},{"id":"윤병구|尹炳球|독립장|419","name":"윤병구","hanja":"尹炳球","alias":"우병길(禹炳吉)","movement":"미주방면","birthplace":"경기 양주(楊州)","order":"독립장","awardYear":"1977"},{"id":"윤병구|尹炳球|독립장|420","name":"윤병구","hanja":"尹炳球","alias":"윤병구(尹秉球)","movement":"중국방면","birthplace":"충남 청양(靑陽)","order":"독립장","awardYear":"1962"},{"id":"윤상열|尹相悅|독립장|421","name":"윤상열","hanja":"尹相悅","alias":"윤상열(尹相烈·尹尙悅)","movement":"3.1운동","birthplace":"평남 대동(大同)","order":"독립장","awardYear":"1996"},{"id":"윤세복|尹世復|독립장|422","name":"윤세복","hanja":"尹世復","alias":"자 : 상원(庠元), 호 : 단애(檀崖)·한다물, 초명 : 세린(世麟)","movement":"만주방면","birthplace":"경남 밀양(密陽)","order":"독립장","awardYear":"1962"},{"id":"윤세용|尹世茸|독립장|423","name":"윤세용","hanja":"尹世茸","alias":"본명 : 윤세두(尹世斗), 자 : 상문(庠文), 호 : 순가(舜可)·백암(白菴), 이명 : 윤성좌(尹聖佐), 윤용좌(尹溶佐), 윤세용(尹世鎔·尹世溶·尹世瑢·尹世鏞), 윤성조(尹成祚), 윤세위(尹世韋), 윤세즙, 김용대(金瀧大·金用大·金龍大·金溶大), 백두산인(白頭山人)","movement":"만주방면","birthplace":"경남 밀양(密陽)","order":"독립장","awardYear":"1962"},{"id":"윤세주|尹世胄|독립장|424","name":"윤세주","hanja":"尹世胄","alias":"호 : 석정(石正, 石鼎, 石井), 초명 : 소룡(小龍), 이명 : 윤세수(世洙), 윤정호(正浩), 윤세호(世浩), 석생(石生)","movement":"중국방면","birthplace":"경남 밀양(密陽)","order":"독립장","awardYear":"1982"},{"id":"윤이병|尹履炳|독립장|425","name":"윤이병","hanja":"尹履炳","alias":"자: 계성(繼星), 호: 성재(省齋)","movement":"계몽운동","birthplace":"충남 논산(論山)","order":"독립장","awardYear":"1968"},{"id":"윤인순|尹仁淳|독립장|426","name":"윤인순","hanja":"尹仁淳","alias":"윤인순(尹仁順)","movement":"의병","birthplace":"경기 양주(楊州)","order":"독립장","awardYear":"1982"},{"id":"윤자영|尹滋瑛|독립장|427","name":"윤자영","hanja":"尹滋瑛","alias":"이명 : 윤석한(尹石漢, 尹錫漢), 윤정민(Юн Чен-мин), 정일영(丁一英), Yun Za-Yen, 호 : 소야(蘇野·笑也), 불가살(不可殺)","movement":"중국방면","birthplace":"경북 청송(靑松)","order":"독립장","awardYear":"2004"},{"id":"윤준희|尹俊熙|독립장|428","name":"윤준희","hanja":"尹俊熙","alias":"윤준희(尹駿熙, 尹俊凞, 尹儁熙)","movement":"만주방면","birthplace":"함북 회령(會寧)","order":"독립장","awardYear":"1963"},{"id":"윤창하|尹敞夏|독립장|429","name":"윤창하","hanja":"尹敞夏","movement":"학생운동","birthplace":"전남 해남(海南)","order":"독립장","awardYear":"1963"},{"id":"윤해|尹海|독립장|430","name":"윤해","hanja":"尹海","alias":"본명 : 윤호제(尹湖濟), 이명 : 윤해(尹海)·윤면제(尹冕濟)·야보르스키(Яворский), 필명 : 혜자(惠子)·혜구(惠球)","movement":"만주방면","birthplace":"함남 영흥(永興)","order":"독립장","awardYear":"1990"},{"id":"윤현진|尹顯振|독립장|431","name":"윤현진","hanja":"尹顯振","alias":"자 : 의백(義伯), 호 : 우산(友山)","movement":"임시정부","birthplace":"경남 양산(梁山)","order":"독립장","awardYear":"1962"},{"id":"윤흥곤|尹興坤|독립장|432","name":"윤흥곤","hanja":"尹興坤","movement":"의병","birthplace":"경북 청하(淸河)","order":"독립장","awardYear":"1995"},{"id":"이갑|李甲|독립장|433","name":"이갑","hanja":"李甲","alias":"본명 : 이휘선(李彙璿), 호 : 추정(秋汀)","movement":"계몽운동","birthplace":"평남 숙천(肅川)","order":"독립장","awardYear":"1962"},{"id":"이강|李剛|독립장|434","name":"이강","hanja":"李剛","alias":"본명 : 이정래(李正來), 호 : 오산(吾山·鰲山), 이명 : 이필례(李弼來)","movement":"계몽운동","birthplace":"평남 용강(龍岡)","order":"독립장","awardYear":"1962"},{"id":"이강산|李江山|독립장|435","name":"이강산","hanja":"李江山","alias":"자 : 인국(仁國), 호 : 돈익(敦益)","movement":"의병","birthplace":"전남 함평(咸平)","order":"독립장","awardYear":"1977"},{"id":"이강훈|李康勳|독립장|436","name":"이강훈","hanja":"李康勳","alias":"호 : 청뢰(靑雷)","movement":"중국방면","birthplace":"강원 김화(金化)","order":"독립장","awardYear":"1977"},{"id":"이건석|李建奭|독립장|437","name":"이건석","hanja":"李建奭","alias":"자 : 한경(漢卿), 한경(漢京), 호 : 성석(醒石), 이명 : 이한경(李漢卿), 이원필(李源弼), 이필화(李弼和)","movement":"의열투쟁","birthplace":"충북 영동(永同)","order":"독립장","awardYear":"1963"},{"id":"이경섭|李景燮|독립장|438","name":"이경섭","hanja":"李景燮","movement":"3.1운동","birthplace":"황해 곡산(谷山)","order":"독립장","awardYear":"1962"},{"id":"이경호|李京鎬|독립장|439","name":"이경호","hanja":"李京鎬","alias":"이경호(李景鎬·李慶鎬), 신경조(申景祚), 김여수(金麗水), 이흑도(李黑島)","movement":"국내항일","birthplace":"황해 옹진(甕津)","order":"독립장","awardYear":"2010"},{"id":"이관직|李觀稙|독립장|440","name":"이관직","hanja":"李觀稙","alias":"자 : 치용(穉用), 호 : 해설(海齧)","movement":"만주방면","birthplace":"충남 공주(公州)","order":"독립장","awardYear":"1990"},{"id":"이광|李光|독립장|441","name":"이광","hanja":"李光","alias":"호 : 성암(星巖)","movement":"임시정부","birthplace":"충북 청주(淸州)","order":"독립장","awardYear":"1963"},{"id":"이광민|李光民|독립장|442","name":"이광민","hanja":"李光民","alias":"이명은 문형(文衡), 광민(光珉), 영형(永衡), 광민(光敏), 영(暎), 영(英)","movement":"만주방면","birthplace":"경북 안동(安東郡)","order":"독립장","awardYear":"1990"},{"id":"이광복|李光福|독립장|443","name":"이광복","hanja":"李光福","alias":"이명: 이명옥(李溟玉), 이용택(李用澤) 최영심(崔英心), 장시옥(張時玉)","movement":"중국방면","birthplace":"황해 금천(金川)","order":"독립장","awardYear":"1995"},{"id":"이광세|李光世|독립장|444","name":"이광세","hanja":"李光世","movement":"국내항일","birthplace":"평북 용천(龍川)","order":"독립장","awardYear":"1963"},{"id":"이광호|李光浩|독립장|445","name":"이광호","hanja":"李光浩","alias":"김성엽(金成燁)","movement":"국내항일","birthplace":"평북 창성(昌城)","order":"독립장","awardYear":"1962"},{"id":"이교영|李敎永|독립장|446","name":"이교영","hanja":"李敎永","alias":"이용담(李龍潭), 이교철(李敎哲), 이춘삼(李春三), 이무산(李茂山), 이경영(李敬永)","movement":"의병","birthplace":"경북 영천(榮川)","order":"독립장","awardYear":"1995"},{"id":"이교재|李敎載|독립장|447","name":"이교재","hanja":"李敎載","alias":"호 : 죽헌(竹軒), 자 : 경두(敬斗)","movement":"임시정부","birthplace":"경남 창원(昌原)","order":"독립장","awardYear":"1963"},{"id":"이구연|李龜淵|독립장|448","name":"이구연","hanja":"李龜淵","alias":"호 : 태룡(泰龍), 이명 : 이해명(李解明, 李海鳴, 李海明)","movement":"임시정부","birthplace":"강원 통천(通川)","order":"독립장","awardYear":"1980"},{"id":"이규갑|李奎甲|독립장|449","name":"이규갑","hanja":"李奎甲","alias":"자 : 원서(元瑞), 호 : 운호(雲湖)","movement":"임시정부","birthplace":"충남 아산(牙山)","order":"독립장","awardYear":"1962"},{"id":"이규선|李奎善|독립장|450","name":"이규선","hanja":"李奎善","alias":"귀선(貴善)","movement":"3.1운동","birthplace":"경기 수원(水原)","order":"독립장","awardYear":"1968"},{"id":"이규창|李圭昌|독립장|451","name":"이규창","hanja":"李圭昌","alias":"본명 : 이규호(李圭虎), 호 : 소산(嘯山)","movement":"중국방면","birthplace":"중국 지린(吉林)","order":"독립장","awardYear":"1968"},{"id":"이규채|李圭彩|독립장|452","name":"이규채","hanja":"李圭彩","alias":"규보(圭輔), 우정(宇精), 공삼(公三), 경산(庚山), 동아(東啞)","movement":"임시정부","birthplace":"경기 포천(抱川)","order":"독립장","awardYear":"1963"},{"id":"이기|李沂|독립장|453","name":"이기","hanja":"李沂","alias":"자 : 백증(伯曾), 호 : 해학(海鶴)·질재(質齋)·재곡(梓谷)·효산자(曉山子)·남악거사(南嶽居士), 이명 : 이기(李綺)","movement":"의열투쟁","birthplace":"전북 김제(金堤)","order":"독립장","awardYear":"1968"},{"id":"이기손|李起巽|독립장|454","name":"이기손","hanja":"李起巽","alias":"자 : 안식(安植), 호 : 금재(錦齋)·연해(淵海)·용섭당(龍攝堂), 이명 : 이준수(李準水)·이안석(李安石)","movement":"의병","birthplace":"전남 나주(羅州)","order":"독립장","awardYear":"1977"},{"id":"이기송|李起松|독립장|455","name":"이기송","hanja":"李起松","alias":"이기동(李起同)","movement":"3.1운동","birthplace":"전북 임실(任實)","order":"독립장","awardYear":"1963"},{"id":"이남규|李南珪|독립장|456","name":"이남규","hanja":"李南珪","alias":"자 : 원팔(元八), 호 : 산좌(汕左), 수당(修堂)","movement":"의병","birthplace":"서울","order":"독립장","awardYear":"1962"},{"id":"이능권|李能權|독립장|457","name":"이능권","hanja":"李能權","alias":"이능곤(李能坤), 이능한(李能漢)","movement":"의병","birthplace":"경기 강화(江華)","order":"독립장","awardYear":"1980"},{"id":"이달|李達|독립장|458","name":"이달","hanja":"李達","alias":"본명: 이이덕(李二德), 일명: 이덕(李德), 필명: 강춘(江春)·금월(今月)·달(達)","movement":"중국방면","birthplace":"충남","order":"독립장","awardYear":"1992"},{"id":"이대극|李大克|독립장|459","name":"이대극","hanja":"李大克","alias":"본명 : 순식(淳植), 명식(明植), 자 : 영화(英華)","movement":"의병","birthplace":"전남 영광(靈光)","order":"독립장","awardYear":"1990"},{"id":"이대위|李大爲|독립장|460","name":"이대위","hanja":"李大爲","alias":"호 : 애산(愛山), 초명 : 태화(泰化)","movement":"미주방면","birthplace":"평남 강서(江西)","order":"독립장","awardYear":"1995"},{"id":"이덕삼|李德三|독립장|461","name":"이덕삼","hanja":"李德三","alias":"이영선(李英善), 이영전(李英全), 이수선(李秀善)","movement":"중국방면","birthplace":"평북 철산(鐵山)","order":"독립장","awardYear":"1995"},{"id":"이동수|李東秀|독립장|462","name":"이동수","hanja":"李東秀","movement":"의열투쟁","birthplace":"평북 정주(定州)","order":"독립장","awardYear":"1963"},{"id":"이만도|李晩燾|독립장|463","name":"이만도","hanja":"李晩燾","alias":"자 : 관필(觀必), 호 : 향산(響山)","movement":"계몽운동","birthplace":"경북 순흥(順興)","order":"독립장","awardYear":"1962"},{"id":"이면주|李冕宙|독립장|464","name":"이면주","hanja":"李冕宙","alias":"자 : 윤래(允來), 호 : 계은(桂隱), 하계(霞溪), 초명 : 석우(錫宇)","movement":"계몽운동","birthplace":"경북 봉화(奉化)","order":"독립장","awardYear":"1962"},{"id":"이명균|李明均|독립장|465","name":"이명균","hanja":"李明均","alias":"자 : 경문(敬文), 호 : 일괴(一槐)","movement":"국내항일","birthplace":"경북 금릉(金陵)","order":"독립장","awardYear":"1968"},{"id":"이명상|李明相|독립장|466","name":"이명상","hanja":"李明相","movement":"의병","birthplace":"충북 단양(丹陽)","order":"독립장","awardYear":"1963"},{"id":"이명서|李明瑞|독립장|467","name":"이명서","hanja":"李明瑞","movement":"만주방면","birthplace":"황해 장연(長淵)","order":"독립장","awardYear":"1990"},{"id":"이명순|李明淳|독립장|468","name":"이명순","hanja":"李明淳","alias":"이명순(李明順)","movement":"만주방면","birthplace":"함북 명천(明川)","order":"독립장","awardYear":"1986"},{"id":"이명하|李命夏|독립장|469","name":"이명하","hanja":"李命夏","alias":"자 : 우문(又文) 호 : 몽학(夢鶴), 몽운(夢雲) 아명 : 계윤(桂允)","movement":"만주방면","birthplace":"경기 광주(廣州)","order":"독립장","awardYear":"1963"},{"id":"이민화|李敏華|독립장|470","name":"이민화","hanja":"李敏華","movement":"만주방면","birthplace":"충남 아산(牙山)","order":"독립장","awardYear":"1963"},{"id":"이민환|李珉煥|독립장|471","name":"이민환","hanja":"李珉煥","alias":"이명 : 이승(李承), 홍파(洪坡), 칠성동(七星童)","movement":"노령방면","birthplace":"함남 홍원(洪原)","order":"독립장","awardYear":"2006"},{"id":"이범직|李範稷|독립장|472","name":"이범직","hanja":"李範稷","alias":"자 : 보경(輔卿), 호 : 조암(釣庵)·조은(釣隱)","movement":"의병","birthplace":"충북 충주(忠州)","order":"독립장","awardYear":"1995"},{"id":"이병묵|李丙黙|독립장|473","name":"이병묵","hanja":"李丙黙","alias":"이경도(李景瓙), 이병묵(李炳默)","movement":"만주방면","birthplace":"전남 담양(潭陽)","order":"독립장","awardYear":"1968"},{"id":"이병욱|李丙旭|독립장|474","name":"이병욱","hanja":"李丙旭","alias":"호 : 강재(强齋)","movement":"만주방면","birthplace":"전남 담양(潭陽)","order":"독립장","awardYear":"1968"},{"id":"이병진|李秉進|독립장|475","name":"이병진","hanja":"李秉進","alias":"이병진(李炳進)","movement":"만주방면","birthplace":"함북 길주(吉州)","order":"독립장","awardYear":"1995"},{"id":"이병채|李秉埰|독립장|476","name":"이병채","hanja":"李秉埰","alias":"호 : 백남(伯南)","movement":"의병","birthplace":"전남 고흥(高興)","order":"독립장","awardYear":"1977"},{"id":"이봉우|李鳳雨|독립장|477","name":"이봉우","hanja":"李鳳雨","alias":"이봉우(李鳳禹, 李鳳羽, 李奉雨)","movement":"만주방면","birthplace":"경남 동래(東萊)","order":"독립장","awardYear":"1980"},{"id":"이봉희|李鳳羲|독립장|478","name":"이봉희","hanja":"李鳳羲","alias":"자 : 덕초(德初), 호 : 척서(尺西), 이명 : 상훈(相勳), 계동(啓東), 상희(相熙), 경식(京植), 기동(基東)","movement":"만주방면","birthplace":"경북 안동(安東)","order":"독립장","awardYear":"1990"},{"id":"이상룡|李相龍|독립장|479","name":"이상룡","hanja":"李相龍","alias":"자 만초(萬初), 호 석주(石洲), 초명 상희(象羲), 이명 계원(啓元)","movement":"임시정부","birthplace":"경북 안동(安東)","order":"독립장","awardYear":"1962"},{"id":"이상만|李象萬|독립장|480","name":"이상만","hanja":"李象萬","alias":"이명 : 이혜춘(李惠春)","movement":"임시정부","birthplace":"충남 홍성(洪城)","order":"독립장","awardYear":"1963"},{"id":"이상정|李相定|독립장|481","name":"이상정","hanja":"李相定","alias":"이직문(李直文), 이연호(李然晧), 호 : 청남(晴南), 산은(汕隱)","movement":"임시정부","birthplace":"경북 대구(大邱)","order":"독립장","awardYear":"1977"},{"id":"이상철|李相哲|독립장|482","name":"이상철","hanja":"李相哲","alias":"본명 : 이근석(李根奭)","movement":"계몽운동","birthplace":"전남 영암(靈巖)","order":"독립장","awardYear":"1962"},{"id":"이상호|李相虎|독립장|483","name":"이상호","hanja":"李相虎","movement":"학생운동","birthplace":"경북 대구(大邱)","order":"독립장","awardYear":"1963"},{"id":"이서현|李瑞賢|독립장|484","name":"이서현","hanja":"李瑞賢","alias":"이광하(李光夏, 李廣夏), 이세현(李世賢)","movement":"만주방면","birthplace":"평북 위원(渭原)","order":"독립장","awardYear":"1963"},{"id":"이석용|李錫庸|독립장|485","name":"이석용","hanja":"李錫庸","alias":"자 : 경항(敬恒), 호 : 정재(靜齋), 아명 : 갑술(甲戌)","movement":"의병","birthplace":"전북 임실(任實)","order":"독립장","awardYear":"1962"},{"id":"이석이|李石伊|독립장|486","name":"이석이","hanja":"李石伊","movement":"의병","birthplace":"경북 청송(靑松)","order":"독립장","awardYear":"1995"},{"id":"이설|李偰|독립장|487","name":"이설","hanja":"李偰","alias":"자 : 순명(舜命, 舜徒), 호 : 복암(復庵)","movement":"계몽운동","birthplace":"충남 결성(結城)","order":"독립장","awardYear":"1963"},{"id":"이성구|李成九|독립장|488","name":"이성구","hanja":"李成九","alias":"이수봉(李秀峰), 이수복(李守福), 이동농(李東儂)","movement":"중국방면","birthplace":"평북 선천(宣川)","order":"독립장","awardYear":"1968"},{"id":"이성우|李誠宇/李成宇|독립장|489","name":"이성우","hanja":"李誠宇/李成宇","alias":"이동소(李同韶)","movement":"의열투쟁","birthplace":"중국","order":"독립장","awardYear":"1968"},{"id":"이성화|李成化|독립장|490","name":"이성화","hanja":"李成化","alias":"휘 : 민효(敏孝), 자 : 원백(源伯), 호 : 성화(成華, 成化)","movement":"의병","birthplace":"전북 고부(古阜)","order":"독립장","awardYear":"2000"},{"id":"이세영|李世永|독립장|491","name":"이세영","hanja":"李世永","alias":"자 : 좌현(佐顯), 호 : 고광(古狂), 이명 : 천민(天民), 유흠(維欽)","movement":"임시정부","birthplace":"충남 아산(牙山)","order":"독립장","awardYear":"1963"},{"id":"이소응|李昭應|독립장|492","name":"이소응","hanja":"李昭應","alias":"자 : 경기(敬器), 호 : 습재(習齋)·사정거사(思靖居士), 이명 : 이의신(李宜愼)·이직신(李直愼), 아명 : 중만(仲萬)","movement":"의병","birthplace":"강원 춘천(春川)","order":"독립장","awardYear":"1962"},{"id":"이수흥|李壽興|독립장|493","name":"이수흥","hanja":"李壽興","alias":"성조(成槽), 좌성(佐聖), 성단(成檀)","movement":"만주방면","birthplace":"경기 이천(利川)","order":"독립장","awardYear":"1962"},{"id":"이순모|李順模|독립장|494","name":"이순모","hanja":"李順模","movement":"3.1운동","birthplace":"경기 수원(水原)","order":"독립장","awardYear":"1963"},{"id":"이승길|李承吉|독립장|495","name":"이승길","hanja":"李承吉","movement":"계몽운동","birthplace":"황해 황주(黃州)","order":"독립장","awardYear":"1977"},{"id":"이신애|李信愛|독립장|496","name":"이신애","hanja":"李信愛","alias":"이자경(李慈卿)","movement":"국내항일","birthplace":"평북 구성(龜城)","order":"독립장","awardYear":"1963"},{"id":"이애라|李愛羅|독립장|497","name":"이애라","hanja":"李愛羅","alias":"본명 : 이심숙(李心淑), 이명 : 이애일라(李愛日羅)","movement":"만주방면","birthplace":"서울","order":"독립장","awardYear":"1962"},{"id":"이양섭|李陽燮|독립장|498","name":"이양섭","hanja":"李陽燮","alias":"명여(明汝)","movement":"3.1운동","birthplace":"경기 안성(安城)","order":"독립장","awardYear":"1968"},{"id":"이영준|李英駿|독립장|499","name":"이영준","hanja":"李英駿","alias":"이영준(李英俊)·왕현지(王現之)·이영철(李英哲)·진일오(陳一吾)·진일로(陳一路)·진의로(陳義櫓·陳義路)","movement":"중국방면","birthplace":"평북 벽동(碧潼)","order":"독립장","awardYear":"1995"},{"id":"이용담|李龍潭|독립장|500","name":"이용담","hanja":"李龍潭","movement":"만주방면","birthplace":"평북 삭주(朔州)","order":"독립장","awardYear":"1963"},{"id":"이우식|李祐植|독립장|501","name":"이우식","hanja":"李祐植","alias":"호 : 남저(南樗)","movement":"문화운동","birthplace":"경남 의령(宜寧)","order":"독립장","awardYear":"1977"},{"id":"이우영|李宇榮|독립장|502","name":"이우영","hanja":"李宇榮","movement":"만주방면","birthplace":"서울","order":"독립장","awardYear":"1963"},{"id":"이운혁|李雲赫|독립장|503","name":"이운혁","hanja":"李雲赫","alias":"이춘추(李春秋), 최광식(崔光植), 김옥산(金玉山)","movement":"국내항일","birthplace":"함북 경성(鏡城)","order":"독립장","awardYear":"2009"},{"id":"이웅해|李雄海|독립장|504","name":"이웅해","hanja":"李雄海","alias":"호 : 송해(松海), 이명 : 이종익(李宗翼)·이익영(李翼霙)·이송주(李松洲)","movement":"만주방면","birthplace":"함남 함흥(咸興)","order":"독립장","awardYear":"2010"},{"id":"이원대|李元大|독립장|505","name":"이원대","hanja":"李元大","alias":"자 : 달문(達文), 호 : 덕산(德山), 초명 : 원대(源大), 이명 : 공문덕(孔文德), 마덕산(馬德山)","movement":"중국방면","birthplace":"경북 신녕(新寧)","order":"독립장","awardYear":"1977"},{"id":"이원직|李元稙|독립장|506","name":"이원직","hanja":"李元稙","movement":"임시정부","birthplace":"서울","order":"독립장","awardYear":"1963"},{"id":"이유필|李裕弼|독립장|507","name":"이유필","hanja":"李裕弼","movement":"임시정부","birthplace":"평북 의주(義州)","order":"독립장","awardYear":"1963"},{"id":"이윤재|李允宰|독립장|508","name":"이윤재","hanja":"李允宰","alias":"호 : 환산(桓山)·한산·한메·한뫼, 전명(前名) : 이여민(李䴡民)·이검신(李儉臣)","movement":"문화운동","birthplace":"경남 김해(金海)","order":"독립장","awardYear":"1962"},{"id":"이은영|李殷榮|독립장|509","name":"이은영","hanja":"李殷榮","movement":"의병","birthplace":"경기 여주(驪州)","order":"독립장","awardYear":"1990"},{"id":"이응서|李應瑞|독립장|510","name":"이응서","hanja":"李應瑞","alias":"호 : 백파(白波), 이명 : 백옥산(白玉山)·이송갑(李松甲)·이춘(李春)·이춘산(李春山)","movement":"만주방면","birthplace":"평북 강계(江界)","order":"독립장","awardYear":"1968"},{"id":"이의준|李義俊|독립장|511","name":"이의준","hanja":"李義俊","alias":"이병준(李秉俊)·한권웅(韓權雄)","movement":"만주방면","birthplace":"평북 위원(渭原)","order":"독립장","awardYear":"1968"},{"id":"이인|李仁|독립장|512","name":"이인","hanja":"李仁","alias":"자 : 자옥(子玉), 호 : 애산(愛山)","movement":"문화운동","birthplace":"경북 대구(大邱)","order":"독립장","awardYear":"1963"},{"id":"이인금|李寅今|독립장|513","name":"이인금","hanja":"李寅今","movement":"의병","birthplace":"미상","order":"독립장","awardYear":"1995"},{"id":"이인식|李仁植|독립장|514","name":"이인식","hanja":"李仁植","alias":"호 춘고(春皐)","movement":"3.1운동","birthplace":"전북 옥구(沃溝)","order":"독립장","awardYear":"1962"},{"id":"이자해|李慈海|독립장|515","name":"이자해","hanja":"李慈海","alias":"본명 : 이동필(李東弼)","movement":"중국방면","birthplace":"평북 자성(慈城)","order":"독립장","awardYear":"2007"},{"id":"이장녕|李章寧|독립장|516","name":"이장녕","hanja":"李章寧","alias":"호 : 백우(白于), 이명 : 이장영(李章榮, 李長榮)","movement":"만주방면","birthplace":"충남 천안(天安)","order":"독립장","awardYear":"1963"},{"id":"이재유|李載裕|독립장|517","name":"이재유","hanja":"李載裕","alias":"김소성(金小成), 전소수(全素洙), 박윤식(朴允植), 윤기순(尹基淳)","movement":"국내항일","birthplace":"함남 삼수(三水)","order":"독립장","awardYear":"2006"},{"id":"이재윤|李載允|독립장|518","name":"이재윤","hanja":"李載允","alias":"자 : 성집(聖執), 호 : 미석(渼石)","movement":"의병","birthplace":"경기 양주(楊州)","order":"독립장","awardYear":"1977"},{"id":"이재현|李在賢|독립장|519","name":"이재현","hanja":"李在賢","alias":"이해평(李海平), 이재두(李在斗)","movement":"광복군","birthplace":"경기 시흥(始興)","order":"독립장","awardYear":"1963"},{"id":"이정렬|李定烈|독립장|520","name":"이정렬","hanja":"李定烈","alias":"자 : 만위(晩瑋), 호 : 춘호(春湖)·한정(漢汀)·법명(法明), 이명 : 윤봉조(尹鳳朝)·이방(李芳)","movement":"국내항일","birthplace":"충남 당진(唐津)","order":"독립장","awardYear":"1963"},{"id":"이종건|李鍾乾|독립장|521","name":"이종건","hanja":"李鍾乾","alias":"본명 : 이종순(李鐘淳), 이명 : 이종건(李宗乾·李宗建·李鐘乾), 이극천(李極天), 이동산(李東山)","movement":"만주방면","birthplace":"경남 통영(統營)","order":"독립장","awardYear":"1990"},{"id":"이종건|李鍾乾|독립장|522","name":"이종건","hanja":"李鍾乾","alias":"호 : 동초(東初), 이명 : 이세장(李世章)","movement":"광복군","birthplace":"충남 천안(天安)","order":"독립장","awardYear":"1977"},{"id":"이종암|李鍾巖|독립장|523","name":"이종암","hanja":"李鍾巖","alias":"본명 : 이종순(李鍾淳), 아명 : 이종암(李鍾岩), 이명 : 이중호(李仲浩), 양건호(梁建浩), 양근오(梁槿吾), 양주평(梁州平), 권택건(權宅建)","movement":"중국방면","birthplace":"경북 달성(達成)","order":"독립장","awardYear":"1962"},{"id":"이종혁|李種赫|독립장|524","name":"이종혁","hanja":"李種赫","alias":"이종혁(李鍾赫), 마덕창(馬德昌)","movement":"만주방면","birthplace":"충남 당진(唐津)","order":"독립장","awardYear":"1980"},{"id":"이종호|李鍾浩|독립장|525","name":"이종호","hanja":"李鍾浩","alias":"호 : 월송(月松)","movement":"만주방면","birthplace":"함북 명천(明川)","order":"독립장","awardYear":"1962"},{"id":"이종희|李鍾熙|독립장|526","name":"이종희","hanja":"李鍾熙","alias":"호 : 남정(南亭), 이명 : 이인홍(李仁洪)·이집중(李集中)·송봉(松奉)","movement":"광복군","birthplace":"전북 금구(金溝)","order":"독립장","awardYear":"1977"},{"id":"이준식|李俊植|독립장|527","name":"이준식","hanja":"李俊植","alias":"호 : 화강(火崗) 이명 : 이웅(李雄), 임병웅(林炳雄), 왕중일(王中一), 증손(曾孫), 진탁(辰卓), 휘석(彙碩)","movement":"광복군","birthplace":"평남 순천(順川)","order":"독립장","awardYear":"1962"},{"id":"이준용|李濬鏞|독립장|528","name":"이준용","hanja":"李濬鏞","alias":"호 : 서우(西愚), 이명 : 이석(李錫)","movement":"만주방면","birthplace":"평남 성천(成川)","order":"독립장","awardYear":"1963"},{"id":"이중봉|李重鳳|독립장|529","name":"이중봉","hanja":"李重鳳","alias":"이중봉(李中鳳)","movement":"의병","birthplace":"충북 청풍(淸風)","order":"독립장","awardYear":"1995"},{"id":"이중언|李中彦|독립장|530","name":"이중언","hanja":"李中彦","alias":"자 : 중관(仲寬), 호 : 동은(東隱)","movement":"계몽운동","birthplace":"경북 안동(安東)","order":"독립장","awardYear":"1962"},{"id":"이중집|李仲執|독립장|531","name":"이중집","hanja":"李仲執","alias":"이중집(李仲集·李重集·李中執), 이중읍(李仲揖)","movement":"만주방면","birthplace":"함남 덕원(德源)","order":"독립장","awardYear":"1996"},{"id":"이진룡|李鎭龍|독립장|532","name":"이진룡","hanja":"李鎭龍","alias":"자 : 석대(錫大), 운서(雲瑞), 호 : 기천(己千), 이명 : 이석대(李錫大·李碩大)","movement":"의병","birthplace":"황해 평산(平山)","order":"독립장","awardYear":"1962"},{"id":"이진무|李振武|독립장|533","name":"이진무","hanja":"李振武","alias":"유전(有田), 성상(星霜), 송해(松海), 득성(得成), 숙산(肅山)","movement":"만주방면","birthplace":"평북 정주(定州)","order":"독립장","awardYear":"1962"},{"id":"이진산|李震山|독립장|534","name":"이진산","hanja":"李震山","alias":"이진산(李振山·李進山), 이수영(李壽榮), 이윤명(李尹明)","movement":"중국방면","birthplace":"경북 의성(義城)","order":"독립장","awardYear":"2014"},{"id":"이진영|李進榮|독립장|535","name":"이진영","hanja":"李進榮","alias":"자 : 자강(自强), 호 : 일우(一宇), 이명(異名) : 우자강(于自强)·조병식(曺秉植), 호적명 : 이무선(李武先)","movement":"광복군","birthplace":"경북 영천(永川)","order":"독립장","awardYear":"1977"},{"id":"이진택|李珍澤|독립장|536","name":"이진택","hanja":"李珍澤","movement":"만주방면","birthplace":"평남 진남포(鎭南浦)","order":"독립장","awardYear":"1968"},{"id":"이창덕|李昌德|독립장|537","name":"이창덕","hanja":"李昌德","movement":"만주방면","birthplace":"함남 북청(北靑)","order":"독립장","awardYear":"1968"},{"id":"이창용|李昌用|독립장|538","name":"이창용","hanja":"李昌用","alias":"본명 : 이창갑(李昌甲), 이명 : 이창룡(李昌龍)","movement":"만주방면","birthplace":"황해 신천(信川)","order":"독립장","awardYear":"1963"},{"id":"이철형|李哲衡|독립장|539","name":"이철형","hanja":"李哲衡","alias":"자(字): 경옥(敬玉), 이명: 이철형(李喆衡)·이진사(李進士)","movement":"의병","birthplace":"전북 고창(高敞)","order":"독립장","awardYear":"1993"},{"id":"이춘숙|李春塾|독립장|540","name":"이춘숙","hanja":"李春塾","alias":"호 : 관오(觀吾), 이명 : 이건(李健)","movement":"임시정부","birthplace":"함남 정평(定平)","order":"독립장","awardYear":"2008"},{"id":"이춘영|李春永|독립장|541","name":"이춘영","hanja":"李春永","alias":"자 : 우삼(友三), 호 : 괴은(槐隱), 이명 : 이춘영(李春英)","movement":"의병","birthplace":"경기 양평(楊平)","order":"독립장","awardYear":"1963"},{"id":"이충응|李忠應|독립장|542","name":"이충응","hanja":"李忠應","movement":"의병","birthplace":"경기 가평(加平)","order":"독립장","awardYear":"1990"},{"id":"이치모|李致模|독립장|543","name":"이치모","hanja":"李致模","alias":"호 : 치암(致庵)","movement":"국내항일","birthplace":"평남 강동(江東)","order":"독립장","awardYear":"1963"},{"id":"이탁|李鐸|독립장|544","name":"이탁","hanja":"李鐸","alias":"본명 : 제용(濟鏞), 호 : 동우(東愚), 자 : 태연(跆然)","movement":"임시정부","birthplace":"평남 성천(宣川)","order":"독립장","awardYear":"1963"},{"id":"이필봉|李弼奉|독립장|545","name":"이필봉","hanja":"李弼奉","movement":"의병","birthplace":"충남 홍성(洪城)","order":"독립장","awardYear":"1990"},{"id":"이필상|李弼相|독립장|546","name":"이필상","hanja":"李弼相","movement":"의병","birthplace":"미상","order":"독립장","awardYear":"2003"},{"id":"이필희|李弼熙|독립장|547","name":"이필희","hanja":"李弼熙","alias":"자 : 만여(萬汝), 호 : 실곡(實谷)","movement":"의병","birthplace":"서울","order":"독립장","awardYear":"1993"},{"id":"이학순|李學純|독립장|548","name":"이학순","hanja":"李學純","alias":"자: 경실(敬實), 호: 회천(晦泉)","movement":"계몽운동","birthplace":"충남 공주(公州)","order":"독립장","awardYear":"1962"},{"id":"이한구|李韓久|독립장|549","name":"이한구","hanja":"李韓久","alias":"자 : 한유(漢有), 호 : 지포(芝圃), 신성재(新省齋)","movement":"의병","birthplace":"경북 월성(月城)","order":"독립장","awardYear":"1963"},{"id":"이한응|李漢應|독립장|550","name":"이한응","hanja":"李漢應","alias":"자 : 경천(敬天), 호 : 국은(菊隱), 이명 : 이한응(李漢膺)","movement":"계몽운동","birthplace":"경기 용인(龍仁)","order":"독립장","awardYear":"1962"},{"id":"이현|李鉉|독립장|551","name":"이현","hanja":"李鉉","movement":"3.1운동","birthplace":"평남 강서(江西)","order":"독립장","awardYear":"1990"},{"id":"이현규|李鉉圭|독립장|552","name":"이현규","hanja":"李鉉圭","alias":"자 : 하현(夏玄·荷鉉), 능우(能雨), 호 : 내산(奈山), 우해(于海), 이명 : 이능우(李能雨)","movement":"의병","birthplace":"경북 영양(英陽)","order":"독립장","awardYear":"1968"},{"id":"이현섭|李鉉燮|독립장|553","name":"이현섭","hanja":"李鉉燮","alias":"자 : 서규(瑞圭), 호 : 우헌(愚軒)","movement":"계몽운동","birthplace":"경북 군위(軍威)","order":"독립장","awardYear":"1962"},{"id":"이형우|李亨雨|독립장|554","name":"이형우","hanja":"李亨雨","alias":"본명 : 이춘우(李春雨) 이명 : 이흥준(李興俊), 이현(李玄)","movement":"만주방면","birthplace":"충북 제천(堤川)","order":"독립장","awardYear":"1977"},{"id":"이호원|李浩源|독립장|555","name":"이호원","hanja":"李浩源","alias":"호 : 송강(松江), 이명 : 이호언(李浩彦), 이효원(李孝源), 강덕재(姜德載·康德載), 삼송(杉松)","movement":"만주방면","birthplace":"충남 공주(公州)","order":"독립장","awardYear":"2000"},{"id":"이홍래|李鴻來|독립장|556","name":"이홍래","hanja":"李鴻來","alias":"자 : 윤선(允善), 호 : 성제(省齊)","movement":"만주방면","birthplace":"서울","order":"독립장","awardYear":"1963"},{"id":"이화익|李化翼|독립장|557","name":"이화익","hanja":"李化翼","alias":"이승춘(李承春)","movement":"중국방면","birthplace":"황해 장연(長淵)","order":"독립장","awardYear":"1963"},{"id":"이화일|李化日|독립장|558","name":"이화일","hanja":"李化日","alias":"이동환(李東煥)","movement":"만주방면","birthplace":"함북 경성(鏡城)","order":"독립장","awardYear":"1977"},{"id":"이화주|李化周|독립장|559","name":"이화주","hanja":"李化周","movement":"만주방면","birthplace":"평북 초산(楚山)","order":"독립장","awardYear":"1963"},{"id":"이황룡|李黃龍|독립장|560","name":"이황룡","hanja":"李黃龍","alias":"이공영(李公榮)","movement":"의병","birthplace":"전북 순창(淳昌)","order":"독립장","awardYear":"1990"},{"id":"이회영|李會榮|독립장|561","name":"이회영","hanja":"李會榮","alias":"호 : 우당(友堂)","movement":"만주방면","birthplace":"서울","order":"독립장","awardYear":"1962"},{"id":"이흥관|李興官|독립장|562","name":"이흥관","hanja":"李興官","alias":"마초군(馬超群, 馬超軍)","movement":"임시정부","birthplace":"함북","order":"독립장","awardYear":"1993"},{"id":"이희경|李喜儆|독립장|563","name":"이희경","hanja":"李喜儆","movement":"임시정부","birthplace":"평남 순천(順川)","order":"독립장","awardYear":"1968"},{"id":"이희룡|李熙龍|독립장|564","name":"이희룡","hanja":"李熙龍","alias":"시은(時殷)","movement":"3.1운동","birthplace":"경기 안성(安城)","order":"독립장","awardYear":"1963"},{"id":"이희삼|李熙三|독립장|565","name":"이희삼","hanja":"李熙三","alias":"이희삼(李希三·李凞三·李喜三), 이은경(李殷卿), 이은향(李殷鄕), 이기호(李基鎬), 이희왕(李熙王)","movement":"만주방면","birthplace":"함남 단천(端川)","order":"독립장","awardYear":"1995"},{"id":"이희승|李熙昇|독립장|566","name":"이희승","hanja":"李熙昇","alias":"호 : 일석(一石)","movement":"문화운동","birthplace":"경기 광주(廣州)","order":"독립장","awardYear":"1962"},{"id":"일라이 밀러 모우리|Eli Miller Mowry|독립장|567","name":"일라이 밀러 모우리","koAlias":"Eli Miller Mowry","alias":"牟義理","movement":"독립운동지원","birthplace":"외국 미국","order":"독립장","awardYear":"1950"},{"id":"임국정|林國楨|독립장|568","name":"임국정","hanja":"林國楨","movement":"만주방면","birthplace":"함남 함흥(咸興)","order":"독립장","awardYear":"1963"},{"id":"임기홍|林基弘|독립장|569","name":"임기홍","hanja":"林基弘","alias":"임기홍(林起弘)","movement":"만주방면","birthplace":"평북 의주(義州)","order":"독립장","awardYear":"2010"},{"id":"임병극|林炳極|독립장|570","name":"임병극","hanja":"林炳極","alias":"임병극(林秉極·林丙極), 임중송(林中松)","movement":"만주방면","birthplace":"평안","order":"독립장","awardYear":"1995"},{"id":"임병찬|林炳瓚|독립장|571","name":"임병찬","hanja":"林炳瓚","alias":"자 : 중옥(中玉), 호 : 돈헌(遯軒)","movement":"의병","birthplace":"전북 옥구(沃溝)","order":"독립장","awardYear":"1962"},{"id":"임봉주|林鳳柱|독립장|572","name":"임봉주","hanja":"林鳳柱","alias":"본명 : 임세규(林世圭·林世奎), 이명 : 이일우(李一羽), 임봉방(林鳳防), 임동근(林東根), 임병하(林炳夏), 임석규(林錫圭), 임사석(林士錫)","movement":"국내항일","birthplace":"경북 영주(榮州)","order":"독립장","awardYear":"1963"},{"id":"임성섭|林成涉|독립장|573","name":"임성섭","hanja":"林成涉","movement":"국내항일","birthplace":"평북 희천(熙川)","order":"독립장","awardYear":"2012"},{"id":"임성우|林成雨|독립장|574","name":"임성우","hanja":"林成雨","alias":"영문명 Lim Sung Woo","movement":"미주방면","birthplace":"서울","order":"독립장","awardYear":"1997"},{"id":"임용상|林龍相|독립장|575","name":"임용상","hanja":"林龍相","alias":"자 : 충서(忠瑞), 호 : 중호(中虎), 병오(炳五)","movement":"의병","birthplace":"경북 청송(靑松)","order":"독립장","awardYear":"1977"},{"id":"임의탁|林義鐸|독립장|576","name":"임의탁","hanja":"林義鐸","alias":"임동환(林東煥), 임창식(林昌植)","movement":"임시정부","birthplace":"평남 평양(平壤)","order":"독립장","awardYear":"1963"},{"id":"임이걸|林利杰|독립장|577","name":"임이걸","hanja":"林利杰","movement":"3.1운동","birthplace":"평남 대동(大同)","order":"독립장","awardYear":"1980"},{"id":"임창모|林昌模|독립장|578","name":"임창모","hanja":"林昌模","alias":"자 : 낙균(洛均), 호(號) : 월담(月潭)","movement":"의병","birthplace":"전남 보성(寶城)","order":"독립장","awardYear":"1963"},{"id":"임치정|林蚩正|독립장|579","name":"임치정","hanja":"林蚩正","alias":"호 : 춘곡(春谷)","movement":"계몽운동","birthplace":"평남 용강(龍岡)","order":"독립장","awardYear":"1968"},{"id":"임하중|林夏仲|독립장|580","name":"임하중","hanja":"林夏仲","movement":"의병","birthplace":"전남 보성(寶城)","order":"독립장","awardYear":"1990"},{"id":"장기천|張基千|독립장|581","name":"장기천","hanja":"張基千","movement":"만주방면","birthplace":"평북 의주(義州)","order":"독립장","awardYear":"1963"},{"id":"장기초|張基礎|독립장|582","name":"장기초","hanja":"張基礎","alias":"김소하(金篠厦), 김광명(金光明), 이광명(李光明)","movement":"만주방면","birthplace":"평북 강계(江界)","order":"독립장","awardYear":"2009"},{"id":"장덕준|張德俊|독립장|583","name":"장덕준","hanja":"張德俊","alias":"호 : 추송(秋松)","movement":"문화운동","birthplace":"황해 재령(載寧)","order":"독립장","awardYear":"1963"},{"id":"장덕진|張德震|독립장|584","name":"장덕진","hanja":"張德震","alias":"호 : 운갑(雲甲)","movement":"만주방면","birthplace":"황해 재령(載寧)","order":"독립장","awardYear":"1963"},{"id":"장도빈|張道斌|독립장|585","name":"장도빈","hanja":"張道斌","alias":"호 산운(汕耘)","movement":"국내항일","birthplace":"평남 중화(中和)","order":"독립장","awardYear":"1990"},{"id":"장두량|張斗良|독립장|586","name":"장두량","hanja":"張斗良","alias":"장기양(張基羕)","movement":"만주방면","birthplace":"함북 부령(富寧)","order":"독립장","awardYear":"1993"},{"id":"장두환|張斗煥|독립장|587","name":"장두환","hanja":"張斗煥","movement":"국내항일","birthplace":"충남 천안(天安)","order":"독립장","awardYear":"1963"},{"id":"장명도|張明道|독립장|588","name":"장명도","hanja":"張明道","alias":"장세량(張世良)","movement":"만주방면","birthplace":"평북 의주(義州)","order":"독립장","awardYear":"1996"},{"id":"장봉한|張鳳漢|독립장|589","name":"장봉한","hanja":"張鳳漢","alias":"장봉한(張鳳翰·張鳳韓)","movement":"만주방면","birthplace":"함북 종성(鍾城)","order":"독립장","awardYear":"1994"},{"id":"장석영|張錫英|독립장|590","name":"장석영","hanja":"張錫英","alias":"자 : 순화(舜華), 호 : 추관(秋觀), 회당(晦堂), 이명 : 장석교(張碩敎)","movement":"3.1운동","birthplace":"경북 칠곡(漆谷)","order":"독립장","awardYear":"1980"},{"id":"장소진|張韶鎭|독립장|591","name":"장소진","hanja":"張韶鎭","alias":"장봉래(張鳳來)","movement":"3.1운동","birthplace":"경기 수원(水原)","order":"독립장","awardYear":"1968"},{"id":"장윤덕|張胤德|독립장|592","name":"장윤덕","hanja":"張胤德","alias":"자 : 원숙(元淑), 호 : 성암(惺菴)","movement":"의병","birthplace":"경북 예천(醴泉)","order":"독립장","awardYear":"1968"},{"id":"장인초|張仁初|독립장|593","name":"장인초","hanja":"張仁初","alias":"이명: 장윤초(張允初), 장인상(張仁尙)","movement":"의병","birthplace":"전남 능주(綾州)","order":"독립장","awardYear":"1990"},{"id":"장일환|張日煥|독립장|594","name":"장일환","hanja":"張日煥","movement":"국내항일","birthplace":"평남 평양(平壤)","order":"독립장","awardYear":"1990"},{"id":"장지|張繼|독립장|595","name":"장지","hanja":"張繼","koAlias":"장계","alias":"장부(張溥)·장부천(張溥泉)·박천(博泉)·자연생(自然生)","movement":"독립운동지원","birthplace":"외국 중국","order":"독립장","awardYear":"1968"},{"id":"장진원|張鎭元|독립장|596","name":"장진원","hanja":"張鎭元","alias":"장영환(張英煥), 장심원(張沈元, 張沈遠, 張沈源)","movement":"중국방면","birthplace":"평북 강계(江界)","order":"독립장","awardYear":"1968"},{"id":"장진홍|張鎭弘|독립장|597","name":"장진홍","hanja":"張鎭弘","alias":"호 : 창여(滄旅), 자 : 준극(俊極), 아명 : 재환(在煥)","movement":"의열투쟁","birthplace":"경북 칠곡(漆谷)","order":"독립장","awardYear":"1962"},{"id":"장철호|張喆鎬|독립장|598","name":"장철호","hanja":"張喆鎬","alias":"장철호(張哲浩), 장수만(張守萬), 장치욱(張致旭)","movement":"만주방면","birthplace":"평북 의주(義州)","order":"독립장","awardYear":"1990"},{"id":"장췬|張群|독립장|599","name":"장췬","hanja":"張群","koAlias":"장군","alias":"자 : 웨쥔(岳軍)","movement":"독립운동지원","birthplace":"외국 중국","order":"독립장","awardYear":"1968"},{"id":"장태수|張泰秀|독립장|600","name":"장태수","hanja":"張泰秀","alias":"자 : 성안(聖安), 호 : 일유재(一逌齋)·남강거사(南岡居士)","movement":"계몽운동","birthplace":"전북 김제(金堤)","order":"독립장","awardYear":"1962"},{"id":"장한성|張寒星|독립장|601","name":"장한성","hanja":"張寒星","alias":"장한성(張漢成), 장지호(張志鎬·張智鎬·張志浩·張智浩)","movement":"만주방면","birthplace":"평남 용강(龍岡)","order":"독립장","awardYear":"1977"},{"id":"장해평|莊海平|독립장|602","name":"장해평","hanja":"莊海平","alias":"장기준(莊麒俊), 남용무(南容武), 이계백(李啓白)","movement":"중국방면","birthplace":"황해 안악(安岳)","order":"독립장","awardYear":"1963"},{"id":"장형|張炯|독립장|603","name":"장형","hanja":"張炯","alias":"본명 : 장세담(張世淡), 호 : 범정(梵亭), 이명 : 장영(張英)","movement":"국내항일","birthplace":"평북 용천(龍川)","order":"독립장","awardYear":"1963"},{"id":"전덕기|全德基|독립장|604","name":"전덕기","hanja":"全德基","alias":"전봉운","movement":"계몽운동","birthplace":"서울","order":"독립장","awardYear":"1962"},{"id":"전덕명|全德明|독립장|605","name":"전덕명","hanja":"全德明","alias":"호 : 죽파(竹坡)","movement":"만주방면","birthplace":"평북 용천(龍川)","order":"독립장","awardYear":"1968"},{"id":"전덕원|全德元|독립장|606","name":"전덕원","hanja":"全德元","alias":"호 : 호은(湖隱)·정송(梃松)·소성(小醒)","movement":"만주방면","birthplace":"평북 용천(龍川)","order":"독립장","awardYear":"1962"},{"id":"전병현|全秉鉉|독립장|607","name":"전병현","hanja":"全秉鉉","alias":"이명 : 왕삼덕(王三德), 전병헌(全炳憲), 김병헌(金秉憲)","movement":"임시정부","birthplace":"평남 순천(順川)","order":"독립장","awardYear":"2015"},{"id":"전일|全一|독립장|608","name":"전일","hanja":"全一","alias":"전인학(全仁學)","movement":"노령방면","birthplace":"함북 길주(吉州)","order":"독립장","awardYear":"2007"},{"id":"전태선|全泰善|독립장|609","name":"전태선","hanja":"全泰善","movement":"의열투쟁","birthplace":"평남 평양","order":"독립장","awardYear":"1963"},{"id":"전학수|田學秀|독립장|610","name":"전학수","hanja":"田學秀","movement":"만주방면","birthplace":"평북 자성(慈城)","order":"독립장","awardYear":"1995"},{"id":"전홍섭|全弘燮|독립장|611","name":"전홍섭","hanja":"全弘燮","alias":"본명 : 전홍섭(全洪燮)","movement":"만주방면","birthplace":"함북 회령(會寧)","order":"독립장","awardYear":"1963"},{"id":"정기선|鄭基善|독립장|612","name":"정기선","hanja":"鄭基善","movement":"의병","birthplace":"전북 순창(淳昌)","order":"독립장","awardYear":"1990"},{"id":"정기찬|鄭奇贊|독립장|613","name":"정기찬","hanja":"鄭奇贊","alias":"정기찬(鄭基贊·鄭基燦), 정광서(鄭光瑞)","movement":"의병","birthplace":"전남 보성(寶城)","order":"독립장","awardYear":"1990"},{"id":"정남용|鄭南用|독립장|614","name":"정남용","hanja":"鄭南用","alias":"정의남(鄭義南), 정일(鄭鎰), 정필성(鄭必成), 홍우식(洪宇植)","movement":"국내항일","birthplace":"강원 고성(高城)","order":"독립장","awardYear":"1963"},{"id":"정동식|鄭東植|독립장|615","name":"정동식","hanja":"鄭東植","alias":"자 : 경필(敬必)","movement":"계몽운동","birthplace":"전북 익산(益山)","order":"독립장","awardYear":"1962"},{"id":"정봉준|鄭鳳俊|독립장|616","name":"정봉준","hanja":"鄭鳳俊","alias":"정봉준(鄭奉俊)","movement":"의병","birthplace":"미상","order":"독립장","awardYear":"1995"},{"id":"정봉화|鄭鳳和|독립장|617","name":"정봉화","hanja":"鄭鳳和","alias":"정봉화(鄭鳳化·鄭奉化)·정재택(鄭在澤)","movement":"만주방면","birthplace":"평북 철산(鐵山)","order":"독립장","awardYear":"1963"},{"id":"정서송|鄭庶松|독립장|618","name":"정서송","hanja":"鄭庶松","alias":"정서성(鄭瑞聖·鄭瑞成)","movement":"3.1운동","birthplace":"경기 용인(龍仁)","order":"독립장","awardYear":"1968"},{"id":"정순경|鄭順敬|독립장|619","name":"정순경","hanja":"鄭順敬","movement":"만주방면","birthplace":"황해 해주(海州)","order":"독립장","awardYear":"1963"},{"id":"정순만|鄭淳萬|독립장|620","name":"정순만","hanja":"鄭淳萬","alias":"정순만(鄭順萬), 왕창동(王昌東), 왕창도(王昌道), 왕일초(王一初), 왕한(王韓), 왕성도(王成道)","movement":"만주방면","birthplace":"충북 청주(淸州)","order":"독립장","awardYear":"1986"},{"id":"정신|鄭信|독립장|621","name":"정신","hanja":"鄭信","alias":"호 : 일우(一隅)","movement":"만주방면","birthplace":"함남 홍원(洪原)","order":"독립장","awardYear":"1963"},{"id":"정용기|鄭鏞基|독립장|622","name":"정용기","hanja":"鄭鏞基","alias":"자 : 관여(寬汝), 호 : 단오(丹吾), 진택(鎭宅)","movement":"의병","birthplace":"경북 영천(永川)","order":"독립장","awardYear":"1962"},{"id":"정용대|鄭用大|독립장|623","name":"정용대","hanja":"鄭用大","alias":"자 : 중범(重凡), 호 의암(毅庵), 이명 : 정용대(鄭容大)","movement":"의병","birthplace":"경기 적성(積城)","order":"독립장","awardYear":"1977"},{"id":"정운경|鄭雲慶|독립장|624","name":"정운경","hanja":"鄭雲慶","alias":"자 : 화백(和百), 호 : 송운(松雲)","movement":"의병","birthplace":"충북 제천(堤川)","order":"독립장","awardYear":"1977"},{"id":"정원집|鄭元執|독립장|625","name":"정원집","hanja":"鄭元執","alias":"정원집(鄭元集)","movement":"의병","birthplace":"서울","order":"독립장","awardYear":"1995"},{"id":"정의도|丁義道|독립장|626","name":"정의도","hanja":"丁義道","alias":"정칠성(丁七星)","movement":"임시정부","birthplace":"평남 평양(平壤)","order":"독립장","awardYear":"1963"},{"id":"정이형|鄭伊衡|독립장|627","name":"정이형","hanja":"鄭伊衡","alias":"호적명: 鄭元欽, 호: 쌍공(雙空), 이명: 용현(用賢)","movement":"만주방면","birthplace":"평북 의주(義州)","order":"독립장","awardYear":"1963"},{"id":"정인국|鄭寅國|독립장|628","name":"정인국","hanja":"鄭寅國","movement":"의병","birthplace":"서울","order":"독립장","awardYear":"1996"},{"id":"정인보|鄭寅普|독립장|629","name":"정인보","hanja":"鄭寅普","alias":"자 : 경업(景業), 호 : 위당(爲堂)·수파(守坡)·담원(薝園)·미소산인(薇蘇山人), 아명 : 정경시(鄭經施)","movement":"문화운동","birthplace":"서울","order":"독립장","awardYear":"1990"},{"id":"정인복|鄭仁福|독립장|630","name":"정인복","hanja":"鄭仁福","movement":"만주방면","birthplace":"평북 철산(鐵山)","order":"독립장","awardYear":"1963"},{"id":"정인승|鄭寅承|독립장|631","name":"정인승","hanja":"鄭寅承","alias":"호 : 건재(建齋), 아명 : 경범","movement":"문화운동","birthplace":"전북 장수(長水)","order":"독립장","awardYear":"1962"},{"id":"정찬조|鄭燦朝|독립장|632","name":"정찬조","hanja":"鄭燦朝","alias":"정찬도(鄭燦道)","movement":"만주방면","birthplace":"평남 평양(平壤)","order":"독립장","awardYear":"1963"},{"id":"정철화|鄭哲和|독립장|633","name":"정철화","hanja":"鄭哲和","movement":"의병","birthplace":"경기 용인(龍仁)","order":"독립장","awardYear":"1990"},{"id":"정춘서|鄭春瑞|독립장|634","name":"정춘서","hanja":"鄭春瑞","alias":"정춘서(鄭春西)","movement":"의병","birthplace":"충북 청주(淸州)","order":"독립장","awardYear":"1977"},{"id":"정태진|丁泰鎭|독립장|635","name":"정태진","hanja":"丁泰鎭","alias":"호 : 석인(石人)","movement":"문화운동","birthplace":"경기 교하(交河)","order":"독립장","awardYear":"1962"},{"id":"정태희|鄭泰熙|독립장|636","name":"정태희","hanja":"鄭泰熙","alias":"호 : 계운(桂雲), 백양(白洋)","movement":"임시정부","birthplace":"충북 중원(中原)","order":"독립장","awardYear":"1963"},{"id":"정한경|鄭翰景|독립장|637","name":"정한경","hanja":"鄭翰景","movement":"미주방면","birthplace":"평남 순천(順川)","order":"독립장","awardYear":"1962"},{"id":"정헌태|鄭憲台|독립장|638","name":"정헌태","hanja":"鄭憲台","alias":"이기준(李基俊)","movement":"국내항일","birthplace":"충남 서산(瑞山)","order":"독립장","awardYear":"2005"},{"id":"정화암|鄭華岩|독립장|639","name":"정화암","hanja":"鄭華岩","alias":"자: 윤옥(允玉), 호: 화암(華岩), 본명: 정현섭(鄭賢燮)","movement":"중국방면","birthplace":"전북 김제(金堤)","order":"독립장","awardYear":"1983"},{"id":"제이 제롬 윌리엄스|Jay Jerome Williams|독립장|640","name":"제이 제롬 윌리엄스","koAlias":"Jay Jerome Williams","movement":"독립운동지원","birthplace":"외국 미국","order":"독립장","awardYear":"1950"},{"id":"조경한|趙擎韓|독립장|641","name":"조경한","hanja":"趙擎韓","movement":"임시정부","birthplace":"전남 승주(昇州)","order":"독립장","awardYear":"1962"},{"id":"조경환|曺京煥|독립장|642","name":"조경환","hanja":"曺京煥","alias":"호 : 대천(大川), 아명 : 정거(丁擧), 본명 : 준환(準煥)","movement":"의병","birthplace":"전남 광주(光州)","order":"독립장","awardYear":"1963"},{"id":"조길룡|曺吉龍|독립장|643","name":"조길룡","hanja":"曺吉龍","movement":"학생운동","birthplace":"전남 화순(和順)","order":"독립장","awardYear":"1963"},{"id":"조도선|曺道先|독립장|644","name":"조도선","hanja":"曺道先","alias":"조도선(曺道善), 조진승(曺晋承)","movement":"의열투쟁","birthplace":"함남 홍원(洪原)","order":"독립장","awardYear":"1962"},{"id":"조동호|趙東祜|독립장|645","name":"조동호","hanja":"趙東祜","alias":"호 : 유정(榴亭), 이명 : 조동우(趙東祐)","movement":"국내항일","birthplace":"충북 옥천(沃川)","order":"독립장","awardYear":"2005"},{"id":"조맹선|趙孟善|독립장|646","name":"조맹선","hanja":"趙孟善","alias":"호 : 원석(圓石), 이명 : 조성호(趙聖浩)·조양원(趙養元)","movement":"만주방면","birthplace":"황해 평산(平山)","order":"독립장","awardYear":"1962"},{"id":"조명하|趙明河|독립장|647","name":"조명하","hanja":"趙明河","alias":"풍천명하(豊川明河)","movement":"중국방면","birthplace":"황해 송화(松禾)","order":"독립장","awardYear":"1963"},{"id":"조병두|趙炳斗|독립장|648","name":"조병두","hanja":"趙炳斗","movement":"의병","birthplace":"충남 부여(扶餘)","order":"독립장","awardYear":"1990"},{"id":"조병요|趙炳堯|독립장|649","name":"조병요","hanja":"趙炳堯","alias":"秉堯·柄堯, Cho Pyeng Ye","movement":"미주방면","birthplace":"평남 평양(平壤)","order":"독립장","awardYear":"1997"},{"id":"조병준|趙秉準|독립장|650","name":"조병준","hanja":"趙秉準","alias":"자 : 유평(幼平), 호 : 국동(菊東)","movement":"만주방면","birthplace":"평북 의주(義州)","order":"독립장","awardYear":"1963"},{"id":"조시원|趙時元|독립장|651","name":"조시원","hanja":"趙時元","alias":"본명 : 조용원(趙鏞元), 호 : 호일(胡逸)","movement":"광복군","birthplace":"경기 연천(漣川)","order":"독립장","awardYear":"1963"},{"id":"조용하|趙鏞夏|독립장|652","name":"조용하","hanja":"趙鏞夏","alias":"호 : 구심(求心)","movement":"미주방면","birthplace":"경기 양주(楊州)","order":"독립장","awardYear":"1977"},{"id":"조원세|趙元世|독립장|653","name":"조원세","hanja":"趙元世","movement":"국내항일","birthplace":"평북 용천(龍川)","order":"독립장","awardYear":"1963"},{"id":"조윤하|趙潤河|독립장|654","name":"조윤하","hanja":"趙潤河","movement":"만주방면","birthplace":"함남 북청(北靑)","order":"독립장","awardYear":"1983"},{"id":"조응순|趙應順|독립장|655","name":"조응순","hanja":"趙應順","alias":"왕대방(王大方)·오주(五周)·김열(金閱)·조일비(趙一飛)·조정규(趙廷奎)","movement":"만주방면","birthplace":"함남 갑산(甲山)","order":"독립장","awardYear":"2017"},{"id":"조인제|趙仁濟|독립장|656","name":"조인제","hanja":"趙仁濟","alias":"이명 : 반성무(潘誠武)","movement":"광복군","birthplace":"경기 연천(漣川)","order":"독립장","awardYear":"1963"},{"id":"조인환|曺仁煥|독립장|657","name":"조인환","hanja":"曺仁煥","movement":"의병","birthplace":"경기 양평(楊平)","order":"독립장","awardYear":"1962"},{"id":"조정인|趙正仁|독립장|658","name":"조정인","hanja":"趙正仁","movement":"의병","birthplace":"전남 나주(羅州)","order":"독립장","awardYear":"1977"},{"id":"조종대|趙鍾大|독립장|659","name":"조종대","hanja":"趙鍾大","movement":"국내항일","birthplace":"황해 금천(金川)","order":"독립장","awardYear":"1963"},{"id":"조지 루이스 쇼|George Lewis Shaw|독립장|660","name":"조지 루이스 쇼","koAlias":"George Lewis Shaw","alias":"이명 : 소지영(蘇志英)","movement":"독립운동지원","birthplace":"외국 중국","order":"독립장","awardYear":"1963"},{"id":"조지 새넌 맥큔|George Shannon McCune|독립장|661","name":"조지 새넌 맥큔","koAlias":"George Shannon McCune","alias":"윤산온(尹山溫)","movement":"독립운동지원","birthplace":"외국 미국","order":"독립장","awardYear":"1963"},{"id":"조지 애쉬모어 피치|George Ashmore Fitch|독립장|662","name":"조지 애쉬모어 피치","koAlias":"George Ashmore Fitch","alias":"費吾生:","movement":"독립운동지원","birthplace":"외국 미국","order":"독립장","awardYear":"1968"},{"id":"조지영|趙志英|독립장|663","name":"조지영","hanja":"趙志英","alias":"조동윤(趙東潤)","movement":"임시정부","birthplace":"평북 정주(定州)","order":"독립장","awardYear":"1990"},{"id":"조진탁|曺振鐸|독립장|664","name":"조진탁","hanja":"曺振鐸","movement":"3.1운동","birthplace":"평남 강서(江西)","order":"독립장","awardYear":"1963"},{"id":"조창룡|趙昌龍|독립장|665","name":"조창룡","hanja":"趙昌龍","movement":"만주방면","birthplace":"평남 순천(順川)","order":"독립장","awardYear":"1995"},{"id":"조창선|趙昌善|독립장|666","name":"조창선","hanja":"趙昌善","alias":"조무선(趙武善), 정해천(鄭海天)","movement":"국내항일","birthplace":"황해 평산(平山)","order":"독립장","awardYear":"1968"},{"id":"조창호|趙昌鎬|독립장|667","name":"조창호","hanja":"趙昌鎬","alias":"이제선(李濟善)","movement":"의열투쟁","birthplace":"평남 평양(平壤)","order":"독립장","awardYear":"1963"},{"id":"조화선|趙化善|독립장|668","name":"조화선","hanja":"趙化善","alias":"조경복(趙景福)","movement":"만주방면","birthplace":"황해 평산(平山)","order":"독립장","awardYear":"1995"},{"id":"존 웨슬리 스태거즈|John W. Staggers|독립장|669","name":"존 웨슬리 스태거즈","koAlias":"John W. Staggers","movement":"독립운동지원","birthplace":"외국 미국","order":"독립장","awardYear":"1950"},{"id":"주기철|朱基徹|독립장|670","name":"주기철","hanja":"朱基徹","alias":"아명 : 주기복(朱基福), 호 : 소양(蘇羊)","movement":"문화운동","birthplace":"경남 웅천(熊川)","order":"독립장","awardYear":"1963"},{"id":"주명우|朱明禹|독립장|671","name":"주명우","hanja":"朱明禹","alias":"호 : 운당(雲堂), 이명 : 주관길(朱寬吉)","movement":"3.1운동","birthplace":"평북 강계(江界)","order":"독립장","awardYear":"1963"},{"id":"주병웅|朱秉雄|독립장|672","name":"주병웅","hanja":"朱秉雄","alias":"주국영(朱國英)","movement":"만주방면","birthplace":"강원 울진(蔚珍)","order":"독립장","awardYear":"1963"},{"id":"주석환|朱錫煥|독립장|673","name":"주석환","hanja":"朱錫煥","movement":"만주방면","birthplace":"평남 강동(江東)","order":"독립장","awardYear":"1968"},{"id":"주칭란|朱慶瀾|독립장|674","name":"주칭란","hanja":"朱慶瀾","koAlias":"주경란","alias":"자 : 자교(子橋), 자초(子樵), 자교(紫橋)","movement":"독립운동지원","birthplace":"외국 중국","order":"독립장","awardYear":"1968"},{"id":"지달수|池達洙|독립장|675","name":"지달수","hanja":"池達洙","alias":"아명 : 청룡(靑龍), 이명 : 이경옥(李慶玉), 이달수(李達洙)","movement":"광복군","birthplace":"서울","order":"독립장","awardYear":"1963"},{"id":"지석용|池錫湧|독립장|676","name":"지석용","hanja":"池錫湧","movement":"3.1운동","birthplace":"평남 강서(江西)","order":"독립장","awardYear":"1990"},{"id":"지용기|池龍起|독립장|677","name":"지용기","hanja":"池龍起","alias":"池弘起, 池弘敏, 池應起","movement":"의병","birthplace":"강원 양양(襄陽)","order":"독립장","awardYear":"1962"},{"id":"진치언|陳致彦|독립장|678","name":"진치언","hanja":"陳致彦","alias":"진치언(陳治彦), 진재평(陳載怦)","movement":"의병","birthplace":"전북 순창(淳昌)","order":"독립장","awardYear":"1980"},{"id":"진희창|秦熙昌|독립장|679","name":"진희창","hanja":"秦熙昌","alias":"호 : 경림(景林)","movement":"임시정부","birthplace":"서울","order":"독립장","awardYear":"1980"},{"id":"차도선|車道善|독립장|680","name":"차도선","hanja":"車道善","movement":"의병","birthplace":"함남 북청(北靑)","order":"독립장","awardYear":"1962"},{"id":"차병수|車炳修|독립장|681","name":"차병수","hanja":"車炳修","movement":"임시정부","birthplace":"평남 용강(龍岡)","order":"독립장","awardYear":"1968"},{"id":"차병제|車秉濟|독립장|682","name":"차병제","hanja":"車秉濟","movement":"만주방면","birthplace":"평남 강서(江西)","order":"독립장","awardYear":"1963"},{"id":"차병혁|車炳赫|독립장|683","name":"차병혁","hanja":"車炳赫","movement":"3.1운동","birthplace":"경기 수원(水原)","order":"독립장","awardYear":"1962"},{"id":"차이석|車利錫|독립장|684","name":"차이석","hanja":"車利錫","alias":"필성(必成)","movement":"임시정부","birthplace":"평남 영원(寧遠)","order":"독립장","awardYear":"1962"},{"id":"차천리|車千里|독립장|685","name":"차천리","hanja":"車千里","alias":"차재흡(車載洽)","movement":"만주방면","birthplace":"평남 숙천(肅川)","order":"독립장","awardYear":"1998"},{"id":"차천모|車天模|독립장|686","name":"차천모","hanja":"車天模","movement":"만주방면","birthplace":"평북 의주(義州)","order":"독립장","awardYear":"1977"},{"id":"차희식|車喜植|독립장|687","name":"차희식","hanja":"車喜植","alias":"차봉습(車奉習·車鳳習), 차춘섭(車春習)","movement":"3.1운동","birthplace":"경기 수원(水原)","order":"독립장","awardYear":"1968"},{"id":"찰스 에드워드 러셀|Charles Edward Russell|독립장|688","name":"찰스 에드워드 러셀","koAlias":"Charles Edward Russell","movement":"독립운동지원","birthplace":"외국 미국","order":"독립장","awardYear":"1950"},{"id":"채광묵|蔡光默|독립장|689","name":"채광묵","hanja":"蔡光默","alias":"자 : 명숙(明叔), 호 : 구연(龜淵)","movement":"의병","birthplace":"충남 홍주(洪州)","order":"독립장","awardYear":"1977"},{"id":"채기중|蔡基中|독립장|690","name":"채기중","hanja":"蔡基中","alias":"자 : 극오(極五) 호 : 소몽(素夢), 이명 : 채기중(蔡基仲)","movement":"국내항일","birthplace":"경북 함창(咸昌)","order":"독립장","awardYear":"1963"},{"id":"채세윤|蔡世允|독립장|691","name":"채세윤","hanja":"蔡世允","alias":"채근우(蔡槿宇)","movement":"만주방면","birthplace":"전북 옥구(沃溝)","order":"독립장","awardYear":"1968"},{"id":"채영|蔡永|독립장|692","name":"채영","hanja":"蔡永","alias":"본명 : 채형묵(蔡亨黙), 이명 : 채영(蔡英)·채룡(蔡龍)","movement":"노령방면","birthplace":"서울","order":"독립장","awardYear":"2002"},{"id":"채원개|蔡元凱|독립장|693","name":"채원개","hanja":"蔡元凱","alias":"호 : 거평(居平), 본명 : 채형석(蔡瀅錫), 이명 : 채군선(蔡君仙, 蔡君善), 채형세(蔡衡世)","movement":"광복군","birthplace":"평남 영원(寧遠)","order":"독립장","awardYear":"1968"},{"id":"채응언|蔡應彦|독립장|694","name":"채응언","hanja":"蔡應彦","alias":"채응원(蔡應元), 채응경(蔡應慶), 채도석(蔡道錫)","movement":"의병","birthplace":"평북 성천(成川)","order":"독립장","awardYear":"1962"},{"id":"채찬|蔡燦|독립장|695","name":"채찬","hanja":"蔡燦","alias":"이명 : 채찬(蔡贊), 백광운(白狂雲·白光雲), 백왕운(白旺雲), 백채찬(白蔡燦)","movement":"만주방면","birthplace":"충북 충주(忠州)","order":"독립장","awardYear":"1962"},{"id":"천리푸|陳立夫|독립장|696","name":"천리푸","hanja":"陳立夫","koAlias":"진입부","alias":"본명 : 주옌(祖燕)，자 : 리푸(立夫), 이명 : 리롱칭(李融清), 구쥔밍(辜君明)","movement":"독립운동지원","birthplace":"외국 중국","order":"독립장","awardYear":"1968"},{"id":"천병림|千炳林|독립장|697","name":"천병림","hanja":"千炳林","alias":"천병일(千炳日)·천병일(千炳一)·석출(石出)·한일래(韓一來)·한위송(韓韋松)·한영일(韓英日)·한원성(韓元晟)·방자원(方子遠)·위사원(韋思源)","movement":"중국방면","birthplace":"충남 부여(扶餘)","order":"독립장","awardYear":"1994"},{"id":"천세헌|千世憲|독립장|698","name":"천세헌","hanja":"千世憲","alias":"자 : 종백(宗伯)","movement":"미주방면","birthplace":"경북 문경(聞慶)","order":"독립장","awardYear":"1995"},{"id":"최관용|崔寬用|독립장|699","name":"최관용","hanja":"崔寬用","movement":"만주방면","birthplace":"황해 연백(延白)","order":"독립장","awardYear":"1963"},{"id":"최낙철|崔洛哲|독립장|700","name":"최낙철","hanja":"崔洛哲","alias":"창씨명 : 가산낙철(佳山洛哲)","movement":"학생운동","birthplace":"전북 무주(茂朱)","order":"독립장","awardYear":"1963"},{"id":"최능찬|崔能贊|독립장|701","name":"최능찬","hanja":"崔能贊","movement":"3.1운동","birthplace":"평남 강서(江西)","order":"독립장","awardYear":"1963"},{"id":"최도환|崔道煥|독립장|702","name":"최도환","hanja":"崔道煥","alias":"최군심(崔君心)","movement":"의병","birthplace":"강원 화천(華川)","order":"독립장","awardYear":"1968"},{"id":"최동오|崔東旿|독립장|703","name":"최동오","hanja":"崔東旿","alias":"호 : 의산(義山), 이명 : 최학원(崔學源), 지석호(池錫浩)","movement":"임시정부","birthplace":"평북 의주(義州)","order":"독립장","awardYear":"1990"},{"id":"최병선|崔秉善|독립장|704","name":"최병선","hanja":"崔秉善","alias":"최병선(崔炳善)","movement":"중국방면","birthplace":"평북 정주(定州)","order":"독립장","awardYear":"1963"},{"id":"최병수|崔炳秀|독립장|705","name":"최병수","hanja":"崔炳秀","movement":"3.1운동","birthplace":"충남 아산(牙山)","order":"독립장","awardYear":"1963"},{"id":"최병호|崔炳鎬|독립장|706","name":"최병호","hanja":"崔炳鎬","alias":"최병호(崔炳浩)","movement":"만주방면","birthplace":"경북 울진(蔚珍)","order":"독립장","awardYear":"1963"},{"id":"최봉준|崔鳳俊|독립장|707","name":"최봉준","hanja":"崔鳳俊","alias":"최반수(崔班首)·최비지개·알렉산더최","movement":"노령방면","birthplace":"함북 경흥(慶興)","order":"독립장","awardYear":"1996"},{"id":"최산흥|崔山興|독립장|708","name":"최산흥","hanja":"崔山興","movement":"의병","birthplace":"전북 순창(淳昌)","order":"독립장","awardYear":"1990"},{"id":"최석준|崔錫濬|독립장|709","name":"최석준","hanja":"崔錫濬","alias":"이명 : 최석준(崔錫俊), 최석유(崔錫濡)","movement":"만주방면","birthplace":"평북 삭주(朔州)","order":"독립장","awardYear":"1963"},{"id":"최성천|崔聖天|독립장|710","name":"최성천","hanja":"崔聖天","movement":"의병","birthplace":"충북 충주(忠州)","order":"독립장","awardYear":"1995"},{"id":"최세윤|崔世允|독립장|711","name":"최세윤","hanja":"崔世允","alias":"자 : 성집(聖執·成執), 호 : 농고(農皐), 본명 : 최세한(崔世翰)","movement":"의병","birthplace":"경북 흥해(興海)","order":"독립장","awardYear":"1968"},{"id":"최수봉|崔壽鳳|독립장|712","name":"최수봉","hanja":"崔壽鳳","alias":"최경학(崔敬鶴)","movement":"의열투쟁","birthplace":"경남 밀양(密陽)","order":"독립장","awardYear":"1963"},{"id":"최시흥|崔時興|독립장|713","name":"최시흥","hanja":"崔時興","alias":"김경태(金敬泰·金景太)·최성언(崔聖彦)·최청산(崔靑山)·최시풍(崔時豊)","movement":"만주방면","birthplace":"평북 의주(義州)","order":"독립장","awardYear":"1962"},{"id":"최양옥|崔養玉|독립장|714","name":"최양옥","hanja":"崔養玉","alias":"권인옥(權仁玉), 최인옥(崔仁玉), 최추강(崔秋崗)","movement":"중국방면","birthplace":"강원 원주(原州)","order":"독립장","awardYear":"1962"},{"id":"최영걸|崔英傑|독립장|715","name":"최영걸","hanja":"崔英傑","alias":"최걸(崔傑)","movement":"만주방면","birthplace":"함북 경원(慶源)","order":"독립장","awardYear":"1968"},{"id":"최영호|崔永浩|독립장|716","name":"최영호","hanja":"崔永浩","alias":"최응선(崔應善), 최영호(崔榮浩·崔永鎬)","movement":"만주방면","birthplace":"강원 울진(蔚珍)","order":"독립장","awardYear":"1996"},{"id":"최용덕|崔用德|독립장|717","name":"최용덕","hanja":"崔用德","alias":"호 : 창석(滄石), 이명 : 최용덕(崔容德)","movement":"광복군","birthplace":"서울","order":"독립장","awardYear":"1962"},{"id":"최욱영|崔旭永|독립장|718","name":"최욱영","hanja":"崔旭永","alias":"자 : 송산(松山), 호 : 청계(淸溪), 이명: 권태준(權泰俊)","movement":"의병","birthplace":"충북 제천(堤川)","order":"독립장","awardYear":"1977"},{"id":"최윤구|崔允龜|독립장|719","name":"최윤구","hanja":"崔允龜","alias":"최윤구(崔允九·崔允求), 최윤규(崔允奎·崔允珪), 최창강(崔蒼岡)","movement":"만주방면","birthplace":"평북","order":"독립장","awardYear":"2005"},{"id":"최은식|崔殷植|독립장|720","name":"최은식","hanja":"崔殷植","movement":"3.1운동","birthplace":"경기 안성(安城)","order":"독립장","awardYear":"1963"},{"id":"최이붕|崔以鵬|독립장|721","name":"최이붕","hanja":"崔以鵬","alias":"최계립(崔溪立·崔系笠·崔桂立), 최봉설(崔鳳雪·崔鳳卨·崔鳳舌·崔鳳說), 최일륜(崔一崙), 최이붕(崔二鵬·崔伊鵬), 최웅렬(崔雄烈)","movement":"만주방면","birthplace":"함북 회령(會寧)","order":"독립장","awardYear":"1990"},{"id":"최익룡|崔翊龍|독립장|722","name":"최익룡","hanja":"崔翊龍","movement":"만주방면","birthplace":"함북 성진(城津)","order":"독립장","awardYear":"1995"},{"id":"최익형|崔益馨|독립장|723","name":"최익형","hanja":"崔益馨","movement":"계몽운동","birthplace":"황해 안악(安岳)","order":"독립장","awardYear":"1977"},{"id":"최일엽|崔日燁|독립장|724","name":"최일엽","hanja":"崔日燁","alias":"최일엽(崔日曄), 최여명(崔汝明)","movement":"만주방면","birthplace":"평북 선천(宣川)","order":"독립장","awardYear":"1995"},{"id":"최재형|崔在亨|독립장|725","name":"최재형","hanja":"崔在亨","alias":"최 표토르 세묘노비치 ЦойПётр Семёнович","movement":"임시정부","birthplace":"함북 경원(慶源)","order":"독립장","awardYear":"1962"},{"id":"최중호|崔重鎬|독립장|726","name":"최중호","hanja":"崔重鎬","alias":"황훈(黃勳)","movement":"중국방면","birthplace":"황해 신천(信川)","order":"독립장","awardYear":"1977"},{"id":"최지관|崔志寬|독립장|727","name":"최지관","hanja":"崔志寬","alias":"홍봉원(洪鳳元)","movement":"만주방면","birthplace":"평북 구성(龜城)","order":"독립장","awardYear":"1963"},{"id":"최진하|崔鎭河|독립장|728","name":"최진하","hanja":"崔鎭河","alias":"영어명 : Choy, Chin Ha","movement":"미주방면","birthplace":"평남 평양(平壤)","order":"독립장","awardYear":"1995"},{"id":"최창식|崔昌植|독립장|729","name":"최창식","hanja":"崔昌植","movement":"임시정부","birthplace":"서울","order":"독립장","awardYear":"1983"},{"id":"최천유|崔千有|독립장|730","name":"최천유","hanja":"崔千有","movement":"의병","birthplace":"강원 춘천(春川)","order":"독립장","awardYear":"1995"},{"id":"최천호|崔天浩|독립장|731","name":"최천호","hanja":"崔天浩","alias":"이명 : 최만년(崔萬年)","movement":"의열투쟁","birthplace":"평북 의주(義州)","order":"독립장","awardYear":"1963"},{"id":"최팔용|崔八鏞|독립장|732","name":"최팔용","hanja":"崔八鏞","alias":"호 : 당남(塘南), 필명 : 당남인(塘南人)","movement":"일본방면","birthplace":"함남 홍원(洪原)","order":"독립장","awardYear":"1962"},{"id":"최해|崔海|독립장|733","name":"최해","hanja":"崔海","alias":"최해일(崔海日)","movement":"만주방면","birthplace":"강원 울진(蔚珍)","order":"독립장","awardYear":"1977"},{"id":"최현배|崔鉉培|독립장|734","name":"최현배","hanja":"崔鉉培","alias":"최현이(崔鉉彛), 감메, 한방우, 호 : 외솔","movement":"문화운동","birthplace":"경남 울산(蔚山)","order":"독립장","awardYear":"1962"},{"id":"추삼만|秋三萬|독립장|735","name":"추삼만","hanja":"秋三萬","movement":"의병","birthplace":"경기 양주(楊州)","order":"독립장","awardYear":"1990"},{"id":"추푸청|褚補成|독립장|736","name":"추푸청","hanja":"褚補成","koAlias":"저보성","alias":"자 : 혜승(慧僧)","movement":"독립운동지원","birthplace":"외국 중국","order":"독립장","awardYear":"1996"},{"id":"태양욱|太陽郁|독립장|737","name":"태양욱","hanja":"太陽郁","movement":"의병","birthplace":"함남 풍산(豐山)","order":"독립장","awardYear":"1990"},{"id":"폴 프레드릭 더글라스|Paul Fredrick Douglass|독립장|738","name":"폴 프레드릭 더글라스","koAlias":"Paul Fredrick Douglass","alias":"Fredrick","movement":"독립운동지원","birthplace":"외국 미국","order":"독립장","awardYear":"1950"},{"id":"표영준|表永俊|독립장|739","name":"표영준","hanja":"表永俊","alias":"최승환(崔昇煥)","movement":"의열투쟁","birthplace":"평남 강동(江東)","order":"독립장","awardYear":"1962"},{"id":"프랭크 윌리엄 스코필드|Frank William Schofield|독립장|740","name":"프랭크 윌리엄 스코필드","koAlias":"Frank William Schofield","alias":"石虎弼","movement":"독립운동지원","birthplace":"외국 영국","order":"독립장","awardYear":"1968"},{"id":"프레데릭 브라운 해리스|Frederick Brown Harris|독립장|741","name":"프레데릭 브라운 해리스","koAlias":"Frederick Brown Harris","alias":"Brown","movement":"독립운동지원","birthplace":"외국 영국","order":"독립장","awardYear":"1950"},{"id":"프레드 에이 돌프|Fred A. Dolph|독립장|742","name":"프레드 에이 돌프","koAlias":"Fred A. Dolph","alias":"투아파(透兒波)","movement":"독립운동지원","birthplace":"외국 미국","order":"독립장","awardYear":"1950"},{"id":"프레드릭 에이 맥켄지|Frederick A. Mackenzie|독립장|743","name":"프레드릭 에이 맥켄지","koAlias":"Frederick A. Mackenzie","movement":"독립운동지원","birthplace":"외국 영국","order":"독립장","awardYear":"2014"},{"id":"한봉근|韓鳳根|독립장|744","name":"한봉근","hanja":"韓鳳根","movement":"중국방면","birthplace":"경남 밀양(密陽)","order":"독립장","awardYear":"1980"},{"id":"한봉수|韓鳳洙|독립장|745","name":"한봉수","hanja":"韓鳳洙","alias":"호 : 청암(淸巖), 이명 : 한봉용(韓奉用·韓鳳龍), 한봉서(韓奉瑞), 한봉수(韓奉洙)","movement":"의병","birthplace":"충북 청주(淸州)","order":"독립장","awardYear":"1963"},{"id":"한봉철|韓奉喆|독립장|746","name":"한봉철","hanja":"韓奉喆","alias":"한상우(韓尙宇·韓相宇)·한봉철(韓奉哲)·한진(韓震)","movement":"만주방면","birthplace":"경기 양평(楊平)","order":"독립장","awardYear":"2006"},{"id":"한상렬|韓相烈|독립장|747","name":"한상렬","hanja":"韓相烈","alias":"자 : 문극(文極), 이명 : 한상열(韓相說)","movement":"의병","birthplace":"강원 횡성(橫城)","order":"독립장","awardYear":"1963"},{"id":"한상호|韓相浩|독립장|748","name":"한상호","hanja":"韓相浩","movement":"만주방면","birthplace":"함북 경성(鏡城)","order":"독립장","awardYear":"1963"},{"id":"한성수|韓聖洙|독립장|749","name":"한성수","hanja":"韓聖洙","alias":"이상일(李相一)","movement":"광복군","birthplace":"평북 신의주(新義州)","order":"독립장","awardYear":"1977"},{"id":"한시대|韓始大|독립장|750","name":"한시대","hanja":"韓始大","movement":"미주방면","birthplace":"황해 해주(海州)","order":"독립장","awardYear":"1995"},{"id":"한위건|韓偉健|독립장|751","name":"한위건","hanja":"韓偉健","alias":"이철부(李鐵夫), 이영식(李永植), 이광우(李光宇), 이철악(李鐵岳)","movement":"중국방면","birthplace":"함남 홍원(洪原)","order":"독립장","awardYear":"2005"},{"id":"한이경|韓利敬|독립장|752","name":"한이경","hanja":"韓利敬","alias":"한이경(韓履敬·韓理景)","movement":"국내항일","birthplace":"평북 의주(義州)","order":"독립장","awardYear":"1990"},{"id":"한정만|韓貞萬|독립장|753","name":"한정만","hanja":"韓貞萬","movement":"의병","birthplace":"황해 평산(平山)","order":"독립장","awardYear":"1980"},{"id":"한징|韓澄|독립장|754","name":"한징","hanja":"韓澄","alias":"호 : 효창(曉蒼)","movement":"문화운동","birthplace":"서울","order":"독립장","awardYear":"1962"},{"id":"한훈|韓焄|독립장|755","name":"한훈","hanja":"韓焄","alias":"본명: 한우석(韓禹錫) 호: 송촌(松村) 자: 훈(焄), 성초(聖初)","movement":"의열투쟁","birthplace":"충남 청양(靑陽)","order":"독립장","awardYear":"1968"},{"id":"한흥|韓興|독립장|756","name":"한흥","hanja":"韓興","alias":"일선(日仙), 한준형(韓俊炯)","movement":"만주방면","birthplace":"함남 신흥(新興)","order":"독립장","awardYear":"1968"},{"id":"한흥근|韓興根|독립장|757","name":"한흥근","hanja":"韓興根","alias":"호 : 백암(白巖)","movement":"의열투쟁","birthplace":"함남 원산(元山)","order":"독립장","awardYear":"1963"},{"id":"함석은|咸錫殷|독립장|758","name":"함석은","hanja":"咸錫殷","movement":"만주방면","birthplace":"평북 용천(龍川)","order":"독립장","awardYear":"1963"},{"id":"허근|許根|독립장|759","name":"허근","hanja":"許根","alias":"허근(許瑾)·허은(許垠)·허재근·허영장(許營將)·허재욱(許在旭)","movement":"만주방면","birthplace":"함북 회령(會寧)","order":"독립장","awardYear":"1995"},{"id":"허버트 아돌프스 밀러|Herbert Adolphus Miller|독립장|760","name":"허버트 아돌프스 밀러","koAlias":"Herbert Adolphus Miller","alias":"Adolphus","movement":"독립운동지원","birthplace":"외국 미국","order":"독립장","awardYear":"1950"},{"id":"허빈|許斌|독립장|761","name":"허빈","hanja":"許斌","alias":"허성묵(許聖默·許性默), 허성(許星), 허백농(許白農), 허백도(許白島)","movement":"만주방면","birthplace":"황해 장연(長淵)","order":"독립장","awardYear":"1977"},{"id":"허형|許炯|독립장|762","name":"허형","hanja":"許炯","alias":"호 : 포동(浦東), 이명 : 허일영(許一英)","movement":"의열투쟁","birthplace":"평남 안주(安州)","order":"독립장","awardYear":"1963"},{"id":"현순|玄楯|독립장|763","name":"현순","hanja":"玄楯","alias":"아명 : 성린(聖麟), 반(槃), 호 : 석정(石丁), 이명 : 송원상(宋元相)","movement":"임시정부","birthplace":"경기 양주(楊州)","order":"독립장","awardYear":"1963"},{"id":"현익철|玄益哲|독립장|764","name":"현익철","hanja":"玄益哲","alias":"호 : 묵관(默觀), 이명 : 현익철(玄益喆)","movement":"만주방면","birthplace":"평북 박천(博川)","order":"독립장","awardYear":"1962"},{"id":"현정건|玄鼎健|독립장|765","name":"현정건","hanja":"玄鼎健","alias":"자 : 우삼(禹三), 호 : 읍민(揖民), 이명 : 현어풍(玄御風), 현수(玄首), 혜성(慧星)","movement":"중국방면","birthplace":"경북 대구(大丘)","order":"독립장","awardYear":"1992"},{"id":"현정경|玄正卿|독립장|766","name":"현정경","hanja":"玄正卿","alias":"본명: 현병근(玄炳槿), 자: 수강(守岡), 호: 하죽(河竹), 이명: 현병근(玄炳瑾·玄炳根)·이흥추(李興樞)","movement":"만주방면","birthplace":"평북 박천(博川)","order":"독립장","awardYear":"1992"},{"id":"현천묵|玄天默|독립장|767","name":"현천묵","hanja":"玄天默","alias":"호 : 백취(白醉)","movement":"만주방면","birthplace":"함북 경성(鏡城)","order":"독립장","awardYear":"1963"},{"id":"호레이스 뉴튼 알렌|Horace Newton Allen|독립장|768","name":"호레이스 뉴튼 알렌","koAlias":"Horace Newton Allen","alias":"안련(安連)","movement":"독립운동지원","birthplace":"외국 미국","order":"독립장","awardYear":"1950"},{"id":"호머 베잘렐 헐버트|Homer Bezaleel Hulbert|독립장|769","name":"호머 베잘렐 헐버트","koAlias":"Homer Bezaleel Hulbert","alias":"訖法","movement":"독립운동지원","birthplace":"외국 미국","order":"독립장","awardYear":"1950"},{"id":"홍만식|洪萬植|독립장|770","name":"홍만식","hanja":"洪萬植","alias":"자: 백헌(伯憲), 호: 호운(湖雲), 시호: 충정(忠貞)","movement":"계몽운동","birthplace":"서울","order":"독립장","awardYear":"1962"},{"id":"홍범식|洪範植|독립장|771","name":"홍범식","hanja":"洪範植","alias":"자 : 성방(聖訪), 호 : 일완(一阮)","movement":"계몽운동","birthplace":"충북 괴산(槐山)","order":"독립장","awardYear":"1962"},{"id":"홍사구|洪思九|독립장|772","name":"홍사구","hanja":"洪思九","alias":"자 : 우용(又容)","movement":"의병","birthplace":"경북 영주(榮州)","order":"독립장","awardYear":"1963"},{"id":"홍석호|洪碩浩|독립장|773","name":"홍석호","hanja":"洪碩浩","alias":"홍석호(洪錫鎬·洪錫浩·洪石浩·洪錫虎), 홍기주(洪基柱·洪基周), 김종성(金宗成·金鐘成)","movement":"만주방면","birthplace":"평북 삭주(朔州)","order":"독립장","awardYear":"1995"},{"id":"홍성익|洪成益|독립장|774","name":"홍성익","hanja":"洪成益","movement":"임시정부","birthplace":"평북 정주(定州)","order":"독립장","awardYear":"1963"},{"id":"홍언|洪焉|독립장|775","name":"홍언","hanja":"洪焉","alias":"본명 : 종표(宗杓) , 호 : 동해수부(東海水夫), 해옹(海翁), 추선(秋船)","movement":"미주방면","birthplace":"서울","order":"독립장","awardYear":"1995"},{"id":"홍원식|洪元植|독립장|776","name":"홍원식","hanja":"洪元植","alias":"홍일초(洪一初)","movement":"3.1운동","birthplace":"경기 수원(水原)","order":"독립장","awardYear":"1968"},{"id":"홍준옥|洪㻐玉|독립장|777","name":"홍준옥","hanja":"洪㻐玉","movement":"3.1운동","birthplace":"경기 수원(水原)","order":"독립장","awardYear":"1977"},{"id":"홍진|洪震|독립장|778","name":"홍진","hanja":"洪震","alias":"본명 : 홍면희(洪冕憙), 초명 : 봉근(鳳根)·우봉(又鳳), 자 : 성무(聖武), 이명 : 홍진(洪鎭·洪震), 호 : 만호(晩湖)·만오(晩悟), 필명 : 경환(警寰)","movement":"임시정부","birthplace":"서울","order":"독립장","awardYear":"1962"},{"id":"홍충희|洪忠熹|독립장|779","name":"홍충희","hanja":"洪忠熹","alias":"호 : 우봉(禹峯), 이명 : 홍충의(洪忠意)·홍충관(洪忠觀)·홍충헌(洪忠憲)·홍충길(洪忠吉)","movement":"만주방면","birthplace":"서울","order":"독립장","awardYear":"1977"},{"id":"홍학순|洪學淳|독립장|780","name":"홍학순","hanja":"洪學淳","alias":"홍학원(洪學元)·홍학(洪學)","movement":"만주방면","birthplace":"평북 의주(義州)","order":"독립장","awardYear":"1995"},{"id":"황덕환|黃德煥|독립장|781","name":"황덕환","hanja":"黃德煥","alias":"호: 일초(一樵), 이명: 황건(黃鍵)","movement":"만주방면","birthplace":"전남 영광(靈光)","order":"독립장","awardYear":"1963"},{"id":"황병길|黃炳吉|독립장|782","name":"황병길","hanja":"黃炳吉","alias":"황병길(黃丙吉)","movement":"만주방면","birthplace":"함북 경원(慶源)","order":"독립장","awardYear":"1963"},{"id":"황병학|黃炳學|독립장|783","name":"황병학","hanja":"黃炳學","alias":"자 : 영문(英文)","movement":"의병","birthplace":"전남 광양(光陽)","order":"독립장","awardYear":"1968"},{"id":"황봉신|黃鳳信|독립장|784","name":"황봉신","hanja":"黃鳳信","movement":"의병","birthplace":"황해 평산(平山)","order":"독립장","awardYear":"1995"},{"id":"황봉운|黃鳳雲|독립장|785","name":"황봉운","hanja":"黃鳳雲","movement":"의병","birthplace":"평남 성천(成川)","order":"독립장","awardYear":"1995"},{"id":"황상규|黃尙奎|독립장|786","name":"황상규","hanja":"黃尙奎","alias":"호 : 백민(白民), 별명 : 관운장(關雲長), 이명 : 허옥(許鈺), 허탁(許鐸)","movement":"중국방면","birthplace":"경남 밀양(密陽)","order":"독립장","awardYear":"1963"},{"id":"황재운|黃在雲|독립장|787","name":"황재운","hanja":"黃在雲","movement":"3.1운동","birthplace":"평남 강서(江西)","order":"독립장","awardYear":"1977"},{"id":"황준성|黃俊聖|독립장|788","name":"황준성","hanja":"黃俊聖","alias":"황준성(黃俊成)","movement":"의병","birthplace":"전북 진안(鎭安)","order":"독립장","awardYear":"1986"},{"id":"황줴|黃覺|독립장|789","name":"황줴","hanja":"黃覺","koAlias":"황각","alias":"호 : 개민(介民), 자: 정보(定保), 원명 : 시지(时至)","movement":"독립운동지원","birthplace":"외국 중국","order":"독립장","awardYear":"1968"},{"id":"황창오|黃昌五|독립장|790","name":"황창오","hanja":"黃昌五","movement":"국내항일","birthplace":"황해 해주(海州)","order":"독립장","awardYear":"1968"},{"id":"황학봉|黃學奉|독립장|791","name":"황학봉","hanja":"黃學奉","movement":"만주방면","birthplace":"평북 초산(楚山)","order":"독립장","awardYear":"1963"},{"id":"황학수|黃學秀|독립장|792","name":"황학수","hanja":"黃學秀","alias":"이국현(李國賢), 자 : 필옥(弼玉), 호 : 몽호(夢乎)","movement":"임시정부","birthplace":"서울","order":"독립장","awardYear":"1962"},{"id":"황현|黃玹|독립장|793","name":"황현","hanja":"黃玹","alias":"자 : 운경(雲卿), 호 : 매천(梅泉)","movement":"계몽운동","birthplace":"전남 광양(光陽)","order":"독립장","awardYear":"1962"},{"id":"후쭝난|胡宗南|독립장|794","name":"후쭝난","hanja":"胡宗南","koAlias":"호종남","alias":"본명 : 호금재(胡琴斋), 이명 : 진동창(秦东昌), 자 : 수산(寿山)","movement":"독립운동지원","birthplace":"외국 중국","order":"독립장","awardYear":"1999"}]};
+
+var PEOPLE = DATA.people;
+var BY_ID = {};
+PEOPLE.forEach(function(p){ BY_ID[p.id] = p; });
+
+var ORDER_LIST = ["대한민국장","대통령장","독립장"];
+var DEFAULT_CREDIT = "국가보훈부 공훈전자사료관 · 독립기념관";
+
+/* ── 작은 도구들 ──────────────────────────────────── */
+function $(id){ return document.getElementById(id); }
+function esc(s){
+  return String(s==null?"":s).replace(/[&<>"']/g, function(c){
+    return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
+  });
+}
+function shuffle(a){
+  var arr = a.slice();
+  for(var i=arr.length-1;i>0;i--){
+    var j = Math.floor(Math.random()*(i+1));
+    var t = arr[i]; arr[i] = arr[j]; arr[j] = t;
+  }
+  return arr;
+}
+function pick(a){ return a[Math.floor(Math.random()*a.length)]; }
+function uniq(a){
+  var seen = {}, out = [];
+  a.forEach(function(x){ if(!seen[x]){ seen[x]=1; out.push(x); } });
+  return out;
+}
+
+/* ── 기록 (이 컴퓨터 안에만 저장, 외부로 보내지 않음) ── */
+var STORE_KEY = "dokrip_quiz_seen_v1";
+function loadSeen(){
+  try{
+    var raw = localStorage.getItem(STORE_KEY);
+    return raw ? JSON.parse(raw) : [];
+  }catch(e){ return []; }
+}
+function saveSeen(ids){
+  try{ localStorage.setItem(STORE_KEY, JSON.stringify(uniq(ids).slice(-3000))); }
+  catch(e){ /* 저장이 막혀 있어도 학습은 그대로 진행됩니다 */ }
+}
+function addSeen(ids){ saveSeen(loadSeen().concat(ids)); }
+
+/* ── 상태 ─────────────────────────────────────────── */
+var state = {
+  grade:"elem",
+  orders:["대한민국장"],
+  moves:[],
+  pool:[],
+  study:[],
+  cardIdx:0,
+  qs:[],
+  qIdx:0,
+  wrong:[],
+  score:0,
+  answered:false
+};
+
+/* ══════════════════════════════════════════════════
+   화면 1 — 시작
+   ══════════════════════════════════════════════════ */
+function countBy(order){
+  return PEOPLE.filter(function(p){ return p.order === order; }).length;
+}
+
+function buildStart(){
+  $("baseDate").textContent = DATA.collected_at_ko
+    ? "자료 기준일: " + DATA.collected_at_ko : "";
+
+  var op = $("orderPick");
+  op.innerHTML = "";
+  ORDER_LIST.forEach(function(o){
+    var n = countBy(o);
+    if(!n) return;
+    var b = document.createElement("button");
+    b.className = "pick";
+    b.dataset.order = o;
+    b.setAttribute("aria-pressed", state.orders.indexOf(o) >= 0 ? "true" : "false");
+    b.innerHTML = esc(o) + '<span class="cnt">' + n + '명</span>';
+    b.addEventListener("click", function(){
+      var i = state.orders.indexOf(o);
+      if(i >= 0){ state.orders.splice(i,1); } else { state.orders.push(o); }
+      b.setAttribute("aria-pressed", i>=0 ? "false" : "true");
+      buildMoves(); refreshPool();
+    });
+    op.appendChild(b);
+  });
+
+  document.querySelectorAll("#gradePick .pick").forEach(function(b){
+    b.setAttribute("aria-pressed", b.dataset.grade === state.grade ? "true" : "false");
+    b.addEventListener("click", function(){
+      state.grade = b.dataset.grade;
+      document.querySelectorAll("#gradePick .pick").forEach(function(x){
+        x.setAttribute("aria-pressed", x.dataset.grade === state.grade ? "true":"false");
+      });
+      refreshPool();
+    });
+  });
+
+  buildMoves();
+  refreshPool();
+}
+
+function buildMoves(){
+  var inOrders = PEOPLE.filter(function(p){ return state.orders.indexOf(p.order) >= 0; });
+  var counts = {};
+  inOrders.forEach(function(p){ counts[p.movement] = (counts[p.movement]||0)+1; });
+  var names = Object.keys(counts).sort(function(a,b){ return counts[b]-counts[a]; });
+
+  state.moves = state.moves.filter(function(m){ return counts[m]; });
+
+  var mp = $("movePick");
+  mp.innerHTML = "";
+  names.forEach(function(m){
+    var b = document.createElement("button");
+    b.className = "chip";
+    b.setAttribute("aria-pressed", state.moves.indexOf(m) >= 0 ? "true":"false");
+    b.textContent = m + " " + counts[m];
+    b.addEventListener("click", function(){
+      var i = state.moves.indexOf(m);
+      if(i>=0){ state.moves.splice(i,1); } else { state.moves.push(m); }
+      b.setAttribute("aria-pressed", i>=0 ? "false":"true");
+      refreshPool();
+    });
+    mp.appendChild(b);
+  });
+}
+
+function computePool(){
+  return PEOPLE.filter(function(p){
+    if(state.orders.indexOf(p.order) < 0) return false;
+    if(state.moves.length && state.moves.indexOf(p.movement) < 0) return false;
+    return true;
+  });
+}
+
+function refreshPool(){
+  state.pool = computePool();
+  var n = state.pool.length;
+  var withPhoto = state.pool.filter(function(p){ return p.photo; }).length;
+  var msg = "고른 범위에 " + n + "명이 있습니다.";
+  if(withPhoto) msg += " (사진 있는 인물 " + withPhoto + "명)";
+  $("poolInfo").textContent = msg;
+
+  var ok = n >= 5;
+  $("startBtn").disabled = !ok;
+  $("startNotice").textContent = ok ? "" : "학습을 시작하려면 최소 5명이 필요합니다. 범위를 넓혀 주세요.";
+}
+
+/* ══════════════════════════════════════════════════
+   화면 2 — 인물 카드
+   ══════════════════════════════════════════════════ */
+function photoBlock(p){
+  if(!p.photo) return "";
+  var credit = p.photoCredit || DEFAULT_CREDIT;
+  var note = "";
+  if(/국사편찬위원회/.test(credit)){
+    note = state.grade === "elem"
+      ? "일제 경찰이 붙잡아 가두고 찍은 사진이에요."
+      : "이 사진은 일제 경찰이 독립운동가를 체포·감시하며 남긴 기록입니다.<br>(일제감시대상인물카드, 국사편찬위원회 소장)";
+  }
+  var uid = "ph" + Math.random().toString(36).slice(2);
+  return '<div class="photo-box" id="' + uid + '" style="display:none;">' +
+           '<img alt="' + esc(p.name) + ' 사진" src="' + esc(p.photo) + '"' +
+             ' onload="this.parentNode.style.display=\'block\';"' +
+             ' onerror="this.parentNode.remove();">' +
+           '<div class="photo-credit">사진 출처: ' + esc(credit) + '</div>' +
+           (note ? '<div class="photo-note">' + note + '</div>' : '') +
+         '</div>';
+}
+
+function factRow(label, value){
+  if(!value) return "";
+  return "<dt>" + esc(label) + "</dt><dd>" + esc(value) + "</dd>";
+}
+
+function personCard(p){
+  var h = "";
+  h += '<div class="person-name">' + esc(p.name);
+  if(p.hanja) h += ' <span class="hanja">' + esc(p.hanja) + '</span>';
+  h += '</div>';
+
+  h += photoBlock(p);
+
+  h += '<dl class="facts">';
+  h += factRow("생몰년", p.bornDied);
+  h += factRow("출생지", p.birthplace);
+  h += factRow("운동계열", p.movement);
+  h += factRow("훈격", p.order + (p.awardYear ? " (" + p.awardYear + ")" : ""));
+  if(state.grade === "high") h += factRow("이명", p.alias);
+  if(state.grade !== "elem"){
+    h += factRow("관련조직", p.orgs);
+    h += factRow("관련사건", p.events);
+  }
+  h += '</dl>';
+
+  if(state.grade === "elem" && p.activitiesEasy){
+    h += '<div class="body-text">' + esc(p.activitiesEasy) + '</div>';
+  } else if(state.grade !== "elem" && p.activities){
+    h += '<div class="body-text">' + esc(p.activities) + '</div>';
+  }
+  if(state.grade === "high" && p.content){
+    h += '<div class="body-text">' + esc(p.content) + '</div>';
+  }
+  if(p.author){
+    h += '<div class="author">집필: ' + esc(p.author) + '</div>';
+  }
+  return h;
+}
+
+function showCard(){
+  var p = state.study[state.cardIdx];
+  $("cardProgress").textContent =
+    "인물 학습 " + (state.cardIdx+1) + " / " + state.study.length;
+  $("cardBody").innerHTML = personCard(p);
+  $("cardPrev").disabled = state.cardIdx === 0;
+  $("cardNext").textContent =
+    state.cardIdx === state.study.length - 1 ? "퀴즈 풀기" : "다음";
+}
+
+/* ══════════════════════════════════════════════════
+   문항 만들기
+   ══════════════════════════════════════════════════ */
+
+/* 오답 후보 — 같은 훈격 또는 같은 운동계열에서만 뽑는다 */
+function siblings(target, need){
+  var same = state.pool.filter(function(p){
+    return p.id !== target.id &&
+           (p.order === target.order || p.movement === target.movement);
+  });
+  if(same.length < need){
+    var extra = PEOPLE.filter(function(p){
+      return p.id !== target.id &&
+             (p.order === target.order || p.movement === target.movement);
+    });
+    same = uniq(same.concat(extra).map(function(p){ return p.id; }))
+             .map(function(id){ return BY_ID[id]; });
+  }
+  return shuffle(same);
+}
+
+/*
+  선택지를 만든다.
+  labelOf : 인물 → 화면에 보일 글자
+  같은 글자가 두 번 나오지 않도록 걸러낸다 (정답 중복 방지).
+*/
+function buildChoices(target, labelOf, wantCount, poolOverride){
+  var answer = labelOf(target);
+  if(!answer) return null;
+
+  var used = {};
+  used[answer] = true;
+  var out = [{ text: answer, id: target.id, correct: true }];
+
+  var cands = poolOverride || siblings(target, wantCount * 3);
+  for(var i=0; i<cands.length && out.length < wantCount; i++){
+    var lab = labelOf(cands[i]);
+    if(!lab || used[lab]) continue;
+    used[lab] = true;
+    out.push({ text: lab, id: cands[i].id, correct: false });
+  }
+  if(out.length < 3) return null;
+
+  out = shuffle(out);
+  return { choices: out, answerIdx: out.findIndex(function(c){ return c.correct; }) };
+}
+
+/* 한 줄 해설 — 사실만 적는다 */
+function oneLine(p){
+  if(p.activitiesEasy && state.grade === "elem") return p.activitiesEasy;
+  if(p.activities) return p.activities;
+  var bits = [];
+  if(p.movement) bits.push(p.movement);
+  if(p.birthplace) bits.push(p.birthplace + " 출신");
+  bits.push(p.order + (p.awardYear ? " " + p.awardYear + "년 포상" : ""));
+  return bits.join(" · ");
+}
+
+function nameLabel(p){ return p.name + (p.hanja ? "(" + p.hanja + ")" : ""); }
+
+/* ── 유형 ① 업적 설명 → 이름 ─────────────────────── */
+function qActivity(p){
+  if(!p.activities) return null;
+  var c = buildChoices(p, nameLabel, 4);
+  if(!c) return null;
+  return {
+    person:p, type:"활동",
+    text:"다음 설명에 해당하는 인물은 누구일까요?",
+    sub:(state.grade==="elem" && p.activitiesEasy) ? p.activitiesEasy : p.activities,
+    choices:c.choices, answerIdx:c.answerIdx
+  };
+}
+
+/* ── 유형 ② 이름 → 훈격 ──────────────────────────────
+   훈격을 하나만 골랐을 때는 보기가 모두 같아져 문제가 성립하지 않는다.
+   그때는 같은 훈격 안에서 포상연도를 묻는다 (묻는 말도 그에 맞게 바꾼다). */
+function qOrder(p){
+  var multi = uniq(state.pool.map(function(x){ return x.order; })).length > 1;
+
+  if(multi){
+    var c = buildChoices(p, function(x){ return x.order; }, 3);
+    if(!c) return null;
+    return {
+      person:p, type:"훈격",
+      text: nameLabel(p) + " 님이 받은 훈격은 무엇일까요?",
+      sub:"", choices:c.choices, answerIdx:c.answerIdx
+    };
+  }
+
+  if(!p.awardYear) return null;
+  var c2 = buildChoices(p, function(x){
+    return x.awardYear ? x.awardYear + "년" : "";
+  }, 4);
+  if(!c2) return null;
+  return {
+    person:p, type:"포상연도",
+    text: nameLabel(p) + " 님이 " + p.order + "을 받은 해는 언제일까요?",
+    sub:"", choices:c2.choices, answerIdx:c2.answerIdx
+  };
+}
+
+/* ── 유형 ③ 사진 → 이름 (사진 있는 인물만) ───────── */
+function qPhoto(p){
+  if(!p.photo) return null;
+  var photoFolk = state.pool.filter(function(x){ return x.photo && x.id !== p.id; });
+  if(photoFolk.length < 2) {
+    photoFolk = PEOPLE.filter(function(x){ return x.photo && x.id !== p.id; });
+  }
+  if(photoFolk.length < 2) return null;
+  /* 오답도 사진 있는 인물 중, 같은 훈격 또는 같은 계열 우선 */
+  var near = shuffle(photoFolk.filter(function(x){
+    return x.order === p.order || x.movement === p.movement;
+  }));
+  var rest = shuffle(photoFolk.filter(function(x){
+    return !(x.order === p.order || x.movement === p.movement);
+  }));
+  var c = buildChoices(p, nameLabel, 4, near.concat(rest));
+  if(!c) return null;
+  return {
+    person:p, type:"사진", photo:p,
+    text:"사진 속 인물은 누구일까요?",
+    sub:"", choices:c.choices, answerIdx:c.answerIdx
+  };
+}
+
+/* ── 유형 ④ 이름 → 운동계열 ──────────────────────── */
+function qMovement(p){
+  if(!p.movement) return null;
+  var c = buildChoices(p, function(x){ return x.movement; }, 4);
+  if(!c) return null;
+  return {
+    person:p, type:"운동계열",
+    text: nameLabel(p) + " 님의 운동계열은 무엇일까요?",
+    sub:"", choices:c.choices, answerIdx:c.answerIdx
+  };
+}
+
+/* ── 유형 ⑤ 관련조직·사건 → 이름 ─────────────────── */
+function qOrgEvent(p){
+  var key = p.orgs || p.events;
+  if(!key) return null;
+  var c = buildChoices(p, nameLabel, 4);
+  if(!c) return null;
+  var lines = [];
+  if(p.orgs)   lines.push("관련조직: " + p.orgs);
+  if(p.events) lines.push("관련사건: " + p.events);
+  return {
+    person:p, type:"조직·사건",
+    text:"다음 조직·사건과 관련된 인물은 누구일까요?",
+    sub:lines.join("\n"), choices:c.choices, answerIdx:c.answerIdx
+  };
+}
+
+/* ── 유형 ⑥ 출생지 ───────────────────────────────── */
+function qBirthplace(p){
+  if(!p.birthplace) return null;
+  var c = buildChoices(p, function(x){ return x.birthplace; }, 4);
+  if(!c) return null;
+  return {
+    person:p, type:"출생지",
+    text: nameLabel(p) + " 님의 출생지는 어디일까요?",
+    sub:"", choices:c.choices, answerIdx:c.answerIdx
+  };
+}
+
+/* ── 유형 ⑦ 생몰년 순서 배열 ─────────────────────── */
+function birthYear(p){
+  var m = /(\d{4})/.exec(p.bornDied || "");
+  return m ? parseInt(m[1],10) : null;
+}
+function qOrderByBirth(p){
+  if(birthYear(p) === null) return null;
+  var others = siblings(p, 12).filter(function(x){ return birthYear(x) !== null; });
+  if(others.length < 2) return null;
+
+  var trio = [p, others[0], others[1]];
+  var years = uniq(trio.map(birthYear));
+  if(years.length < 3) return null;
+
+  var sorted = trio.slice().sort(function(a,b){ return birthYear(a)-birthYear(b); });
+  var answer = sorted.map(function(x){ return x.name; }).join(" → ");
+
+  var seen = {}; seen[answer] = true;
+  var opts = [{ text:answer, id:p.id, correct:true }];
+  var perms = [[0,2,1],[1,0,2],[2,1,0],[1,2,0],[2,0,1]];
+  for(var i=0;i<perms.length && opts.length<4;i++){
+    var t = perms[i].map(function(k){ return sorted[k].name; }).join(" → ");
+    if(seen[t]) continue;
+    seen[t] = true;
+    opts.push({ text:t, id:p.id, correct:false });
+  }
+  if(opts.length < 3) return null;
+  opts = shuffle(opts);
+  return {
+    person:p, type:"생몰년",
+    text:"세 인물을 태어난 해가 이른 순서대로 놓은 것은?",
+    sub: trio.map(function(x){ return x.name + " " + (x.bornDied||""); }).join("\n"),
+    choices:opts, answerIdx:opts.findIndex(function(c){ return c.correct; })
+  };
+}
+
+/* ── 유형 ⑧ 본문 빈칸 (사실 정보만) ──────────────── */
+var JUDGE_WORDS = /(가장|매우|결정적|중요한|뛰어난|위대한|훌륭|평가|의의|의미가|공헌으로|손꼽|대표적|핵심적|상징적|높이|기여로)/;
+
+function blankCandidates(text){
+  var out = [];
+  var reYear = /(\d{3,4})년/g, m;
+  while((m = reYear.exec(text)) !== null){
+    out.push({ start:m.index, len:m[1].length, word:m[1], kind:"연도" });
+  }
+  var reOrg = /([가-힣]{2,9}(?:회|단|당|군|부|사|원|대|국|회의|정부))/g;
+  while((m = reOrg.exec(text)) !== null){
+    out.push({ start:m.index, len:m[1].length, word:m[1], kind:"단체·기관" });
+  }
+  return out;
+}
+
+function sentenceAround(text, idx){
+  var s = text.lastIndexOf(".", idx); s = s < 0 ? 0 : s+1;
+  var e = text.indexOf(".", idx); e = e < 0 ? text.length : e+1;
+  return text.slice(s, e);
+}
+
+function qBlank(p){
+  if(!p.content || p.content.length < 60) return null;
+  var cands = shuffle(blankCandidates(p.content)).filter(function(c){
+    return !JUDGE_WORDS.test(sentenceAround(p.content, c.start));
+  });
+  if(!cands.length) return null;
+
+  var c0 = cands[0];
+  var passage = p.content.slice(0, c0.start) + "◯◯◯◯" +
+                p.content.slice(c0.start + c0.len);
+
+  /* 오답은 다른 인물의 본문에서 같은 종류로 뽑는다 */
+  var others = [];
+  shuffle(PEOPLE.filter(function(x){ return x.content && x.id !== p.id; }))
+    .slice(0, 40).forEach(function(x){
+      blankCandidates(x.content).forEach(function(c){
+        if(c.kind === c0.kind && c.word !== c0.word) others.push(c.word);
+      });
+    });
+  others = shuffle(uniq(others));
+  if(others.length < 2) return null;
+
+  var seen = {}; seen[c0.word] = true;
+  var opts = [{ text:c0.word, id:p.id, correct:true }];
+  for(var i=0;i<others.length && opts.length<4;i++){
+    if(seen[others[i]]) continue;
+    seen[others[i]] = true;
+    opts.push({ text:others[i], id:p.id, correct:false });
+  }
+  if(opts.length < 3) return null;
+  opts = shuffle(opts);
+  return {
+    person:p, type:"본문",
+    text:"본문의 ◯◯◯◯ 에 들어갈 말은 무엇일까요?",
+    sub:passage,
+    note:"이 내용은 연구자가 집필한 글에 근거합니다." + (p.author ? " (집필: " + p.author + ")" : ""),
+    choices:opts, answerIdx:opts.findIndex(function(c){ return c.correct; })
+  };
+}
+
+/* 학년별로 쓸 수 있는 유형 */
+var TYPES = {
+  elem: [qActivity, qOrder, qPhoto],
+  mid:  [qActivity, qOrder, qPhoto, qMovement, qOrgEvent],
+  high: [qActivity, qOrder, qPhoto, qMovement, qOrgEvent, qBirthplace, qOrderByBirth, qBlank]
+};
+
+function makeQuiz(){
+  var makers = TYPES[state.grade];
+
+  /* 방금 배운 5명을 중심으로, 이전에 배운 인물을 섞는다 */
+  var seen = loadSeen();
+  var studyIds = state.study.map(function(p){ return p.id; });
+  var previous = shuffle(state.pool.filter(function(p){
+    return studyIds.indexOf(p.id) < 0 && seen.indexOf(p.id) >= 0;
+  }));
+  var fresh = shuffle(state.pool.filter(function(p){
+    return studyIds.indexOf(p.id) < 0 && seen.indexOf(p.id) < 0;
+  }));
+
+  var order = shuffle(state.study)
+                .concat(shuffle(state.study))
+                .concat(previous.slice(0,4))
+                .concat(fresh);
+
+  var qs = [], guard = 0;
+  var typeCount = {};
+  while(qs.length < 10 && guard < 600){
+    guard++;
+    var p = order[guard % order.length];
+    if(!p) break;
+
+    /* 같은 유형만 반복되지 않게 적게 쓴 유형부터 시도한다 */
+    var ms = makers.slice().sort(function(a,b){
+      return (typeCount[a.name]||0) - (typeCount[b.name]||0);
+    });
+    var made = null;
+    for(var i=0;i<ms.length;i++){
+      made = ms[i](p);
+      if(made){ typeCount[ms[i].name] = (typeCount[ms[i].name]||0)+1; break; }
+    }
+    if(!made) continue;
+
+    /* 똑같은 문제가 두 번 나오지 않게 */
+    var key = made.type + "|" + made.person.id;
+    if(qs.some(function(q){ return q.type + "|" + q.person.id === key; })) continue;
+    qs.push(made);
+  }
+  return qs;
+}
+
+/* ══════════════════════════════════════════════════
+   화면 3 — 퀴즈
+   ══════════════════════════════════════════════════ */
+function showQuestion(){
+  var q = state.qs[state.qIdx];
+  state.answered = false;
+  $("quizProgress").textContent = (state.qIdx+1) + " / " + state.qs.length;
+  $("quizNext").style.display = "none";
+
+  var h = '<div class="q-text">' + esc(q.text) + '</div>';
+  if(q.photo) h += photoBlock(q.photo);
+  if(q.sub)   h += '<div class="q-sub">' + esc(q.sub).replace(/\n/g,"<br>") + '</div>';
+
+  h += '<div class="choices" id="choiceBox">';
+  q.choices.forEach(function(c, i){
+    h += '<button class="choice" data-i="' + i + '">' +
+           '<span class="num">' + (i+1) + '</span>' +
+           '<span>' + esc(c.text) + '</span></button>';
+  });
+  h += '</div>';
+  h += '<div id="verdictBox"></div>';
+  if(q.note) h += '<div class="q-note">' + esc(q.note) + '</div>';
+  h += '<div class="keyhint">키보드 1 · 2 · 3 · 4 로 답을 고르고, Enter 로 다음 문항으로 넘어갑니다.</div>';
+
+  $("quizBody").innerHTML = h;
+  Array.prototype.forEach.call(
+    document.querySelectorAll("#choiceBox .choice"),
+    function(b){
+      b.addEventListener("click", function(){ answer(parseInt(b.dataset.i,10)); });
+    }
+  );
+}
+
+function answer(i){
+  if(state.answered) return;
+  state.answered = true;
+
+  var q = state.qs[state.qIdx];
+  var right = (i === q.answerIdx);
+  if(right) state.score++;
+  else state.wrong.push(q.person);
+
+  Array.prototype.forEach.call(
+    document.querySelectorAll("#choiceBox .choice"),
+    function(b){
+      var bi = parseInt(b.dataset.i,10);
+      b.disabled = true;
+      if(bi === q.answerIdx) b.classList.add("correct");
+      else if(bi === i)      b.classList.add("chosen-wrong");
+    }
+  );
+
+  var p = q.person;
+  var lead = right ? "맞았습니다" : "다시 기억해 볼까요";
+  var body = right
+    ? oneLine(p)
+    : "정답은 <strong>" + esc(q.choices[q.answerIdx].text) + "</strong> 입니다.<br>" + esc(oneLine(p));
+
+  $("verdictBox").innerHTML =
+    '<div class="verdict ' + (right ? "ok" : "no") + '">' +
+      '<span class="lead">' + lead + '</span>' + body +
+    '</div>';
+
+  $("quizNext").style.display = "block";
+  $("quizNext").textContent =
+    state.qIdx === state.qs.length - 1 ? "결과 보기" : "다음 문항";
+}
+
+/* ══════════════════════════════════════════════════
+   화면 4 — 결과
+   ══════════════════════════════════════════════════ */
+function showResult(){
+  addSeen(state.study.map(function(p){ return p.id; }));
+
+  $("scoreLine").innerHTML =
+    state.score + " <small>/ " + state.qs.length + " 문항</small>";
+
+  var total = loadSeen().length;
+  $("tallyLine").textContent = "지금까지 기억한 독립운동가: " + total + "명";
+
+  var area = $("reviewArea");
+  if(!state.wrong.length){
+    area.innerHTML = '<div class="card"><p>틀린 문항이 없습니다.</p></div>';
+  } else {
+    var ids = [], list = [];
+    state.wrong.forEach(function(p){
+      if(ids.indexOf(p.id) < 0){ ids.push(p.id); list.push(p); }
+    });
+    var h = '<h3 style="margin-left:.2rem;">다시 살펴볼 인물</h3>';
+    list.forEach(function(p){
+      h += '<div class="card">' + personCard(p) + '</div>';
+    });
+    area.innerHTML = h;
+  }
+  show("screen-result");
+}
+
+/* ══════════════════════════════════════════════════
+   화면 전환 및 시작
+   ══════════════════════════════════════════════════ */
+function show(id){
+  Array.prototype.forEach.call(document.querySelectorAll(".screen"), function(s){
+    s.classList.toggle("on", s.id === id);
+  });
+  window.scrollTo(0,0);
+}
+
+function beginStudy(){
+  state.pool = computePool();
+  if(state.pool.length < 5) return;
+
+  var seen = loadSeen();
+  var unseen = shuffle(state.pool.filter(function(p){ return seen.indexOf(p.id) < 0; }));
+  var rest   = shuffle(state.pool.filter(function(p){ return seen.indexOf(p.id) >= 0; }));
+  state.study = unseen.concat(rest).slice(0,5);
+
+  state.cardIdx = 0;
+  showCard();
+  show("screen-card");
+}
+
+function beginQuiz(){
+  state.qs = makeQuiz();
+  if(!state.qs.length){
+    alert("고른 범위에서는 낼 수 있는 문항이 없습니다. 범위를 넓혀 주세요.");
+    show("screen-start");
+    return;
+  }
+  state.qIdx = 0; state.score = 0; state.wrong = [];
+  showQuestion();
+  show("screen-quiz");
+}
+
+/* ── 버튼 연결 ────────────────────────────────────── */
+$("startBtn").addEventListener("click", beginStudy);
+
+$("cardPrev").addEventListener("click", function(){
+  if(state.cardIdx > 0){ state.cardIdx--; showCard(); }
+});
+$("cardNext").addEventListener("click", function(){
+  if(state.cardIdx < state.study.length - 1){ state.cardIdx++; showCard(); }
+  else beginQuiz();
+});
+
+$("quizNext").addEventListener("click", function(){
+  if(state.qIdx < state.qs.length - 1){ state.qIdx++; showQuestion(); }
+  else showResult();
+});
+
+$("againBtn").addEventListener("click", beginStudy);
+$("otherBtn").addEventListener("click", function(){ show("screen-start"); });
+
+$("bigToggle").addEventListener("click", function(){
+  var on = document.documentElement.classList.toggle("big");
+  this.setAttribute("aria-pressed", on ? "true" : "false");
+});
+
+/* ── 키보드 ───────────────────────────────────────── */
+document.addEventListener("keydown", function(e){
+  var quizOn = $("screen-quiz").classList.contains("on");
+  var cardOn = $("screen-card").classList.contains("on");
+
+  if(quizOn){
+    if(/^[1-4]$/.test(e.key) && !state.answered){
+      var i = parseInt(e.key,10) - 1;
+      var q = state.qs[state.qIdx];
+      if(q && i < q.choices.length){ e.preventDefault(); answer(i); }
+    } else if(e.key === "Enter" && state.answered){
+      e.preventDefault(); $("quizNext").click();
+    }
+  } else if(cardOn && e.key === "Enter"){
+    e.preventDefault(); $("cardNext").click();
+  }
+});
+
+buildStart();
+</script>
+</body>
+</html>

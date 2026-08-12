@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>독립운동가 인물 사전 퀴즈</title>
+<style>
+:root{
+  font-size:18px;
+  --navy:#1b2a41;
+  --navy-soft:#2c4160;
+  --ink:#23272c;
+  --ink-soft:#5b626b;
+  --paper:#ffffff;
+  --bg:#f3f4f6;
+  --line:#d7dbe0;
+  --line-soft:#e8eaee;
+  --red:#8c2f2f;
+  --blue:#2f4f7a;
+  --ok-bg:#eef3ee;
+  --ok-line:#7d9a7d;
+  --no-bg:#f6efef;
+  --no-line:#b08585;
+}
+html.big{font-size:27px;}
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  padding:0 0 7.5rem 0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:"Malgun Gothic","맑은 고딕",AppleGothic,"Apple SD Gothic Neo",
+              "Nanum Gothic",Dotum,sans-serif;
+  font-size:1rem;
+  line-height:1.7;
+  -webkit-text-size-adjust:100%;
+}
+.wrap{max-width:46rem;margin:0 auto;padding:1rem;}
+.screen{display:none;}
+.screen.on{display:block;}
+
+/* ── 머리말 ───────────────────────────── */
+.top{
+  display:flex;align-items:center;justify-content:space-between;gap:.75rem;
+  background:var(--navy);color:#fff;padding:.85rem 1rem;
+}
+.top h1{font-size:1.15rem;margin:0;font-weight:700;letter-spacing:-.01em;}
+.top .sub{font-size:.72rem;opacity:.8;font-weight:400;display:block;margin-top:.15rem;}
+.bigbtn{
+  background:transparent;color:#fff;border:1px solid rgba(255,255,255,.55);
+  border-radius:.35rem;padding:.45rem .7rem;font-size:.78rem;cursor:pointer;
+  font-family:inherit;white-space:nowrap;
+}
+.bigbtn:hover{background:rgba(255,255,255,.12);}
+.bigbtn[aria-pressed="true"]{background:#fff;color:var(--navy);font-weight:700;}
+
+/* ── 카드/블록 ────────────────────────── */
+.card{
+  background:var(--paper);border:1px solid var(--line);border-radius:.5rem;
+  padding:1.25rem;margin-bottom:1rem;
+}
+h2{font-size:1.2rem;margin:0 0 .8rem;color:var(--navy);letter-spacing:-.01em;}
+h3{font-size:1rem;margin:1.2rem 0 .5rem;color:var(--navy-soft);}
+p{margin:.5rem 0;}
+.hint{color:var(--ink-soft);font-size:.85rem;line-height:1.6;}
+
+/* ── 버튼 ─────────────────────────────── */
+.btn{
+  display:inline-block;font-family:inherit;font-size:1rem;
+  padding:.9rem 1.5rem;border-radius:.4rem;border:1px solid var(--navy);
+  background:var(--navy);color:#fff;cursor:pointer;font-weight:700;
+}
+.btn:hover{background:var(--navy-soft);}
+.btn:disabled{opacity:.45;cursor:not-allowed;}
+.btn.ghost{background:var(--paper);color:var(--navy);}
+.btn.ghost:hover{background:#eef1f5;}
+.btn.wide{width:100%;}
+.btnrow{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1rem;}
+.btnrow .btn{flex:1 1 12rem;}
+
+/* ── 선택 버튼 (학년/범위/계열) ───────── */
+.pickgrid{display:flex;gap:.6rem;flex-wrap:wrap;}
+.pick{
+  flex:1 1 8rem;font-family:inherit;font-size:1rem;text-align:center;
+  padding:1.1rem .6rem;border-radius:.45rem;border:2px solid var(--line);
+  background:var(--paper);color:var(--ink);cursor:pointer;line-height:1.4;
+}
+.pick:hover{border-color:var(--navy-soft);}
+.pick[aria-pressed="true"]{
+  border-color:var(--navy);background:var(--navy);color:#fff;font-weight:700;
+}
+.pick .cnt{display:block;font-size:.78rem;opacity:.75;margin-top:.2rem;font-weight:400;}
+.pick[aria-pressed="true"] .cnt{opacity:.9;}
+.chips{display:flex;gap:.4rem;flex-wrap:wrap;}
+.chip{
+  font-family:inherit;font-size:.85rem;padding:.45rem .75rem;border-radius:1.2rem;
+  border:1px solid var(--line);background:var(--paper);color:var(--ink-soft);cursor:pointer;
+}
+.chip[aria-pressed="true"]{background:var(--navy-soft);border-color:var(--navy-soft);color:#fff;}
+
+/* ── 인물 카드 ────────────────────────── */
+.person-name{font-size:1.5rem;font-weight:700;color:var(--navy);line-height:1.35;}
+.person-name .hanja{font-size:1rem;color:var(--ink-soft);font-weight:400;}
+.photo-box{margin:.9rem 0;text-align:center;}
+.photo-box img{
+  max-width:100%;width:13rem;border:1px solid var(--line);border-radius:.3rem;
+  background:#eceef1;display:block;margin:0 auto;
+}
+.photo-credit{font-size:.72rem;color:var(--ink-soft);margin-top:.4rem;line-height:1.5;}
+.photo-note{
+  font-size:.75rem;color:var(--navy-soft);background:#eef1f5;border-left:3px solid var(--navy-soft);
+  padding:.5rem .7rem;margin:.5rem auto 0;text-align:left;max-width:26rem;line-height:1.55;
+}
+dl.facts{display:grid;grid-template-columns:auto 1fr;gap:.4rem .9rem;margin:.9rem 0 0;}
+dl.facts dt{color:var(--ink-soft);font-size:.88rem;white-space:nowrap;}
+dl.facts dd{margin:0;}
+.body-text{
+  margin-top:.9rem;padding-top:.9rem;border-top:1px solid var(--line-soft);
+  font-size:.95rem;line-height:1.8;
+}
+.author{margin-top:.9rem;font-size:.75rem;color:var(--ink-soft);text-align:right;}
+.progress{font-size:.9rem;color:var(--ink-soft);margin-bottom:.5rem;}
+
+/* ── 퀴즈 ─────────────────────────────── */
+.q-text{font-size:1.15rem;font-weight:700;line-height:1.6;margin:.3rem 0 1rem;color:var(--navy);}
+.q-sub{font-size:.95rem;color:var(--ink);background:#eef1f5;border-radius:.35rem;
+       padding:.8rem 1rem;margin-bottom:1rem;line-height:1.75;}
+.choices{display:flex;flex-direction:column;gap:.55rem;}
+.choice{
+  display:flex;align-items:flex-start;gap:.7rem;width:100%;text-align:left;
+  font-family:inherit;font-size:1rem;padding:.85rem 1rem;border-radius:.4rem;
+  border:2px solid var(--line);background:var(--paper);color:var(--ink);cursor:pointer;
+  line-height:1.5;
+}
+.choice:hover:not(:disabled){border-color:var(--navy-soft);}
+.choice:disabled{cursor:default;}
+.choice .num{
+  flex:0 0 auto;width:1.6rem;height:1.6rem;border-radius:.25rem;background:#eceef1;
+  color:var(--ink-soft);font-size:.85rem;font-weight:700;display:flex;
+  align-items:center;justify-content:center;
+}
+.choice.correct{border-color:var(--ok-line);background:var(--ok-bg);}
+.choice.correct .num{background:var(--ok-line);color:#fff;}
+.choice.chosen-wrong{border-color:var(--no-line);background:var(--no-bg);}
+.choice.chosen-wrong .num{background:var(--no-line);color:#fff;}
+.verdict{margin-top:1rem;padding:.9rem 1rem;border-radius:.4rem;font-size:.95rem;line-height:1.7;}
+.verdict.ok{background:var(--ok-bg);border:1px solid var(--ok-line);}
+.verdict.no{background:var(--no-bg);border:1px solid var(--no-line);}
+.verdict .lead{font-weight:700;display:block;margin-bottom:.25rem;}
+.q-note{margin-top:.9rem;font-size:.75rem;color:var(--ink-soft);border-top:1px dotted var(--line);
+        padding-top:.6rem;line-height:1.6;}
+.keyhint{margin-top:.9rem;font-size:.75rem;color:var(--ink-soft);}
+
+/* ── 결과 ─────────────────────────────── */
+.score{font-size:2rem;font-weight:700;color:var(--navy);line-height:1.3;}
+.score small{font-size:1rem;font-weight:400;color:var(--ink-soft);}
+.tally{background:#eef1f5;border-radius:.4rem;padding:.9rem 1rem;font-size:.95rem;margin-top:.9rem;}
+
+/* ── 바닥 출처 ────────────────────────── */
+.foot{
+  position:fixed;left:0;right:0;bottom:0;background:var(--navy);color:rgba(255,255,255,.88);
+  font-size:.68rem;line-height:1.55;padding:.55rem 1rem;text-align:center;z-index:50;
+}
+.foot span{display:block;}
+.foot .warn{color:rgba(255,255,255,.68);}
+.notice{font-size:.78rem;color:var(--ink-soft);text-align:center;margin-top:1rem;line-height:1.6;}
+@media (max-width:34rem){
+  .top h1{font-size:1rem;}
+  .btnrow .btn{flex:1 1 100%;}
+}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <h1>독립운동가 인물 사전 퀴즈<span class="sub" id="baseDate"></span></h1>
+  <button class="bigbtn" id="bigToggle" aria-pressed="false">큰 화면 모드</button>
+</div>
+
+<div class="wrap">
+
+<!-- ═══ 화면 1 · 시작 ═══════════════════════════════ -->
+<section class="screen on" id="screen-start">
+  <div class="card">
+    <h2>1. 학년을 고르세요</h2>
+    <div class="pickgrid" id="gradePick">
+      <button class="pick" data-grade="elem">초등<span class="cnt">쉬운 말로</span></button>
+      <button class="pick" data-grade="mid">중등<span class="cnt">조직·사건까지</span></button>
+      <button class="pick" data-grade="high">고등<span class="cnt">본문·이명까지</span></button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>2. 학습 범위를 고르세요</h2>
+    <p class="hint">여러 개를 함께 고를 수 있습니다.</p>
+    <div class="pickgrid" id="orderPick"></div>
+  </div>
+
+  <div class="card">
+    <h2>3. 운동계열 (선택 사항)</h2>
+    <p class="hint">고르지 않으면 전체에서 출제됩니다.</p>
+    <div class="chips" id="movePick"></div>
+    <p class="hint" id="poolInfo" style="margin-top:.9rem;"></p>
+  </div>
+
+  <button class="btn wide" id="startBtn">학습 시작</button>
+  <p class="notice" id="startNotice"></p>
+</section>
+
+<!-- ═══ 화면 2 · 인물 카드 학습 ══════════════════════ -->
+<section class="screen" id="screen-card">
+  <p class="progress" id="cardProgress"></p>
+  <div class="card" id="cardBody"></div>
+  <div class="btnrow">
+    <button class="btn ghost" id="cardPrev">이전</button>
+    <button class="btn" id="cardNext">다음</button>
+  </div>
+</section>
+
+<!-- ═══ 화면 3 · 퀴즈 ═══════════════════════════════ -->
+<section class="screen" id="screen-quiz">
+  <p class="progress" id="quizProgress"></p>
+  <div class="card">
+    <div id="quizBody"></div>
+  </div>
+  <button class="btn wide" id="quizNext" style="display:none;">다음 문항</button>
+</section>
+
+<!-- ═══ 화면 4 · 결과 ═══════════════════════════════ -->
+<section class="screen" id="screen-result">
+  <div class="card">
+    <h2>학습을 마쳤습니다</h2>
+    <p class="score" id="scoreLine"></p>
+    <div class="tally" id="tallyLine"></div>
+  </div>
+  <div id="reviewArea"></div>
+  <div class="btnrow">
+    <button class="btn" id="againBtn">다시 하기</button>
+    <button class="btn ghost" id="otherBtn">다른 훈격 배우기</button>
+  </div>
+</section>
+
+</div>
+
+<div class="foot">
+  <span>자료 출처: 독립기념관 한국독립운동인명사전 (search.i815.or.kr) · 공공저작물</span>
+  <span class="warn">본문은 각 집필자의 학술적 견해이며 독립기념관의 공식 입장과 다를 수 있습니다.</span>
+  <span>사진 출처: 각 사진 하단 표기 참조</span>
+  <span>이 앱은 교육 목적의 비영리 학습 자료입니다.</span>
+</div>
+
+<script>
+"use strict";
+/* ══════════════════════════════════════════════════════════
+   자료 — 이 파일 안에 직접 들어 있습니다.
+   인터넷이 없어도 사진을 뺀 모든 기능이 작동합니다.
+   ══════════════════════════════════════════════════════════ */
+var DATA = /*__DATA__*/;
+
+var PEOPLE = DATA.people;
+var BY_ID = {};
+PEOPLE.forEach(function(p){ BY_ID[p.id] = p; });
+
+var ORDER_LIST = ["대한민국장","대통령장","독립장"];
+var DEFAULT_CREDIT = "국가보훈부 공훈전자사료관 · 독립기념관";
+
+/* ── 작은 도구들 ──────────────────────────────────── */
+function $(id){ return document.getElementById(id); }
+function esc(s){
+  return String(s==null?"":s).replace(/[&<>"']/g, function(c){
+    return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
+  });
+}
+function shuffle(a){
+  var arr = a.slice();
+  for(var i=arr.length-1;i>0;i--){
+    var j = Math.floor(Math.random()*(i+1));
+    var t = arr[i]; arr[i] = arr[j]; arr[j] = t;
+  }
+  return arr;
+}
+function pick(a){ return a[Math.floor(Math.random()*a.length)]; }
+function uniq(a){
+  var seen = {}, out = [];
+  a.forEach(function(x){ if(!seen[x]){ seen[x]=1; out.push(x); } });
+  return out;
+}
+
+/* ── 기록 (이 컴퓨터 안에만 저장, 외부로 보내지 않음) ── */
+var STORE_KEY = "dokrip_quiz_seen_v1";
+function loadSeen(){
+  try{
+    var raw = localStorage.getItem(STORE_KEY);
+    return raw ? JSON.parse(raw) : [];
+  }catch(e){ return []; }
+}
+function saveSeen(ids){
+  try{ localStorage.setItem(STORE_KEY, JSON.stringify(uniq(ids).slice(-3000))); }
+  catch(e){ /* 저장이 막혀 있어도 학습은 그대로 진행됩니다 */ }
+}
+function addSeen(ids){ saveSeen(loadSeen().concat(ids)); }
+
+/* ── 상태 ─────────────────────────────────────────── */
+var state = {
+  grade:"elem",
+  orders:["대한민국장"],
+  moves:[],
+  pool:[],
+  study:[],
+  cardIdx:0,
+  qs:[],
+  qIdx:0,
+  wrong:[],
+  score:0,
+  answered:false
+};
+
+/* ══════════════════════════════════════════════════
+   화면 1 — 시작
+   ══════════════════════════════════════════════════ */
+function countBy(order){
+  return PEOPLE.filter(function(p){ return p.order === order; }).length;
+}
+
+function buildStart(){
+  $("baseDate").textContent = DATA.collected_at_ko
+    ? "자료 기준일: " + DATA.collected_at_ko : "";
+
+  var op = $("orderPick");
+  op.innerHTML = "";
+  ORDER_LIST.forEach(function(o){
+    var n = countBy(o);
+    if(!n) return;
+    var b = document.createElement("button");
+    b.className = "pick";
+    b.dataset.order = o;
+    b.setAttribute("aria-pressed", state.orders.indexOf(o) >= 0 ? "true" : "false");
+    b.innerHTML = esc(o) + '<span class="cnt">' + n + '명</span>';
+    b.addEventListener("click", function(){
+      var i = state.orders.indexOf(o);
+      if(i >= 0){ state.orders.splice(i,1); } else { state.orders.push(o); }
+      b.setAttribute("aria-pressed", i>=0 ? "false" : "true");
+      buildMoves(); refreshPool();
+    });
+    op.appendChild(b);
+  });
+
+  document.querySelectorAll("#gradePick .pick").forEach(function(b){
+    b.setAttribute("aria-pressed", b.dataset.grade === state.grade ? "true" : "false");
+    b.addEventListener("click", function(){
+      state.grade = b.dataset.grade;
+      document.querySelectorAll("#gradePick .pick").forEach(function(x){
+        x.setAttribute("aria-pressed", x.dataset.grade === state.grade ? "true":"false");
+      });
+      refreshPool();
+    });
+  });
+
+  buildMoves();
+  refreshPool();
+}
+
+function buildMoves(){
+  var inOrders = PEOPLE.filter(function(p){ return state.orders.indexOf(p.order) >= 0; });
+  var counts = {};
+  inOrders.forEach(function(p){ counts[p.movement] = (counts[p.movement]||0)+1; });
+  var names = Object.keys(counts).sort(function(a,b){ return counts[b]-counts[a]; });
+
+  state.moves = state.moves.filter(function(m){ return counts[m]; });
+
+  var mp = $("movePick");
+  mp.innerHTML = "";
+  names.forEach(function(m){
+    var b = document.createElement("button");
+    b.className = "chip";
+    b.setAttribute("aria-pressed", state.moves.indexOf(m) >= 0 ? "true":"false");
+    b.textContent = m + " " + counts[m];
+    b.addEventListener("click", function(){
+      var i = state.moves.indexOf(m);
+      if(i>=0){ state.moves.splice(i,1); } else { state.moves.push(m); }
+      b.setAttribute("aria-pressed", i>=0 ? "false":"true");
+      refreshPool();
+    });
+    mp.appendChild(b);
+  });
+}
+
+function computePool(){
+  return PEOPLE.filter(function(p){
+    if(state.orders.indexOf(p.order) < 0) return false;
+    if(state.moves.length && state.moves.indexOf(p.movement) < 0) return false;
+    return true;
+  });
+}
+
+function refreshPool(){
+  state.pool = computePool();
+  var n = state.pool.length;
+  var withPhoto = state.pool.filter(function(p){ return p.photo; }).length;
+  var msg = "고른 범위에 " + n + "명이 있습니다.";
+  if(withPhoto) msg += " (사진 있는 인물 " + withPhoto + "명)";
+  $("poolInfo").textContent = msg;
+
+  var ok = n >= 5;
+  $("startBtn").disabled = !ok;
+  $("startNotice").textContent = ok ? "" : "학습을 시작하려면 최소 5명이 필요합니다. 범위를 넓혀 주세요.";
+}
+
+/* ══════════════════════════════════════════════════
+   화면 2 — 인물 카드
+   ══════════════════════════════════════════════════ */
+function photoBlock(p){
+  if(!p.photo) return "";
+  var credit = p.photoCredit || DEFAULT_CREDIT;
+  var note = "";
+  if(/국사편찬위원회/.test(credit)){
+    note = state.grade === "elem"
+      ? "일제 경찰이 붙잡아 가두고 찍은 사진이에요."
+      : "이 사진은 일제 경찰이 독립운동가를 체포·감시하며 남긴 기록입니다.<br>(일제감시대상인물카드, 국사편찬위원회 소장)";
+  }
+  var uid = "ph" + Math.random().toString(36).slice(2);
+  return '<div class="photo-box" id="' + uid + '" style="display:none;">' +
+           '<img alt="' + esc(p.name) + ' 사진" src="' + esc(p.photo) + '"' +
+             ' onload="this.parentNode.style.display=\'block\';"' +
+             ' onerror="this.parentNode.remove();">' +
+           '<div class="photo-credit">사진 출처: ' + esc(credit) + '</div>' +
+           (note ? '<div class="photo-note">' + note + '</div>' : '') +
+         '</div>';
+}
+
+function factRow(label, value){
+  if(!value) return "";
+  return "<dt>" + esc(label) + "</dt><dd>" + esc(value) + "</dd>";
+}
+
+function personCard(p){
+  var h = "";
+  h += '<div class="person-name">' + esc(p.name);
+  if(p.hanja) h += ' <span class="hanja">' + esc(p.hanja) + '</span>';
+  h += '</div>';
+
+  h += photoBlock(p);
+
+  h += '<dl class="facts">';
+  h += factRow("생몰년", p.bornDied);
+  h += factRow("출생지", p.birthplace);
+  h += factRow("운동계열", p.movement);
+  h += factRow("훈격", p.order + (p.awardYear ? " (" + p.awardYear + ")" : ""));
+  if(state.grade === "high") h += factRow("이명", p.alias);
+  if(state.grade !== "elem"){
+    h += factRow("관련조직", p.orgs);
+    h += factRow("관련사건", p.events);
+  }
+  h += '</dl>';
+
+  if(state.grade === "elem" && p.activitiesEasy){
+    h += '<div class="body-text">' + esc(p.activitiesEasy) + '</div>';
+  } else if(state.grade !== "elem" && p.activities){
+    h += '<div class="body-text">' + esc(p.activities) + '</div>';
+  }
+  if(state.grade === "high" && p.content){
+    h += '<div class="body-text">' + esc(p.content) + '</div>';
+  }
+  if(p.author){
+    h += '<div class="author">집필: ' + esc(p.author) + '</div>';
+  }
+  return h;
+}
+
+function showCard(){
+  var p = state.study[state.cardIdx];
+  $("cardProgress").textContent =
+    "인물 학습 " + (state.cardIdx+1) + " / " + state.study.length;
+  $("cardBody").innerHTML = personCard(p);
+  $("cardPrev").disabled = state.cardIdx === 0;
+  $("cardNext").textContent =
+    state.cardIdx === state.study.length - 1 ? "퀴즈 풀기" : "다음";
+}
+
+/* ══════════════════════════════════════════════════
+   문항 만들기
+   ══════════════════════════════════════════════════ */
+
+/* 오답 후보 — 같은 훈격 또는 같은 운동계열에서만 뽑는다 */
+function siblings(target, need){
+  var same = state.pool.filter(function(p){
+    return p.id !== target.id &&
+           (p.order === target.order || p.movement === target.movement);
+  });
+  if(same.length < need){
+    var extra = PEOPLE.filter(function(p){
+      return p.id !== target.id &&
+             (p.order === target.order || p.movement === target.movement);
+    });
+    same = uniq(same.concat(extra).map(function(p){ return p.id; }))
+             .map(function(id){ return BY_ID[id]; });
+  }
+  return shuffle(same);
+}
+
+/*
+  선택지를 만든다.
+  labelOf : 인물 → 화면에 보일 글자
+  같은 글자가 두 번 나오지 않도록 걸러낸다 (정답 중복 방지).
+*/
+function buildChoices(target, labelOf, wantCount, poolOverride){
+  var answer = labelOf(target);
+  if(!answer) return null;
+
+  var used = {};
+  used[answer] = true;
+  var out = [{ text: answer, id: target.id, correct: true }];
+
+  var cands = poolOverride || siblings(target, wantCount * 3);
+  for(var i=0; i<cands.length && out.length < wantCount; i++){
+    var lab = labelOf(cands[i]);
+    if(!lab || used[lab]) continue;
+    used[lab] = true;
+    out.push({ text: lab, id: cands[i].id, correct: false });
+  }
+  if(out.length < 3) return null;
+
+  out = shuffle(out);
+  return { choices: out, answerIdx: out.findIndex(function(c){ return c.correct; }) };
+}
+
+/* 한 줄 해설 — 사실만 적는다 */
+function oneLine(p){
+  if(p.activitiesEasy && state.grade === "elem") return p.activitiesEasy;
+  if(p.activities) return p.activities;
+  var bits = [];
+  if(p.movement) bits.push(p.movement);
+  if(p.birthplace) bits.push(p.birthplace + " 출신");
+  bits.push(p.order + (p.awardYear ? " " + p.awardYear + "년 포상" : ""));
+  return bits.join(" · ");
+}
+
+function nameLabel(p){ return p.name + (p.hanja ? "(" + p.hanja + ")" : ""); }
+
+/* ── 유형 ① 업적 설명 → 이름 ─────────────────────── */
+function qActivity(p){
+  if(!p.activities) return null;
+  var c = buildChoices(p, nameLabel, 4);
+  if(!c) return null;
+  return {
+    person:p, type:"활동",
+    text:"다음 설명에 해당하는 인물은 누구일까요?",
+    sub:(state.grade==="elem" && p.activitiesEasy) ? p.activitiesEasy : p.activities,
+    choices:c.choices, answerIdx:c.answerIdx
+  };
+}
+
+/* ── 유형 ② 이름 → 훈격 ──────────────────────────────
+   훈격을 하나만 골랐을 때는 보기가 모두 같아져 문제가 성립하지 않는다.
+   그때는 같은 훈격 안에서 포상연도를 묻는다 (묻는 말도 그에 맞게 바꾼다). */
+function qOrder(p){
+  var multi = uniq(state.pool.map(function(x){ return x.order; })).length > 1;
+
+  if(multi){
+    var c = buildChoices(p, function(x){ return x.order; }, 3);
+    if(!c) return null;
+    return {
+      person:p, type:"훈격",
+      text: nameLabel(p) + " 님이 받은 훈격은 무엇일까요?",
+      sub:"", choices:c.choices, answerIdx:c.answerIdx
+    };
+  }
+
+  if(!p.awardYear) return null;
+  var c2 = buildChoices(p, function(x){
+    return x.awardYear ? x.awardYear + "년" : "";
+  }, 4);
+  if(!c2) return null;
+  return {
+    person:p, type:"포상연도",
+    text: nameLabel(p) + " 님이 " + p.order + "을 받은 해는 언제일까요?",
+    sub:"", choices:c2.choices, answerIdx:c2.answerIdx
+  };
+}
+
+/* ── 유형 ③ 사진 → 이름 (사진 있는 인물만) ───────── */
+function qPhoto(p){
+  if(!p.photo) return null;
+  var photoFolk = state.pool.filter(function(x){ return x.photo && x.id !== p.id; });
+  if(photoFolk.length < 2) {
+    photoFolk = PEOPLE.filter(function(x){ return x.photo && x.id !== p.id; });
+  }
+  if(photoFolk.length < 2) return null;
+  /* 오답도 사진 있는 인물 중, 같은 훈격 또는 같은 계열 우선 */
+  var near = shuffle(photoFolk.filter(function(x){
+    return x.order === p.order || x.movement === p.movement;
+  }));
+  var rest = shuffle(photoFolk.filter(function(x){
+    return !(x.order === p.order || x.movement === p.movement);
+  }));
+  var c = buildChoices(p, nameLabel, 4, near.concat(rest));
+  if(!c) return null;
+  return {
+    person:p, type:"사진", photo:p,
+    text:"사진 속 인물은 누구일까요?",
+    sub:"", choices:c.choices, answerIdx:c.answerIdx
+  };
+}
+
+/* ── 유형 ④ 이름 → 운동계열 ──────────────────────── */
+function qMovement(p){
+  if(!p.movement) return null;
+  var c = buildChoices(p, function(x){ return x.movement; }, 4);
+  if(!c) return null;
+  return {
+    person:p, type:"운동계열",
+    text: nameLabel(p) + " 님의 운동계열은 무엇일까요?",
+    sub:"", choices:c.choices, answerIdx:c.answerIdx
+  };
+}
+
+/* ── 유형 ⑤ 관련조직·사건 → 이름 ─────────────────── */
+function qOrgEvent(p){
+  var key = p.orgs || p.events;
+  if(!key) return null;
+  var c = buildChoices(p, nameLabel, 4);
+  if(!c) return null;
+  var lines = [];
+  if(p.orgs)   lines.push("관련조직: " + p.orgs);
+  if(p.events) lines.push("관련사건: " + p.events);
+  return {
+    person:p, type:"조직·사건",
+    text:"다음 조직·사건과 관련된 인물은 누구일까요?",
+    sub:lines.join("\n"), choices:c.choices, answerIdx:c.answerIdx
+  };
+}
+
+/* ── 유형 ⑥ 출생지 ───────────────────────────────── */
+function qBirthplace(p){
+  if(!p.birthplace) return null;
+  var c = buildChoices(p, function(x){ return x.birthplace; }, 4);
+  if(!c) return null;
+  return {
+    person:p, type:"출생지",
+    text: nameLabel(p) + " 님의 출생지는 어디일까요?",
+    sub:"", choices:c.choices, answerIdx:c.answerIdx
+  };
+}
+
+/* ── 유형 ⑦ 생몰년 순서 배열 ─────────────────────── */
+function birthYear(p){
+  var m = /(\d{4})/.exec(p.bornDied || "");
+  return m ? parseInt(m[1],10) : null;
+}
+function qOrderByBirth(p){
+  if(birthYear(p) === null) return null;
+  var others = siblings(p, 12).filter(function(x){ return birthYear(x) !== null; });
+  if(others.length < 2) return null;
+
+  var trio = [p, others[0], others[1]];
+  var years = uniq(trio.map(birthYear));
+  if(years.length < 3) return null;
+
+  var sorted = trio.slice().sort(function(a,b){ return birthYear(a)-birthYear(b); });
+  var answer = sorted.map(function(x){ return x.name; }).join(" → ");
+
+  var seen = {}; seen[answer] = true;
+  var opts = [{ text:answer, id:p.id, correct:true }];
+  var perms = [[0,2,1],[1,0,2],[2,1,0],[1,2,0],[2,0,1]];
+  for(var i=0;i<perms.length && opts.length<4;i++){
+    var t = perms[i].map(function(k){ return sorted[k].name; }).join(" → ");
+    if(seen[t]) continue;
+    seen[t] = true;
+    opts.push({ text:t, id:p.id, correct:false });
+  }
+  if(opts.length < 3) return null;
+  opts = shuffle(opts);
+  return {
+    person:p, type:"생몰년",
+    text:"세 인물을 태어난 해가 이른 순서대로 놓은 것은?",
+    sub: trio.map(function(x){ return x.name + " " + (x.bornDied||""); }).join("\n"),
+    choices:opts, answerIdx:opts.findIndex(function(c){ return c.correct; })
+  };
+}
+
+/* ── 유형 ⑧ 본문 빈칸 (사실 정보만) ──────────────── */
+var JUDGE_WORDS = /(가장|매우|결정적|중요한|뛰어난|위대한|훌륭|평가|의의|의미가|공헌으로|손꼽|대표적|핵심적|상징적|높이|기여로)/;
+
+function blankCandidates(text){
+  var out = [];
+  var reYear = /(\d{3,4})년/g, m;
+  while((m = reYear.exec(text)) !== null){
+    out.push({ start:m.index, len:m[1].length, word:m[1], kind:"연도" });
+  }
+  var reOrg = /([가-힣]{2,9}(?:회|단|당|군|부|사|원|대|국|회의|정부))/g;
+  while((m = reOrg.exec(text)) !== null){
+    out.push({ start:m.index, len:m[1].length, word:m[1], kind:"단체·기관" });
+  }
+  return out;
+}
+
+function sentenceAround(text, idx){
+  var s = text.lastIndexOf(".", idx); s = s < 0 ? 0 : s+1;
+  var e = text.indexOf(".", idx); e = e < 0 ? text.length : e+1;
+  return text.slice(s, e);
+}
+
+function qBlank(p){
+  if(!p.content || p.content.length < 60) return null;
+  var cands = shuffle(blankCandidates(p.content)).filter(function(c){
+    return !JUDGE_WORDS.test(sentenceAround(p.content, c.start));
+  });
+  if(!cands.length) return null;
+
+  var c0 = cands[0];
+  var passage = p.content.slice(0, c0.start) + "◯◯◯◯" +
+                p.content.slice(c0.start + c0.len);
+
+  /* 오답은 다른 인물의 본문에서 같은 종류로 뽑는다 */
+  var others = [];
+  shuffle(PEOPLE.filter(function(x){ return x.content && x.id !== p.id; }))
+    .slice(0, 40).forEach(function(x){
+      blankCandidates(x.content).forEach(function(c){
+        if(c.kind === c0.kind && c.word !== c0.word) others.push(c.word);
+      });
+    });
+  others = shuffle(uniq(others));
+  if(others.length < 2) return null;
+
+  var seen = {}; seen[c0.word] = true;
+  var opts = [{ text:c0.word, id:p.id, correct:true }];
+  for(var i=0;i<others.length && opts.length<4;i++){
+    if(seen[others[i]]) continue;
+    seen[others[i]] = true;
+    opts.push({ text:others[i], id:p.id, correct:false });
+  }
+  if(opts.length < 3) return null;
+  opts = shuffle(opts);
+  return {
+    person:p, type:"본문",
+    text:"본문의 ◯◯◯◯ 에 들어갈 말은 무엇일까요?",
+    sub:passage,
+    note:"이 내용은 연구자가 집필한 글에 근거합니다." + (p.author ? " (집필: " + p.author + ")" : ""),
+    choices:opts, answerIdx:opts.findIndex(function(c){ return c.correct; })
+  };
+}
+
+/* 학년별로 쓸 수 있는 유형 */
+var TYPES = {
+  elem: [qActivity, qOrder, qPhoto],
+  mid:  [qActivity, qOrder, qPhoto, qMovement, qOrgEvent],
+  high: [qActivity, qOrder, qPhoto, qMovement, qOrgEvent, qBirthplace, qOrderByBirth, qBlank]
+};
+
+function makeQuiz(){
+  var makers = TYPES[state.grade];
+
+  /* 방금 배운 5명을 중심으로, 이전에 배운 인물을 섞는다 */
+  var seen = loadSeen();
+  var studyIds = state.study.map(function(p){ return p.id; });
+  var previous = shuffle(state.pool.filter(function(p){
+    return studyIds.indexOf(p.id) < 0 && seen.indexOf(p.id) >= 0;
+  }));
+  var fresh = shuffle(state.pool.filter(function(p){
+    return studyIds.indexOf(p.id) < 0 && seen.indexOf(p.id) < 0;
+  }));
+
+  var order = shuffle(state.study)
+                .concat(shuffle(state.study))
+                .concat(previous.slice(0,4))
+                .concat(fresh);
+
+  var qs = [], guard = 0;
+  var typeCount = {};
+  while(qs.length < 10 && guard < 600){
+    guard++;
+    var p = order[guard % order.length];
+    if(!p) break;
+
+    /* 같은 유형만 반복되지 않게 적게 쓴 유형부터 시도한다 */
+    var ms = makers.slice().sort(function(a,b){
+      return (typeCount[a.name]||0) - (typeCount[b.name]||0);
+    });
+    var made = null;
+    for(var i=0;i<ms.length;i++){
+      made = ms[i](p);
+      if(made){ typeCount[ms[i].name] = (typeCount[ms[i].name]||0)+1; break; }
+    }
+    if(!made) continue;
+
+    /* 똑같은 문제가 두 번 나오지 않게 */
+    var key = made.type + "|" + made.person.id;
+    if(qs.some(function(q){ return q.type + "|" + q.person.id === key; })) continue;
+    qs.push(made);
+  }
+  return qs;
+}
+
+/* ══════════════════════════════════════════════════
+   화면 3 — 퀴즈
+   ══════════════════════════════════════════════════ */
+function showQuestion(){
+  var q = state.qs[state.qIdx];
+  state.answered = false;
+  $("quizProgress").textContent = (state.qIdx+1) + " / " + state.qs.length;
+  $("quizNext").style.display = "none";
+
+  var h = '<div class="q-text">' + esc(q.text) + '</div>';
+  if(q.photo) h += photoBlock(q.photo);
+  if(q.sub)   h += '<div class="q-sub">' + esc(q.sub).replace(/\n/g,"<br>") + '</div>';
+
+  h += '<div class="choices" id="choiceBox">';
+  q.choices.forEach(function(c, i){
+    h += '<button class="choice" data-i="' + i + '">' +
+           '<span class="num">' + (i+1) + '</span>' +
+           '<span>' + esc(c.text) + '</span></button>';
+  });
+  h += '</div>';
+  h += '<div id="verdictBox"></div>';
+  if(q.note) h += '<div class="q-note">' + esc(q.note) + '</div>';
+  h += '<div class="keyhint">키보드 1 · 2 · 3 · 4 로 답을 고르고, Enter 로 다음 문항으로 넘어갑니다.</div>';
+
+  $("quizBody").innerHTML = h;
+  Array.prototype.forEach.call(
+    document.querySelectorAll("#choiceBox .choice"),
+    function(b){
+      b.addEventListener("click", function(){ answer(parseInt(b.dataset.i,10)); });
+    }
+  );
+}
+
+function answer(i){
+  if(state.answered) return;
+  state.answered = true;
+
+  var q = state.qs[state.qIdx];
+  var right = (i === q.answerIdx);
+  if(right) state.score++;
+  else state.wrong.push(q.person);
+
+  Array.prototype.forEach.call(
+    document.querySelectorAll("#choiceBox .choice"),
+    function(b){
+      var bi = parseInt(b.dataset.i,10);
+      b.disabled = true;
+      if(bi === q.answerIdx) b.classList.add("correct");
+      else if(bi === i)      b.classList.add("chosen-wrong");
+    }
+  );
+
+  var p = q.person;
+  var lead = right ? "맞았습니다" : "다시 기억해 볼까요";
+  var body = right
+    ? oneLine(p)
+    : "정답은 <strong>" + esc(q.choices[q.answerIdx].text) + "</strong> 입니다.<br>" + esc(oneLine(p));
+
+  $("verdictBox").innerHTML =
+    '<div class="verdict ' + (right ? "ok" : "no") + '">' +
+      '<span class="lead">' + lead + '</span>' + body +
+    '</div>';
+
+  $("quizNext").style.display = "block";
+  $("quizNext").textContent =
+    state.qIdx === state.qs.length - 1 ? "결과 보기" : "다음 문항";
+}
+
+/* ══════════════════════════════════════════════════
+   화면 4 — 결과
+   ══════════════════════════════════════════════════ */
+function showResult(){
+  addSeen(state.study.map(function(p){ return p.id; }));
+
+  $("scoreLine").innerHTML =
+    state.score + " <small>/ " + state.qs.length + " 문항</small>";
+
+  var total = loadSeen().length;
+  $("tallyLine").textContent = "지금까지 기억한 독립운동가: " + total + "명";
+
+  var area = $("reviewArea");
+  if(!state.wrong.length){
+    area.innerHTML = '<div class="card"><p>틀린 문항이 없습니다.</p></div>';
+  } else {
+    var ids = [], list = [];
+    state.wrong.forEach(function(p){
+      if(ids.indexOf(p.id) < 0){ ids.push(p.id); list.push(p); }
+    });
+    var h = '<h3 style="margin-left:.2rem;">다시 살펴볼 인물</h3>';
+    list.forEach(function(p){
+      h += '<div class="card">' + personCard(p) + '</div>';
+    });
+    area.innerHTML = h;
+  }
+  show("screen-result");
+}
+
+/* ══════════════════════════════════════════════════
+   화면 전환 및 시작
+   ══════════════════════════════════════════════════ */
+function show(id){
+  Array.prototype.forEach.call(document.querySelectorAll(".screen"), function(s){
+    s.classList.toggle("on", s.id === id);
+  });
+  window.scrollTo(0,0);
+}
+
+function beginStudy(){
+  state.pool = computePool();
+  if(state.pool.length < 5) return;
+
+  var seen = loadSeen();
+  var unseen = shuffle(state.pool.filter(function(p){ return seen.indexOf(p.id) < 0; }));
+  var rest   = shuffle(state.pool.filter(function(p){ return seen.indexOf(p.id) >= 0; }));
+  state.study = unseen.concat(rest).slice(0,5);
+
+  state.cardIdx = 0;
+  showCard();
+  show("screen-card");
+}
+
+function beginQuiz(){
+  state.qs = makeQuiz();
+  if(!state.qs.length){
+    alert("고른 범위에서는 낼 수 있는 문항이 없습니다. 범위를 넓혀 주세요.");
+    show("screen-start");
+    return;
+  }
+  state.qIdx = 0; state.score = 0; state.wrong = [];
+  showQuestion();
+  show("screen-quiz");
+}
+
+/* ── 버튼 연결 ────────────────────────────────────── */
+$("startBtn").addEventListener("click", beginStudy);
+
+$("cardPrev").addEventListener("click", function(){
+  if(state.cardIdx > 0){ state.cardIdx--; showCard(); }
+});
+$("cardNext").addEventListener("click", function(){
+  if(state.cardIdx < state.study.length - 1){ state.cardIdx++; showCard(); }
+  else beginQuiz();
+});
+
+$("quizNext").addEventListener("click", function(){
+  if(state.qIdx < state.qs.length - 1){ state.qIdx++; showQuestion(); }
+  else showResult();
+});
+
+$("againBtn").addEventListener("click", beginStudy);
+$("otherBtn").addEventListener("click", function(){ show("screen-start"); });
+
+$("bigToggle").addEventListener("click", function(){
+  var on = document.documentElement.classList.toggle("big");
+  this.setAttribute("aria-pressed", on ? "true" : "false");
+});
+
+/* ── 키보드 ───────────────────────────────────────── */
+document.addEventListener("keydown", function(e){
+  var quizOn = $("screen-quiz").classList.contains("on");
+  var cardOn = $("screen-card").classList.contains("on");
+
+  if(quizOn){
+    if(/^[1-4]$/.test(e.key) && !state.answered){
+      var i = parseInt(e.key,10) - 1;
+      var q = state.qs[state.qIdx];
+      if(q && i < q.choices.length){ e.preventDefault(); answer(i); }
+    } else if(e.key === "Enter" && state.answered){
+      e.preventDefault(); $("quizNext").click();
+    }
+  } else if(cardOn && e.key === "Enter"){
+    e.preventDefault(); $("cardNext").click();
+  }
+});
+
+buildStart();
+</script>
+</body>
+</html>
