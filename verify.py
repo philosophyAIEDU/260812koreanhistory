@@ -402,10 +402,31 @@ def run():
         check("큰 화면 1.5배", abs(float(after[:-2])/float(before[:-2]) - 1.5) < .01,
               "%s → %s" % (before, after))
 
-        banned = ["꽝", "실패!", "수집", "모으기", "등수", "순위", "1등", "랭킹"]
+        banned = ["꽝", "실패!", "수집", "모으기", "등수", "순위", "1등", "랭킹",
+                  "일제감시대상인물카드", "붙잡아 가두고", "체포·감시하며 남긴"]
         body = page.evaluate("document.body.innerText")
         found = [w for w in banned if w in body]
-        check("경박한 표현 없음", not found, ",".join(found))
+        check("금지 표현·사진 설명 문구 없음", not found, ",".join(found))
+        # 사진 아래에는 출처 한 줄만 있어야 한다
+        page.click("#homeBtn")
+        page.click('.menu button[data-go="find"]')
+        page.fill("#findInput", "유관순")
+        page.wait_for_timeout(300)
+        if page.locator("#findRoster .rname").count():
+            page.locator("#findRoster .rname").first.click()
+            page.wait_for_timeout(500)
+            pb = page.evaluate("""() => {
+                const box = document.querySelector('#s-person .photo-box');
+                if (!box) return null;
+                return {kids: Array.from(box.children).map(c => c.className || c.tagName),
+                        text: box.innerText.trim()};
+            }""")
+            if pb:
+                check("사진 아래에 출처 한 줄만",
+                      pb["kids"] == ["IMG", "photo-credit"], str(pb["kids"]))
+                check("사진에 덧붙인 설명 문구 없음",
+                      pb["text"].startswith("사진 출처:") and "\n" not in pb["text"],
+                      pb["text"].replace("\n", " / "))
 
         check("전 과정 오류 없음", not errs, "; ".join(errs[:3]))
         browser.close()

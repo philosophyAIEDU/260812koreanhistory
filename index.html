@@ -417,11 +417,6 @@ p{margin:.55rem 0;}
   background:var(--bg-2);display:block;margin:0 auto;box-shadow:var(--shadow);
 }
 .photo-credit{font-size:.7rem;color:var(--ink-4);margin-top:.5rem;line-height:1.5;}
-.photo-note{
-  font-size:.72rem;color:var(--ink-3);background:var(--bg-2);
-  border-left:2px solid var(--accent);padding:.6rem .8rem;margin:.6rem auto 0;
-  text-align:left;max-width:26rem;line-height:1.6;
-}
 dl.facts{
   display:grid;grid-template-columns:auto 1fr;gap:0;margin:1.3rem 0 0;
   border-top:1px solid var(--rule);
@@ -1381,22 +1376,17 @@ function renderList(q){
 /* ══════════════════════════════════════════════════
    인물
    ══════════════════════════════════════════════════ */
+/* 사진과 그 아래 출처만 보여 줍니다.
+   사진에 덧붙이는 설명 문구는 넣지 않습니다. */
 function photoBlock(p){
   if(!p.photo) return "";
   var credit = p.photoCredit || DEFAULT_CREDIT;
-  var note = "";
-  if(/국사편찬위원회/.test(credit)){
-    note = state.grade === "elem"
-      ? "일제 경찰이 붙잡아 가두고 찍은 사진이에요."
-      : "이 사진은 일제 경찰이 독립운동가를 체포·감시하며 남긴 기록입니다.<br>(일제감시대상인물카드, 국사편찬위원회 소장)";
-  }
   var uid = "ph" + Math.random().toString(36).slice(2);
   return '<div class="photo-box" id="' + uid + '" style="display:none;">' +
            '<img alt="' + esc(p.name) + ' 사진" src="' + esc(p.photo) + '"' +
              ' onload="this.parentNode.style.display=\'block\';"' +
              ' onerror="this.parentNode.remove();">' +
            '<div class="photo-credit">사진 출처: ' + esc(credit) + '</div>' +
-           (note ? '<div class="photo-note">' + note + '</div>' : '') +
          '</div>';
 }
 function row(label, value){
