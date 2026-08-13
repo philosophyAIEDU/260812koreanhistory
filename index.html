@@ -91,6 +91,31 @@ body{
 .bigbtn:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.5);}
 .bigbtn[aria-pressed="true"]{background:#fff;color:var(--ink);font-weight:700;border-color:#fff;}
 
+/* ── 출처·안내 띠 (머리말 바로 아래, 가장 잘 보이는 자리) ── */
+.sourcebar{
+  background:var(--paper);border-bottom:1px solid var(--rule-2);
+  padding:.85rem 1.15rem .9rem;text-align:center;
+}
+.srclink{
+  display:inline-block;font-family:var(--brush);font-size:1.02rem;
+  color:var(--ink);text-decoration:none;line-height:1.45;
+  border-bottom:2px solid var(--accent);padding-bottom:.15rem;
+  letter-spacing:.02em;
+}
+.srclink b{font-weight:700;}
+.srclink::after{content:" ↗";font-family:var(--sans);font-size:.8rem;color:var(--accent);}
+.srclink:hover{color:var(--accent);}
+.srcnote{
+  margin:.6rem auto 0;max-width:40rem;font-size:.76rem;line-height:1.65;
+  color:var(--ink-3);
+}
+.srcnote b{color:var(--ink-2);font-weight:700;}
+@media (max-width:36rem){
+  .sourcebar{padding:.75rem .85rem .8rem;}
+  .srclink{font-size:.92rem;}
+  .srcnote{font-size:.72rem;}
+}
+
 /* ── 이동줄 ────────────────────────────────────────── */
 .crumb{
   display:flex;align-items:center;gap:.45rem;flex-wrap:wrap;
@@ -573,6 +598,11 @@ dl.facts dd{
   :root{font-size:11pt;}
   body{background:#fff;padding:0;color:#000;}
   .top,.foot,.crumb,.btnrow,.searchrow,.no-print,.ask{display:none !important;}
+  .sourcebar{border:none;border-bottom:1px solid #ccc;padding:0 0 .4rem;
+             margin-bottom:.8rem;text-align:left;}
+  .srclink{font-size:.9rem;border:none;color:#000;}
+  .srclink::after{content:" (search.i815.or.kr)";font-size:.8rem;}
+  .srcnote{font-size:.72rem;margin:.2rem 0 0;text-align:left;}
   .card,.masthead{border:none;padding:0;margin:0 0 .6rem;box-shadow:none;}
   .screen{display:none;}
   .screen.on{display:block;animation:none;}
@@ -591,6 +621,12 @@ dl.facts dd{
     <button class="bigbtn" id="homeBtn">처음으로</button>
     <button class="bigbtn" id="bigToggle" aria-pressed="false">큰 화면</button>
   </div>
+</div>
+
+<div class="sourcebar">
+  <a class="srclink" href="https://search.i815.or.kr/dictionary/main.do"
+     target="_blank" rel="noopener noreferrer">독립기념관 한국독립운동사연구소 <b>「한국독립운동인명사전」</b> 바로가기</a>
+  <p class="srcnote">이 자료는 「한국독립운동인명사전」을 널리 알리고, 학생들이 독립운동가를 잘 알 수 있도록 만든 <b>비상업적·교육적 목적</b>의 학습 자료입니다.</p>
 </div>
 
 <div class="wrap">

@@ -37,8 +37,28 @@ def run():
         check("학생 개인정보 입력란 없음",
               page.evaluate("""() => Array.from(document.querySelectorAll('input'))
                      .filter(i => i.type !== 'search').length""") == 0)
-        check("외부 링크 없음",
-              page.evaluate("document.querySelectorAll('a[href^=http]').length") == 0)
+        links = page.evaluate("""() => Array.from(document.querySelectorAll('a[href]'))
+              .map(a => ({href: a.href, target: a.target, rel: a.rel,
+                          text: a.textContent.trim().replace(/\\s+/g,' ')}))""")
+        check("바깥 링크는 공식 출처 하나뿐", len(links) == 1, "%d개" % len(links))
+        if links:
+            a = links[0]
+            check("링크가 인명사전 공식 주소",
+                  a["href"].startswith("https://search.i815.or.kr/dictionary/"), a["href"])
+            check("새 창으로 열리고 안전하게 설정됨",
+                  a["target"] == "_blank" and "noopener" in a["rel"],
+                  "target=%s rel=%s" % (a["target"], a["rel"]))
+            check("링크 문구에 기관·사전 이름 표기",
+                  "독립기념관" in a["text"] and "한국독립운동인명사전" in a["text"], a["text"])
+        bartxt = page.inner_text(".sourcebar")
+        check("비상업적·교육적 목적 명시", "비상업적" in bartxt and "교육적" in bartxt)
+        check("출처 띠가 머리말 바로 아래에 늘 보임",
+              page.evaluate("""() => {
+                  const b = document.querySelector('.sourcebar');
+                  const t = document.querySelector('.top');
+                  return b && b.offsetParent !== null &&
+                         b.getBoundingClientRect().top >= t.getBoundingClientRect().bottom - 1;
+              }"""))
 
         print("\n【2】 여덟 가지 활동이 모두 열리는가")
         acts = [("region", "s-region"), ("family", "s-family"), ("years", "s-years"),
