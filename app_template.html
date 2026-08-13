@@ -38,12 +38,14 @@
   --no-bg:#faf3f2;
 
   /* 서체 */
-  --serif:"Nanum Myeongjo","NanumMyeongjo","AppleMyungjo","Batang","바탕",
-          "Songti SC",serif;
+  /* 드러나는 글자 — 궁서체.
+     윈도우는 '궁서', 리눅스는 '은 궁서', 맥은 궁서체가 없어 명조로 대신합니다. */
+  --brush:"궁서","Gungsuh","궁서체","GungsuhChe","UnGungseo","은 궁서",
+          "HCR Batang","AppleMyungjo","Nanum Myeongjo","Batang","바탕",serif;
   --sans:"Pretendard","Malgun Gothic","맑은 고딕","Apple SD Gothic Neo",
          "Noto Sans KR","Nanum Gothic",AppleGothic,Dotum,sans-serif;
 
-  --shadow:0 1px 2px rgba(28,37,48,.04), 0 8px 24px -12px rgba(28,37,48,.10);
+  --shadow:0 1px 2px rgba(28,37,48,.05);
 }
 html.big{font-size:27px;}
 *{box-sizing:border-box;}
@@ -65,12 +67,13 @@ body{
 /* ── 머리말 ────────────────────────────────────────── */
 .top{
   display:flex;align-items:center;justify-content:space-between;gap:1rem;
-  background:var(--ink);color:#fff;padding:.9rem 1.15rem;
-  border-bottom:3px solid var(--accent);
+  background:var(--ink);color:#fff;padding:.85rem 1.15rem;
+  border-bottom:1px solid var(--accent);
+  box-shadow:inset 0 -4px 0 -3px rgba(255,255,255,.18);
 }
 .top h1{
-  font-family:var(--serif);font-size:1.22rem;margin:0;font-weight:700;
-  letter-spacing:.01em;line-height:1.3;
+  font-family:var(--brush);font-size:1.3rem;margin:0;font-weight:700;
+  letter-spacing:.045em;line-height:1.3;
 }
 .top .sub{
   display:block;margin-top:.2rem;font-family:var(--sans);
@@ -107,42 +110,47 @@ body{
   text-transform:none;margin:0 0 .5rem;font-weight:700;
 }
 h2{
-  font-family:var(--serif);font-size:1.5rem;line-height:1.35;margin:0 0 .35rem;
+  font-family:var(--brush);font-size:1.5rem;line-height:1.35;margin:0 0 .35rem;
   color:var(--ink);font-weight:700;letter-spacing:.005em;
 }
 h3{
-  font-family:var(--sans);font-size:.8rem;font-weight:700;letter-spacing:.08em;
-  color:var(--ink-3);margin:1.7rem 0 .7rem;
-  padding-bottom:.4rem;border-bottom:1px solid var(--rule);
+  font-family:var(--sans);font-size:.72rem;font-weight:700;letter-spacing:.16em;
+  color:var(--ink-4);margin:1.9rem 0 .8rem;
+  display:flex;align-items:center;gap:.75rem;
 }
+h3::after{content:"";flex:1;height:1px;background:var(--rule);}
 p{margin:.55rem 0;}
 .lead{font-size:.94rem;color:var(--ink-3);margin:0 0 1.3rem;line-height:1.7;}
 .hint{color:var(--ink-3);font-size:.82rem;line-height:1.65;}
 
 /* ── 카드 ──────────────────────────────────────────── */
 .card{
-  background:var(--paper);border:1px solid var(--rule);border-radius:.3rem;
-  padding:1.7rem;margin-bottom:1.15rem;box-shadow:var(--shadow);
+  background:var(--paper);border:1px solid var(--rule);border-radius:.15rem;
+  padding:1.9rem 1.9rem 1.8rem;margin-bottom:1rem;
 }
 
 /* ── 표제부 (처음 화면) ────────────────────────────── */
 .masthead{
-  background:var(--paper);border:1px solid var(--rule);border-radius:.3rem;
-  padding:2.2rem 1.7rem;margin-bottom:1.15rem;text-align:center;
-  box-shadow:var(--shadow);
+  background:var(--paper);border:1px solid var(--rule);border-radius:.15rem;
+  padding:2.6rem 1.9rem 1.9rem;margin-bottom:1rem;text-align:center;
 }
 .masthead .mark{
-  width:2.2rem;height:1px;background:var(--accent);margin:0 auto 1.1rem;
+  width:2.6rem;height:0;border-top:3px double var(--accent);margin:0 auto 1.3rem;
 }
-.masthead h2{font-size:1.85rem;margin-bottom:.6rem;}
+.masthead h2{font-size:2rem;margin-bottom:.55rem;letter-spacing:.03em;}
+.masthead .rule{
+  width:4.5rem;height:0;border-top:1px solid var(--rule-2);margin:1.4rem auto 1.1rem;
+}
 .masthead .count{
-  font-family:var(--serif);font-size:2.6rem;line-height:1.1;color:var(--ink);
-  font-variant-numeric:tabular-nums;display:block;margin:.9rem 0 .1rem;
+  font-family:var(--brush);font-size:3rem;line-height:1;color:var(--ink);
+  display:block;margin:0 0 .2rem;letter-spacing:.02em;
 }
-.masthead .count-lbl{font-size:.8rem;color:var(--ink-3);letter-spacing:.06em;}
+.masthead .count-lbl{
+  font-size:.7rem;color:var(--ink-4);letter-spacing:.18em;font-weight:700;
+}
 .masthead .note{
-  font-size:.8rem;color:var(--ink-3);margin-top:1.2rem;padding-top:1.1rem;
-  border-top:1px solid var(--rule);line-height:1.7;
+  font-size:.78rem;color:var(--ink-3);margin-top:1.4rem;padding-top:1.2rem;
+  border-top:1px solid var(--rule);line-height:1.75;
 }
 
 /* ── 버튼 ──────────────────────────────────────────── */
@@ -176,7 +184,7 @@ p{margin:.55rem 0;}
 }
 .menu button:hover::after{color:var(--accent);}
 .menu .mt{
-  font-family:var(--serif);font-size:1.15rem;font-weight:700;color:var(--ink);
+  font-family:var(--brush);font-size:1.15rem;font-weight:700;color:var(--ink);
   display:block;letter-spacing:.005em;
 }
 .menu .md{
@@ -210,11 +218,9 @@ p{margin:.55rem 0;}
   cursor:pointer;color:var(--ink-2);line-height:1.35;
   transition:border-color .15s,box-shadow .15s,transform .15s;
 }
-.tile:hover{
-  border-color:var(--ink-3);box-shadow:var(--shadow);transform:translateY(-1px);
-}
+.tile:hover{border-color:var(--ink);background:var(--bg-2);}
 .tile b{
-  display:block;font-family:var(--serif);font-size:1.05rem;color:var(--ink);
+  display:block;font-family:var(--brush);font-size:1.05rem;color:var(--ink);
   font-weight:700;
 }
 .tile span{
@@ -238,8 +244,8 @@ p{margin:.55rem 0;}
   line-height:1.3;background:var(--paper);
   transition:transform .14s,box-shadow .14s,border-color .14s;
 }
-.mapcell:hover{transform:translateY(-2px);box-shadow:var(--shadow);border-color:var(--ink);}
-.mapcell b{display:block;font-family:var(--serif);font-size:.98rem;font-weight:700;}
+.mapcell:hover{border-color:var(--ink);outline:1px solid var(--ink);}
+.mapcell b{display:block;font-family:var(--brush);font-size:.98rem;font-weight:700;}
 .mapcell span{
   display:block;font-size:.74rem;margin-top:.15rem;
   font-variant-numeric:tabular-nums;opacity:.75;
@@ -266,7 +272,7 @@ p{margin:.55rem 0;}
   display:block;margin-bottom:.4rem;
 }
 .today .tn{
-  font-family:var(--serif);font-size:1.45rem;font-weight:700;color:var(--ink);
+  font-family:var(--brush);font-size:1.45rem;font-weight:700;color:var(--ink);
   display:block;line-height:1.3;
 }
 .today .tn small{font-family:var(--sans);font-size:.8rem;color:var(--ink-4);font-weight:400;}
@@ -296,7 +302,7 @@ p{margin:.55rem 0;}
   display:block;margin-bottom:.45rem;
 }
 .quest .qq{
-  font-family:var(--serif);font-size:1.08rem;font-weight:700;color:var(--ink);
+  font-family:var(--brush);font-size:1.08rem;font-weight:700;color:var(--ink);
   line-height:1.55;display:block;
 }
 .quest .qh{font-size:.78rem;color:var(--ink-3);margin-top:.5rem;line-height:1.6;}
@@ -312,20 +318,23 @@ p{margin:.55rem 0;}
   border:1px solid var(--ok);border-radius:.25rem;font-size:.9rem;color:var(--ink);
   line-height:1.65;
 }
-.quest .qa b{font-family:var(--serif);font-size:1.05rem;}
+.quest .qa b{font-family:var(--brush);font-size:1.05rem;}
 
 /* ── 막대 ──────────────────────────────────────────── */
 .bars{margin-top:.3rem;}
 .bar{
   display:grid;grid-template-columns:5.5rem 1fr 3.2rem;align-items:center;
-  gap:.75rem;padding:.3rem 0;font-size:.85rem;border-radius:.2rem;
+  gap:.8rem;padding:.32rem 0;font-size:.84rem;
 }
 .bar .lbl{
   color:var(--ink-3);text-align:right;white-space:nowrap;overflow:hidden;
   text-overflow:ellipsis;letter-spacing:.01em;
 }
-.bar .track{background:var(--bg-2);border-radius:1px;height:.85rem;overflow:hidden;}
-.bar .fill{background:var(--ink-2);height:100%;border-radius:1px;}
+.bar .track{
+  background:var(--bg-2);border-radius:0;height:.85rem;overflow:hidden;
+  border-left:1px solid var(--rule-2);
+}
+.bar .fill{background:var(--ink-2);height:100%;}
 .bar .fill.alt{background:var(--accent-2);}
 .bar .num{
   text-align:right;color:var(--ink);font-variant-numeric:tabular-nums;
@@ -351,7 +360,7 @@ p{margin:.55rem 0;}
   transition:background .13s,padding-left .13s;
 }
 .rname:hover{background:var(--bg-2);padding-left:.5rem;}
-.rname b{font-family:var(--serif);font-weight:700;color:var(--ink);font-size:1.02rem;}
+.rname b{font-family:var(--brush);font-weight:700;color:var(--ink);font-size:1.02rem;}
 .rname .meta{display:block;font-size:.73rem;color:var(--ink-4);letter-spacing:.01em;}
 .countline{
   font-size:.8rem;color:var(--ink-3);margin:.1rem 0 1rem;
@@ -360,8 +369,9 @@ p{margin:.55rem 0;}
 
 /* ── 인물 ──────────────────────────────────────────── */
 .person-name{
-  font-family:var(--serif);font-size:2rem;font-weight:700;color:var(--ink);
-  line-height:1.3;letter-spacing:.005em;
+  font-family:var(--brush);font-size:2.15rem;font-weight:700;color:var(--ink);
+  line-height:1.3;letter-spacing:.03em;
+  border-left:3px double var(--accent);padding-left:.85rem;
 }
 .person-name .hanja{
   font-size:1rem;color:var(--ink-4);font-weight:400;margin-left:.2rem;
@@ -405,13 +415,13 @@ dl.facts dd{
 
 /* ── 호명 ──────────────────────────────────────────── */
 .roll{
-  background:var(--ink);color:#fff;border-radius:.3rem;
+  background:var(--ink);color:#fff;border-radius:.15rem;
   padding:min(3.4rem,4.5vh) 1.6rem min(3rem,4vh);text-align:center;
   margin-bottom:1.15rem;
-  border-top:3px solid var(--accent);box-shadow:var(--shadow);
+  border-top:3px double var(--accent);
 }
 .roll .rn{
-  font-family:var(--serif);font-size:min(2.6rem,5.6vh);font-weight:700;
+  font-family:var(--brush);font-size:min(2.6rem,5.6vh);font-weight:700;
   line-height:1.3;letter-spacing:.02em;
 }
 .roll .rh{font-size:1rem;opacity:.5;font-weight:400;letter-spacing:.02em;}
@@ -441,7 +451,7 @@ dl.facts dd{
 
 /* ── 문제 ──────────────────────────────────────────── */
 .q-text{
-  font-family:var(--serif);font-size:1.28rem;font-weight:700;line-height:1.6;
+  font-family:var(--brush);font-size:1.28rem;font-weight:700;line-height:1.6;
   margin:.2rem 0 1.2rem;color:var(--ink);letter-spacing:.005em;
 }
 .q-sub{
@@ -474,7 +484,7 @@ dl.facts dd{
 .verdict.ok{background:var(--ok-bg);border:1px solid var(--ok);}
 .verdict.no{background:var(--no-bg);border:1px solid var(--no);}
 .verdict .vl{
-  font-family:var(--serif);font-weight:700;display:block;margin-bottom:.35rem;
+  font-family:var(--brush);font-weight:700;display:block;margin-bottom:.35rem;
   font-size:1rem;color:var(--ink);
 }
 .keyhint{
@@ -486,7 +496,7 @@ dl.facts dd{
   font-variant-numeric:tabular-nums;font-weight:700;
 }
 .score{
-  font-family:var(--serif);font-size:2.8rem;font-weight:700;color:var(--ink);
+  font-family:var(--brush);font-size:2.8rem;font-weight:700;color:var(--ink);
   line-height:1.2;font-variant-numeric:tabular-nums;margin:.3rem 0;
 }
 .score small{
@@ -520,6 +530,16 @@ dl.facts dd{
   #s-roll .btnrow{margin-top:.6rem;}
   #s-roll .progress{margin-bottom:.4rem;}
   #s-roll .crumb{margin-bottom:.6rem;}
+}
+
+/* 아주 낮은 화면 (작은 휴대폰) — 더 좁힌다.
+   손가락으로 넘기므로 키보드 안내는 감춘다. */
+@media (max-height:700px){
+  #s-roll .roll{padding:min(1.5rem,2.2vh) 1rem min(1.3rem,1.8vh);}
+  #s-roll .roll .rn{font-size:min(1.9rem,4.2vh);}
+  #s-roll .roll .rm{margin-top:min(.7rem,1.2vh);}
+  #s-roll .roll .rc{margin-top:min(.7rem,1.2vh);padding-top:.5rem;}
+  #s-roll .hint{display:none;}
 }
 
 /* ── 좁은 화면 ─────────────────────────────────────── */
@@ -571,6 +591,7 @@ dl.facts dd{
     <div class="mark"></div>
     <h2>한국독립운동인명사전</h2>
     <p class="lead" style="margin-bottom:0;">독립기념관 자료로 만든 교실용 인물 사전</p>
+    <div class="rule"></div>
     <span class="count" id="homeCount"></span>
     <span class="count-lbl">수록 인원</span>
     <div class="bars" id="homeStats" style="margin-top:1.4rem;"></div>
