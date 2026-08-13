@@ -173,11 +173,16 @@ p{margin:.55rem 0;}
 .menu button{
   display:block;width:100%;text-align:left;font-family:var(--sans);
   background:transparent;border:none;border-top:1px solid var(--rule);
-  padding:1.15rem .3rem 1.15rem 0;cursor:pointer;color:var(--ink-2);
-  position:relative;transition:padding-left .16s,background .16s;
+  padding:1.15rem .3rem 1.15rem 2.8rem;cursor:pointer;color:var(--ink-2);
+  position:relative;transition:background .16s;
 }
 .menu button:first-child{border-top:none;}
-.menu button:hover{padding-left:.7rem;background:linear-gradient(90deg,var(--bg-2),transparent 70%);}
+.menu button:hover{background:linear-gradient(90deg,var(--bg-2),transparent 70%);}
+.menu .mnum{
+  position:absolute;left:.15rem;top:1.2rem;font-family:var(--brush);
+  font-size:1rem;color:var(--ink-4);letter-spacing:.02em;line-height:1;
+}
+.menu button:hover .mnum{color:var(--accent);}
 .menu button::after{
   content:"›";position:absolute;right:.4rem;top:50%;transform:translateY(-52%);
   color:var(--ink-4);font-size:1.3rem;line-height:1;
@@ -189,7 +194,7 @@ p{margin:.55rem 0;}
 }
 .menu .md{
   font-size:.82rem;color:var(--ink-3);display:block;margin-top:.25rem;
-  line-height:1.6;padding-right:1.5rem;
+  line-height:1.6;padding-right:1.8rem;
 }
 
 /* ── 고르기 단추 ───────────────────────────────────── */
@@ -277,6 +282,11 @@ p{margin:.55rem 0;}
 }
 .today .tn small{font-family:var(--sans);font-size:.8rem;color:var(--ink-4);font-weight:400;}
 .today .tm{font-size:.8rem;color:var(--ink-3);display:block;margin-top:.3rem;}
+.today{position:relative;}
+.today .tphoto{
+  float:right;width:4.6rem;margin:0 0 .5rem .9rem;border:1px solid var(--rule);
+  border-radius:.1rem;background:var(--bg-2);
+}
 
 /* ── 발자취 ──────────────────────────────────────────
    막대 트랙(.bar .track)과 이름이 겹치지 않도록 .trail 을 쓴다. */
@@ -617,35 +627,35 @@ dl.facts dd{
     <p class="lead" id="homeLead"></p>
     <div class="menu">
       <button data-go="region">
-        <span class="mt">우리 고장의 독립운동가</span>
+        <span class="mnum">01</span><span class="mt">우리 고장의 독립운동가</span>
         <span class="md">지역을 골라, 그곳에서 태어난 분들을 만나 봅니다.</span>
       </button>
       <button data-go="family">
-        <span class="mt">어떤 일을 하셨을까</span>
+        <span class="mnum">02</span><span class="mt">어떤 일을 하셨을까</span>
         <span class="md">운동계열별로 나누어 보고, 어느 고장 출신이 많은지 살펴봅니다.</span>
       </button>
       <button data-go="years">
-        <span class="mt">기억의 연표</span>
+        <span class="mnum">03</span><span class="mt">기억의 연표</span>
         <span class="md">언제 훈장이 드려졌는지 살펴봅니다. 아주 늦게 드려진 분들도 있습니다.</span>
       </button>
       <button data-go="names">
-        <span class="mt">이름을 여럿 가진 사람들</span>
+        <span class="mnum">04</span><span class="mt">이름을 여럿 가진 사람들</span>
         <span class="md">본래 이름 말고 다른 이름을 쓰신 분들을 찾아봅니다.</span>
       </button>
       <button data-go="roll">
-        <span class="mt">이름을 불러 봅니다</span>
+        <span class="mnum">05</span><span class="mt">이름을 불러 봅니다</span>
         <span class="md">한 분씩 천천히 이름을 읽어 봅니다. 수업을 열거나 닫을 때 씁니다.</span>
       </button>
       <button data-go="find">
-        <span class="mt">이름으로 찾기</span>
+        <span class="mnum">06</span><span class="mt">이름으로 찾기</span>
         <span class="md">알고 있는 분의 이름을 적어 찾아봅니다.</span>
       </button>
       <button data-go="quest">
-        <span class="mt">찾아보기 과제</span>
+        <span class="mnum">07</span><span class="mt">찾아보기 과제</span>
         <span class="md">물음에 답을 앱에서 직접 찾아봅니다. 답은 눌러서 맞춰 봅니다.</span>
       </button>
       <button data-go="quizsetup">
-        <span class="mt">확인해 보기</span>
+        <span class="mnum">08</span><span class="mt">확인해 보기</span>
         <span class="md">살펴본 내용을 문제로 확인합니다.</span>
       </button>
     </div>
@@ -1008,6 +1018,8 @@ function drawToday(){
   var p = todayPerson();
   state._today = p;
   $("todayCard").innerHTML =
+    (p.photo ? '<img class="tphoto" alt="" src="' + esc(p.photo) +
+               '" onerror="this.remove();">' : '') +
     '<span class="tl">오늘 만나는 분</span>' +
     '<span class="tn">' + esc(p.name) +
       (p.hanja ? ' <small>' + esc(p.hanja) + '</small>' : '') + '</span>' +
@@ -1699,6 +1711,32 @@ function qAlias(p){
            sub:String(p.alias).slice(0,90),
            choices:c.choices, answerIdx:c.answerIdx };
 }
+/* ── 사진 → 이름 (사진이 있는 인물에게만) ────────────
+   오답 선택지도 사진이 있는 인물로만 채웁니다. */
+function qPhoto(p){
+  if(!p.photo) return null;
+  var withPhoto = state.pool.filter(function(x){ return x.photo && x.id !== p.id; });
+  if(withPhoto.length < 2){
+    withPhoto = PEOPLE.filter(function(x){ return x.photo && x.id !== p.id; });
+  }
+  if(withPhoto.length < 2) return null;
+
+  /* 같은 훈격·같은 계열을 먼저 쓰고, 모자라면 나머지 사진 인물로 채웁니다 */
+  var near = shuffle(withPhoto.filter(function(x){
+    return x.order === p.order || x.movement === p.movement;
+  }));
+  var rest = shuffle(withPhoto.filter(function(x){
+    return !(x.order === p.order || x.movement === p.movement);
+  }));
+  var c = buildChoices(p, nameLabel, 4, near.concat(rest));
+  if(!c) return null;
+  return {
+    person:p, type:"사진", photo:p,
+    text:"사진 속 인물은 누구일까요?",
+    sub:"", choices:c.choices, answerIdx:c.answerIdx
+  };
+}
+
 function qActivity(p){
   if(!p.activities) return null;
   var c = buildChoices(p, nameLabel, 4);
@@ -1769,9 +1807,9 @@ function qOddRegion(p){
 }
 
 var TYPES = {
-  elem: [qActivity, qOrder, qMovement, qRegionToName],
-  mid:  [qActivity, qOrder, qMovement, qRegionToName, qBirthplace, qAlias],
-  high: [qActivity, qOrder, qMovement, qRegionToName, qBirthplace, qAlias,
+  elem: [qActivity, qPhoto, qOrder, qMovement, qRegionToName],
+  mid:  [qActivity, qPhoto, qOrder, qMovement, qRegionToName, qBirthplace, qAlias],
+  high: [qActivity, qPhoto, qOrder, qMovement, qRegionToName, qBirthplace, qAlias,
          qAwardOrder, qOddRegion]
 };
 
@@ -1811,6 +1849,7 @@ function showQuestion(){
   $("quizNext").style.display = "none";
 
   var h = '<div class="q-text">' + esc(q.text) + '</div>';
+  if(q.photo) h += photoBlock(q.photo);
   if(q.sub) h += '<div class="q-sub">' + esc(q.sub).replace(/\n/g,"<br>") + '</div>';
   h += '<div class="choices" id="choiceBox">';
   q.choices.forEach(function(c,i){

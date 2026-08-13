@@ -49,6 +49,11 @@ def run():
             page.click('.menu button[data-go="%s"]' % go)
             page.wait_for_timeout(200)
             check("%s 화면" % go, page.locator("#" + sid).is_visible())
+        page.click("#homeBtn"); page.wait_for_timeout(200)
+        nums = page.evaluate("""() => Array.from(
+            document.querySelectorAll('.menu .mnum')).map(x => x.textContent)""")
+        check("활동에 번호 01~08", nums == ["01","02","03","04","05","06","07","08"],
+              " ".join(nums))
 
         print("\n【3】 지역 → 명단 → 인물 → 이어보기")
         page.click("#homeBtn")
@@ -284,6 +289,80 @@ def run():
         check("과제의 답이 자료와 일치", not acc, "; ".join(acc))
         page.click("#questNew"); page.wait_for_timeout(250)
         check("다른 물음으로 바꾸기 동작", page.locator("#questList .quest").count() == 5)
+
+        print("\n【9-3】 사진 — 있으면 제대로 나오는지, 없으면 흔적이 없는지")
+        ph = page.evaluate("""() => {
+            const withPhoto = PEOPLE.filter(p => p.photo);
+            const grand = PEOPLE.filter(p => p.order === '대한민국장');
+            return {n: withPhoto.length,
+                    grand: grand.length,
+                    grandWith: grand.filter(p => p.photo).length,
+                    otherWith: withPhoto.filter(p => p.order !== '대한민국장').length,
+                    allData: withPhoto.every(p => p.photo.startsWith('data:image/')),
+                    creditAll: withPhoto.every(p => p.photoCredit)};
+        }""")
+
+        if ph["n"] == 0:
+            # 사진을 넣지 않은 상태 — 사진 흔적이 아예 없어야 한다
+            check("사진 없음 — 인물 자료에 사진 항목이 없음", True, "0장")
+            check("사진 없음 — 사진 영역이 만들어지지 않음",
+                  page.evaluate("""() => PEOPLE.slice(0,80)
+                        .every(p => photoBlock(p) === '')"""))
+            noq = page.evaluate("""() => {
+                let made = 0;
+                ['elem','mid','high'].forEach(g => {
+                  state.grade=g; state.orders=['대한민국장']; state.pool=computePool();
+                  for(let t=0;t<15;t++)
+                    makeQuiz().forEach(q => { if(q.type==='사진') made++; });
+                });
+                return made;
+            }""")
+            check("사진 없음 — 사진 문항이 출제되지 않음", noq == 0, "%d문항" % noq)
+            check("사진 없음 — 화면에 이미지 태그가 없음",
+                  page.evaluate("document.images.length") == 0,
+                  "%d개" % page.evaluate("document.images.length"))
+        else:
+            check("대한민국장 전원 사진", ph["grandWith"] == ph["grand"],
+                  "%d/%d" % (ph["grandWith"], ph["grand"]))
+            check("다른 훈격에는 사진 없음", ph["otherWith"] == 0, "%d명" % ph["otherWith"])
+            check("사진이 파일 안에 심겨 있음 (인터넷 불필요)", ph["allData"])
+            check("사진마다 출처 표기", ph["creditAll"])
+
+            page.click("#homeBtn")
+            page.click('.menu button[data-go="find"]')
+            page.fill("#findInput", "김구")
+            page.wait_for_timeout(300)
+            page.locator("#findRoster .rname").first.click()
+            page.wait_for_timeout(500)
+            img = page.evaluate("""() => {
+                const i = document.querySelector('#s-person .photo-box img');
+                if (!i) return null;
+                return {shown: i.parentNode.style.display !== 'none',
+                        w: i.naturalWidth,
+                        credit: (document.querySelector('#s-person .photo-credit')||{}).textContent};
+            }""")
+            check("인터넷 없이도 사진이 실제로 그려짐",
+                  bool(img and img["shown"] and img["w"] > 0),
+                  "naturalWidth=%s" % (img and img["w"]))
+            check("사진 아래 출처 표시", bool(img) and "사진 출처" in (img["credit"] or ""))
+
+            pq = page.evaluate("""() => {
+                let bad = 0, made = 0;
+                ['elem','mid','high'].forEach(g => {
+                  state.grade=g; state.orders=['대한민국장']; state.pool=computePool();
+                  for(let t=0;t<15;t++){
+                    makeQuiz().forEach(q => {
+                      if(q.type !== '사진') return;
+                      made++;
+                      if(!q.person.photo) bad++;
+                      q.choices.forEach(c => { if(!BY_ID[c.id].photo) bad++; });
+                    });
+                  }
+                });
+                return {bad, made};
+            }""")
+            check("사진 문항이 출제됨", pq["made"] > 0, "%d문항" % pq["made"])
+            check("사진 문항의 정답·오답 모두 사진 보유", pq["bad"] == 0, "%d건" % pq["bad"])
 
         print("\n【10】 사진 · 큰 화면 · 어투")
         broken = page.evaluate("""() => Array.from(document.images)

@@ -19,6 +19,8 @@ import os
 import re
 import sys
 import unicodedata
+import base64
+import io
 from urllib.parse import quote
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -29,10 +31,19 @@ TEMPLATE = os.path.join(HERE, "app_template.html")
 OUT_HTML = os.path.join(HERE, "index.html")
 OUT_JSON = os.path.join(HERE, "data.json")
 
-# ── 사진 저장소 주소 ────────────────────────────────
-# 선생님의 GitHub 아이디와 저장소 이름을 받으면 아래 한 줄만 채우면 됩니다.
-# 예: "https://raw.githubusercontent.com/philosophyAIEDU/dokrip-photos/main"
-PHOTO_BASE = ""
+# ── 사진 ────────────────────────────────────────────
+# photos 폴더에 "김구.jpg" 처럼 한글 이름으로 넣어 두면 됩니다.
+# 괄호가 붙어 있어도 됩니다 ("쑨원(손문).jpg" → 쑨원).
+PHOTO_DIR = os.path.join(HERE, "photos")
+
+# True  : 사진을 index.html 안에 직접 심습니다.
+#         → 인터넷이 없어도 사진이 보이고, 깃헙이 바뀌어도 안전합니다. (권장)
+# False : 아래 PHOTO_BASE 주소에서 사진을 불러옵니다. 파일은 가벼워지지만
+#         인터넷이 없으면 사진 자리가 비어 있게 됩니다.
+EMBED_PHOTOS = True
+PHOTO_QUALITY = 85          # 심을 때 사진 품질 (숫자가 크면 선명하고 무겁습니다)
+
+PHOTO_BASE = ""             # EMBED_PHOTOS = False 일 때만 씁니다
 
 DEFAULT_CREDIT = "국가보훈부 공훈전자사료관 · 독립기념관"
 
@@ -130,6 +141,57 @@ def tidy(v):
         return ""
     s = re.sub(r"\s+", " ", str(v).replace("\xa0", " ")).strip()
     return "" if s in ("-", "null", "None") else s
+
+
+# ══════════════════════════════════════════════════
+#  사진 읽어들이기
+# ══════════════════════════════════════════════════
+IMG_EXT = (".jpg", ".jpeg", ".png", ".gif", ".webp")
+
+
+def photo_key(filename):
+    """파일 이름에서 사람 이름만 뽑는다. '쑨원(손문).jpg' → '쑨원'"""
+    stem = os.path.splitext(os.path.basename(filename))[0]
+    stem = unicodedata.normalize("NFC", stem)
+    return re.sub(r"\(.*$", "", stem).strip()
+
+
+def load_photos():
+    """photos 폴더(하위 폴더 포함)를 뒤져 {이름: (파일경로, 원래이름)} 를 만든다."""
+    found = {}
+    if not os.path.isdir(PHOTO_DIR):
+        log("   · photos 폴더 없음 — 사진 없이 만듭니다")
+        return found
+    for root, _dirs, files in os.walk(PHOTO_DIR):
+        for fn in files:
+            if not fn.lower().endswith(IMG_EXT):
+                continue
+            key = photo_key(fn)
+            if key:
+                found.setdefault(key, os.path.join(root, fn))
+    return found
+
+
+def to_data_uri(path):
+    """사진을 index.html 에 심을 수 있는 형태로 바꾼다. 실패하면 None."""
+    try:
+        from PIL import Image
+    except ImportError:
+        log("   !! Pillow 가 없어 사진을 심을 수 없습니다.  pip install Pillow")
+        return None
+    try:
+        im = Image.open(path)
+        if im.mode != "RGB":
+            bg = Image.new("RGB", im.size, (255, 255, 255))
+            mask = im.split()[-1] if im.mode in ("RGBA", "LA") else None
+            bg.paste(im, mask=mask)
+            im = bg
+        buf = io.BytesIO()
+        im.save(buf, "JPEG", quality=PHOTO_QUALITY, optimize=True, progressive=True)
+        return "data:image/jpeg;base64," + base64.b64encode(buf.getvalue()).decode("ascii")
+    except Exception as e:                          # noqa: BLE001
+        log("   !! 사진을 읽지 못했습니다: %s (%s)" % (os.path.basename(path), e))
+        return None
 
 
 # ══════════════════════════════════════════════════
@@ -246,23 +308,47 @@ def build():
         log(" API 결과 없음 — 엑셀 항목만으로 만듭니다")
         log("   (생몰년·주요활동·관련조직·관련사건·본문·집필자가 비어 있습니다)")
 
-    # ── 3) 사진 URL 을 대한민국장에만 붙인다 ─────────
+    # ── 3) 사진을 붙인다 (사진이 있는 훈격에만) ──────
+    photos = load_photos()
     photo_n = 0
-    for p in people.values():
-        if p["order"] not in PHOTO_ORDERS:
+    used_photo = set()
+    targets = [p for p in people.values() if p["order"] in PHOTO_ORDERS]
+
+    log("")
+    log(" photos 폴더에서 사진 %d장을 찾음" % len(photos))
+
+    for p in targets:
+        path = photos.get(p["name"])
+        if not path:
             continue
-        if not PHOTO_BASE:
-            continue
-        fname = photo_name(p["name"]) + ".jpg"
-        p["photo"] = PHOTO_BASE.rstrip("/") + "/photos/" + quote(fname)
+        if EMBED_PHOTOS:
+            uri = to_data_uri(path)
+            if not uri:
+                continue
+            p["photo"] = uri
+        else:
+            if not PHOTO_BASE:
+                continue
+            p["photo"] = (PHOTO_BASE.rstrip("/") + "/photos/" +
+                          quote(os.path.basename(path)))
         p["photoCredit"] = credits.get(p["name"], DEFAULT_CREDIT)
+        used_photo.add(p["name"])
         photo_n += 1
 
-    if PHOTO_BASE:
-        log(" 사진 주소 %d명에 부여" % photo_n)
+    # 사진이 없는 인물, 임자 없는 사진을 알려 준다
+    missing = sorted(p["name"] for p in targets if p["name"] not in used_photo)
+    extra = sorted(k for k in photos if k not in used_photo)
+
+    if photo_n:
+        log(" 사진을 %d명에게 붙였습니다 (%s)"
+            % (photo_n, "파일 안에 심음" if EMBED_PHOTOS else "인터넷에서 불러옴"))
+    if missing:
+        log(" ⚠ 사진이 없는 분 %d명: %s" % (len(missing), ", ".join(missing)))
     else:
-        log(" 사진 저장소 주소가 아직 비어 있어 사진 없이 만듭니다")
-        log("   (build_app.py 의 PHOTO_BASE 한 줄만 채우면 됩니다)")
+        log(" ✓ %s %d명 모두 사진이 있습니다"
+            % (" · ".join(sorted(PHOTO_ORDERS)), len(targets)))
+    if extra:
+        log(" ⚠ 짝을 찾지 못한 사진 %d장: %s" % (len(extra), ", ".join(extra)))
 
     # ── 4) 빈 값을 정리해 파일 크기를 줄인다 ─────────
     out = []
