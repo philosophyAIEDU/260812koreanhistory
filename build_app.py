@@ -19,7 +19,6 @@ import os
 import re
 import sys
 import unicodedata
-from datetime import date
 from urllib.parse import quote
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -36,6 +35,12 @@ OUT_JSON = os.path.join(HERE, "data.json")
 PHOTO_BASE = ""
 
 DEFAULT_CREDIT = "국가보훈부 공훈전자사료관 · 독립기념관"
+
+# ── 자료 기준일 ─────────────────────────────────────
+# 엑셀을 내려받은 날짜입니다. 화면 맨 위에 "자료 기준일" 로 표시됩니다.
+# api_raw.json 이 있으면 그 안의 수집 날짜가 이 값보다 우선합니다.
+# 자료를 새로 받으면 이 날짜도 함께 고쳐 주세요.
+DATA_DATE = "2026-08-12"
 
 # 사진이 있는 훈격 (대한민국장 33명분만 존재)
 PHOTO_ORDERS = {"대한민국장"}
@@ -264,7 +269,7 @@ def build():
     for p in sorted(people.values(), key=lambda x: (x["order"], x["name"])):
         out.append({k: v for k, v in p.items() if v not in ("", None)})
 
-    collected = (api or {}).get("collected_at") or date.today().isoformat()
+    collected = (api or {}).get("collected_at") or DATA_DATE
     y, m, d = collected.split("-")
     payload = {
         "collected_at": collected,
