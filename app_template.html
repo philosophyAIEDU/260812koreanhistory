@@ -402,6 +402,49 @@ p{margin:.55rem 0;}
   font-variant-numeric:tabular-nums;letter-spacing:.02em;
 }
 
+/* ── 훈격별 카드 보기 ──────────────────────────────── */
+.cardgrid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(9.5rem,1fr));gap:.7rem;
+}
+.pcard{
+  font-family:var(--sans);text-align:center;background:var(--paper);
+  border:1px solid var(--rule);border-radius:.15rem;padding:.8rem .6rem .9rem;
+  cursor:pointer;color:var(--ink-2);line-height:1.4;
+  display:flex;flex-direction:column;
+  transition:border-color .14s,background .14s;
+}
+.pcard:hover{border-color:var(--ink);background:var(--bg);}
+.pcard .pimg{
+  width:100%;max-width:7rem;margin:0 auto .7rem;border:1px solid var(--rule);
+  background:var(--bg-2);display:block;
+}
+.pcard .pnm{
+  font-family:var(--brush);font-size:1.1rem;font-weight:700;color:var(--ink);
+  letter-spacing:.02em;display:block;
+}
+.pcard .phj{font-size:.72rem;color:var(--ink-4);display:block;margin-top:.1rem;}
+.pcard .pmeta{
+  font-size:.72rem;color:var(--ink-3);margin-top:.55rem;padding-top:.5rem;
+  border-top:1px solid var(--rule);line-height:1.6;
+}
+.pcard .pyear{
+  font-size:.7rem;color:var(--ink-4);margin-top:.2rem;
+  font-variant-numeric:tabular-nums;
+}
+.clickhint{
+  font-size:.76rem;color:var(--ink-4);margin-top:.7rem;letter-spacing:.02em;
+}
+@media (max-width:36rem){
+  .cardgrid{grid-template-columns:repeat(auto-fill,minmax(7.5rem,1fr));gap:.5rem;}
+  .pcard{padding:.6rem .4rem .7rem;}
+  .pcard .pnm{font-size:.98rem;}
+}
+@media print{
+  .cardgrid{grid-template-columns:repeat(4,1fr);gap:.3rem;}
+  .pcard{border:1px solid #ddd;padding:.3rem;}
+  .pcard .pimg{max-width:4rem;margin-bottom:.3rem;}
+}
+
 /* ── 인물 ──────────────────────────────────────────── */
 .person-name{
   font-family:var(--brush);font-size:2.15rem;font-weight:700;color:var(--ink);
@@ -635,6 +678,7 @@ dl.facts dd{
     <div class="rule"></div>
     <span class="count" id="homeCount"></span>
     <span class="count-lbl">수록 인원</span>
+    <p class="clickhint">훈격을 누르면 그분들을 카드로 볼 수 있습니다</p>
     <div class="bars" id="homeStats" style="margin-top:1.4rem;"></div>
     <button class="today" id="todayCard"></button>
     <div class="trail" id="trackBox"></div>
@@ -765,6 +809,24 @@ dl.facts dd{
     <button class="btn" id="rollNext">다음 분</button>
   </div>
   <p class="hint no-print">키보드 오른쪽·왼쪽 화살표로도 넘길 수 있습니다.</p>
+</section>
+
+<!-- ═══ 훈격별 카드 보기 ════════════════════════════ -->
+<section class="screen" id="s-cards">
+  <div class="crumb" id="cr-cards"></div>
+  <div class="card">
+    <h2 id="cardsTitle"></h2>
+    <p class="countline" id="cardsCount"></p>
+    <div class="searchrow no-print">
+      <input type="search" id="cardsSearch" placeholder="이름으로 좁혀 보기 (예: 김)"
+             autocomplete="off" aria-label="이름으로 좁혀 보기">
+      <button class="btn ghost" id="cardsPrint">인쇄</button>
+    </div>
+    <div class="cardgrid" id="cardsGrid"></div>
+    <div class="btnrow no-print" id="cardsMoreRow" style="display:none;">
+      <button class="btn ghost" id="cardsMore">더 보기</button>
+    </div>
+  </div>
 </section>
 
 <!-- ═══ 명단 ════════════════════════════════════════ -->
@@ -1022,9 +1084,21 @@ function buildHome(){
     ORDER_LIST.join(" · ") + " 서훈자입니다." +
     (DATA.collected_at_ko ? " 자료 기준일 " + DATA.collected_at_ko + "." : "");
 
-  drawBars($("homeStats"), ORDER_LIST.map(function(o){
+  var orderRows = ORDER_LIST.map(function(o){
     return { k:o, n:PEOPLE.filter(function(p){ return p.order===o; }).length };
-  }));
+  });
+  var statEl = $("homeStats");
+  drawBars(statEl, orderRows);
+  Array.prototype.forEach.call(statEl.querySelectorAll(".bar"), function(bar, i){
+    bar.style.cursor = "pointer";
+    bar.setAttribute("role", "button");
+    bar.setAttribute("tabindex", "0");
+    bar.setAttribute("aria-label", orderRows[i].k + " " + orderRows[i].n + "명 카드로 보기");
+    bar.addEventListener("click", function(){ goOrderCards(orderRows[i].k); });
+    bar.addEventListener("keydown", function(e){
+      if(e.key === "Enter" || e.key === " "){ e.preventDefault(); goOrderCards(orderRows[i].k); }
+    });
+  });
 
   document.querySelectorAll(".menu button").forEach(function(b){
     if(b._wired) return;
@@ -1371,6 +1445,77 @@ function renderList(q){
     (q ? " (전체 " + state.list.people.length + "명 가운데)" : "");
   $("listRoster").innerHTML = rosterHTML(got);
   wireRoster($("listRoster"), function(){ show("s-list"); }, "명단");
+}
+
+/* ══════════════════════════════════════════════════
+   훈격별 카드 보기
+   794명까지 있으므로 한 번에 다 그리지 않고 나눠 그립니다.
+   ══════════════════════════════════════════════════ */
+var CARD_PAGE = 48;
+
+function cardHTML(p){
+  var h = '<button class="pcard" data-id="' + esc(p.id) + '">';
+  if(p.photo){
+    h += '<img class="pimg" alt="" src="' + esc(p.photo) +
+         '" onerror="this.remove();">';
+  }
+  h += '<span class="pnm">' + esc(p.name) + '</span>';
+  if(p.hanja) h += '<span class="phj">' + esc(p.hanja) + '</span>';
+  h += '<span class="pmeta">' + esc(p._city || p.birthplace) + '<br>' +
+       esc(p.movement) + '</span>';
+  if(p.awardYear) h += '<span class="pyear">' + esc(p.awardYear) + '년 포상</span>';
+  h += '</button>';
+  return h;
+}
+
+function openCards(title, people, backFn, backLabel){
+  state.cards = {
+    title: title, all: people, shown: 0, q: "",
+    back: backFn, backLabel: backLabel
+  };
+  crumb($("cr-cards"), [
+    {t:"처음", go:goHome},
+    {t:backLabel || "돌아가기", go:backFn},
+    {t:"카드로 보기"}
+  ]);
+  $("cardsTitle").textContent = title;
+  $("cardsSearch").value = "";
+  renderCards(true);
+  show("s-cards");
+}
+
+function renderCards(reset){
+  var c = state.cards;
+  var got = c.all.filter(function(p){ return nameMatches(p, c.q); })
+             .sort(function(a,b){ return a.name.localeCompare(b.name, "ko"); });
+  c.filtered = got;
+  if(reset) c.shown = 0;
+
+  var next = Math.min(got.length, c.shown + CARD_PAGE);
+  var slice = got.slice(0, next);
+  c.shown = next;
+
+  $("cardsCount").textContent =
+    got.length + "명" + (c.q ? " (전체 " + c.all.length + "명 가운데)" : "") +
+    (next < got.length ? " · " + next + "명까지 보이는 중" : "");
+
+  $("cardsGrid").innerHTML = slice.map(cardHTML).join("");
+  Array.prototype.forEach.call($("cardsGrid").querySelectorAll(".pcard"), function(b){
+    b.addEventListener("click", function(){
+      openPerson(BY_ID[b.dataset.id],
+                 function(){ show("s-cards"); }, "카드로 보기");
+    });
+  });
+
+  $("cardsMoreRow").style.display = (next < got.length) ? "flex" : "none";
+  $("cardsMore").textContent =
+    "더 보기 (" + Math.min(CARD_PAGE, got.length - next) + "명)";
+}
+
+function goOrderCards(order){
+  openCards(order,
+            PEOPLE.filter(function(p){ return p.order === order; }),
+            goHome, "처음");
 }
 
 /* ══════════════════════════════════════════════════
@@ -1967,6 +2112,12 @@ $("f1List").addEventListener("click", function(){
            function(){ goFamily1(state._fam.name); }, state._fam.name);
 });
 $("listSearch").addEventListener("input", function(){ renderList(this.value); });
+$("cardsSearch").addEventListener("input", function(){
+  state.cards.q = this.value;
+  renderCards(true);
+});
+$("cardsMore").addEventListener("click", function(){ renderCards(false); });
+$("cardsPrint").addEventListener("click", function(){ window.print(); });
 $("findInput").addEventListener("input", function(){ renderFind(this.value); });
 $("printBtn").addEventListener("click", function(){ window.print(); });
 $("rollPrev").addEventListener("click", function(){

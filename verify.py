@@ -100,6 +100,68 @@ def run():
         page.wait_for_timeout(250)
         check("계열로 이어보기 동작", page.locator("#s-list").is_visible())
 
+        print("\n【3-2】 처음 화면에서 훈격을 눌러 카드로 보기")
+        page.click("#homeBtn"); page.wait_for_timeout(250)
+        check("훈격 막대가 누를 수 있게 되어 있음",
+              page.evaluate("""() => Array.from(
+                  document.querySelectorAll('#homeStats .bar'))
+                  .every(b => b.getAttribute('role') === 'button')"""))
+        check("누르라는 안내가 보임", "카드로" in page.inner_text(".clickhint"))
+
+        for order, n in [("대한민국장", 33), ("대통령장", 89), ("독립장", 794)]:
+            page.click("#homeBtn"); page.wait_for_timeout(200)
+            idx = ["대한민국장", "대통령장", "독립장"].index(order)
+            page.locator("#homeStats .bar").nth(idx).click()
+            page.wait_for_timeout(350)
+            check("%s — 카드 화면 열림" % order, page.locator("#s-cards").is_visible())
+            check("%s — 제목 표시" % order,
+                  page.inner_text("#cardsTitle") == order, page.inner_text("#cardsTitle"))
+            cnt = page.inner_text("#cardsCount")
+            check("%s — 인원 %d명 표시" % (order, n), ("%d명" % n) in cnt, cnt)
+            shown = page.locator("#cardsGrid .pcard").count()
+            expect = min(48, n)
+            check("%s — 카드 %d장 그려짐" % (order, expect), shown == expect, "%d장" % shown)
+            more = page.locator("#cardsMoreRow").is_visible()
+            check("%s — 더 보기 단추 %s" % (order, "있음" if n > 48 else "없음"),
+                  more == (n > 48))
+
+        # 대한민국장은 33명 전원 사진이 카드에 나와야 한다
+        page.click("#homeBtn"); page.wait_for_timeout(200)
+        page.locator("#homeStats .bar").nth(0).click(); page.wait_for_timeout(600)
+        imgs = page.evaluate("""() => {
+            const a = Array.from(document.querySelectorAll('#cardsGrid .pimg'));
+            return {n: a.length, broken: a.filter(i => i.complete && i.naturalWidth === 0).length};
+        }""")
+        check("대한민국장 카드에 사진 33장", imgs["n"] == 33, "%d장" % imgs["n"])
+        check("카드에 깨진 사진 없음", imgs["broken"] == 0, "%d장" % imgs["broken"])
+
+        # 더 보기로 전부 펼쳐지는가 (독립장)
+        page.click("#homeBtn"); page.wait_for_timeout(200)
+        page.locator("#homeStats .bar").nth(2).click(); page.wait_for_timeout(300)
+        for _ in range(20):
+            if not page.locator("#cardsMoreRow").is_visible():
+                break
+            page.click("#cardsMore"); page.wait_for_timeout(120)
+        check("더 보기로 794명 전부 펼쳐짐",
+              page.locator("#cardsGrid .pcard").count() == 794,
+              "%d장" % page.locator("#cardsGrid .pcard").count())
+
+        # 카드에서 이름으로 좁히기 · 인물로 이동
+        page.click("#homeBtn"); page.wait_for_timeout(200)
+        page.locator("#homeStats .bar").nth(0).click(); page.wait_for_timeout(300)
+        page.fill("#cardsSearch", "김"); page.wait_for_timeout(300)
+        kim = page.locator("#cardsGrid .pcard").count()
+        check("카드에서 이름으로 좁히기", 0 < kim < 33, "%d장" % kim)
+        page.locator("#cardsGrid .pcard").first.click(); page.wait_for_timeout(350)
+        check("카드를 누르면 인물 화면", page.locator("#s-person").is_visible())
+
+        # 다음 검사가 명단 화면에서 시작하도록 되돌려 놓는다
+        page.click("#homeBtn")
+        page.click('.menu button[data-go="region"]')
+        page.wait_for_timeout(200)
+        page.locator('#regionTiles .mapcell[data-region="평북"]').click()
+        page.wait_for_timeout(300)
+
         print("\n【4】 명단 좁혀 보기 · 이름으로 찾기")
         page.fill("#listSearch", "김")
         page.wait_for_timeout(250)
