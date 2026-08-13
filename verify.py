@@ -40,10 +40,10 @@ def run():
         check("외부 링크 없음",
               page.evaluate("document.querySelectorAll('a[href^=http]').length") == 0)
 
-        print("\n【2】 일곱 가지 활동이 모두 열리는가")
+        print("\n【2】 여덟 가지 활동이 모두 열리는가")
         acts = [("region", "s-region"), ("family", "s-family"), ("years", "s-years"),
                 ("names", "s-names"), ("roll", "s-roll"), ("find", "s-find"),
-                ("quizsetup", "s-quizsetup")]
+                ("quest", "s-quest"), ("quizsetup", "s-quizsetup")]
         for go, sid in acts:
             page.click("#homeBtn")
             page.click('.menu button[data-go="%s"]' % go)
@@ -54,9 +54,16 @@ def run():
         page.click("#homeBtn")
         page.click('.menu button[data-go="region"]')
         page.wait_for_timeout(200)
-        tiles = page.locator("#regionTiles .tile").count()
-        check("지역 타일 생성", tiles >= 15, "%d개" % tiles)
-        page.locator('#regionTiles .tile[data-region="평북"]').click()
+        cells = page.locator("#regionTiles .mapcell").count()
+        check("지역 배치 그림 생성", cells >= 14, "%d칸" % cells)
+        check("나라 밖·미상 따로 표시", page.locator("#regionTiles .tile").count() >= 5)
+        shades = page.evaluate("""() => {
+            const c = Array.from(document.querySelectorAll('#regionTiles .mapcell'));
+            const bg = c.map(x => x.style.background);
+            return new Set(bg).size;
+        }""")
+        check("인원에 따라 색이 다름", shades >= 10, "%d가지" % shades)
+        page.locator('#regionTiles .mapcell[data-region="평북"]').click()
         page.wait_for_timeout(250)
         check("평북 명단 124명",
               "124명" in page.inner_text("#listCount"), page.inner_text("#listCount"))
@@ -86,6 +93,25 @@ def run():
         page.wait_for_timeout(250)
         check("없는 이름 처리", "없습니다" in page.inner_text("#findCount"))
 
+        print("\n【4-2】 막대가 실제로 채워져 그려지는가")
+        page.click("#homeBtn"); page.wait_for_timeout(250)
+        bars = page.evaluate("""() => {
+            const bad = [];
+            document.querySelectorAll('.bars .bar').forEach(b => {
+              if (b.offsetParent === null) return;   // 숨겨진 화면은 건너뛴다
+              const t = b.querySelector('.track'), f = b.querySelector('.fill');
+              if (!t || !f) return;
+              const th = t.getBoundingClientRect().height;
+              const fh = f.getBoundingClientRect().height;
+              const fw = f.getBoundingClientRect().width;
+              if (fh < 4 || fh < th - 2 || fw < 1)
+                bad.push(b.querySelector('.lbl').textContent +
+                         ' 트랙' + Math.round(th) + ' 채움' + Math.round(fh) + 'x' + Math.round(fw));
+            });
+            return bad.slice(0, 4);
+        }""")
+        check("처음 화면 막대가 채워져 있음", not bars, "; ".join(bars))
+
         print("\n【5】 운동계열 · 연표 막대")
         page.click("#homeBtn")
         page.click('.menu button[data-go="family"]')
@@ -95,6 +121,17 @@ def run():
         page.locator("#familyBars .bar").first.click()
         page.wait_for_timeout(250)
         check("계열 상세 열림", page.locator("#s-family1").is_visible())
+        fbad = page.evaluate("""() => {
+            const bad = [];
+            document.querySelectorAll('#s-family1 .bar').forEach(b => {
+              if (b.offsetParent === null) return;
+              const t=b.querySelector('.track'), f=b.querySelector('.fill');
+              if(!t||!f) return;
+              if(f.getBoundingClientRect().height < 4) bad.push(b.querySelector('.lbl').textContent);
+            });
+            return bad.slice(0,4);
+        }""")
+        check("계열 화면 막대가 채워져 있음", not fbad, "; ".join(fbad))
         check("출생지 분포 표시", page.locator("#f1Region .bar").count() > 0)
         check("포상연도 분포 표시", page.locator("#f1Years .bar").count() > 0)
         page.click("#f1List")
@@ -190,6 +227,63 @@ def run():
             page.wait_for_timeout(130)
         check("결과 화면 도달", page.locator("#s-result").is_visible())
         check("누적 인원 표시", "만난 독립운동가" in page.inner_text("#tallyLine"))
+
+        print("\n【9-2】 오늘의 인물 · 발자취 · 찾아보기 과제")
+        page.click("#homeBtn"); page.wait_for_timeout(250)
+        t1 = page.inner_text("#todayCard")
+        check("오늘의 인물 표시", "오늘 만나는 분" in t1)
+        same = page.evaluate("""() => {
+            const a = todayPerson().id, b = todayPerson().id;
+            return a === b;
+        }""")
+        check("같은 날에는 같은 분 (반 전체가 동일)", same)
+        check("발자취 표시", "발자취" in page.inner_text("#trackBox"))
+        page.click("#todayCard"); page.wait_for_timeout(250)
+        check("오늘의 인물을 눌러 카드로 이동", page.locator("#s-person").is_visible())
+
+        page.click("#homeBtn")
+        page.click('.menu button[data-go="quest"]')
+        page.wait_for_timeout(250)
+        nq = page.locator("#questList .quest").count()
+        check("과제 5개 제시", nq == 5, "%d개" % nq)
+        check("답이 처음에는 감춰져 있음",
+              page.locator("#questList .qa:visible").count() == 0)
+        page.locator('#questList .quest [data-act="ans"]').first.click()
+        page.wait_for_timeout(200)
+        check("답 맞춰보기 동작", page.locator("#questList .qa:visible").count() == 1)
+        # 과제의 답이 실제 자료와 맞는지 확인
+        acc = page.evaluate("""() => {
+            const bad = [];
+            for(let t=0;t<40;t++){
+              makeQuests().forEach(q => {
+                if(/에서 태어난 분은 모두 몇 분/.test(q.q) && !/나라 밖/.test(q.q)){
+                  const rg = q.q.split('에서')[0];
+                  const real = PEOPLE.filter(p => p._region === rg).length + '명';
+                  if(real !== q.a) bad.push(q.q + ' → ' + q.a + ' / 실제 ' + real);
+                }
+                if(/계열에는 모두 몇 분/.test(q.q)){
+                  const fm = q.q.split('\u2018')[1].split('\u2019')[0];
+                  const real = PEOPLE.filter(p => p.movement === fm).length + '명';
+                  if(real !== q.a) bad.push(q.q + ' → ' + q.a + ' / 실제 ' + real);
+                }
+                if(/나라 밖에서 태어난 분/.test(q.q)){
+                  const real = PEOPLE.filter(p => !MAP_POS[p._region] &&
+                                 p._region !== '미상').length + '명';
+                  if(real !== q.a) bad.push(q.q + ' → ' + q.a + ' / 실제 ' + real);
+                }
+                if(/년대에 훈장이 드려진 분은/.test(q.q)){
+                  const d = parseInt(q.q,10);
+                  const real = PEOPLE.filter(p => /^\d{4}$/.test(p.awardYear||'') &&
+                                 Math.floor(+p.awardYear/10)*10 === d).length + '명';
+                  if(real !== q.a) bad.push(q.q + ' → ' + q.a + ' / 실제 ' + real);
+                }
+              });
+            }
+            return bad.slice(0,3);
+        }""")
+        check("과제의 답이 자료와 일치", not acc, "; ".join(acc))
+        page.click("#questNew"); page.wait_for_timeout(250)
+        check("다른 물음으로 바꾸기 동작", page.locator("#questList .quest").count() == 5)
 
         print("\n【10】 사진 · 큰 화면 · 어투")
         broken = page.evaluate("""() => Array.from(document.images)

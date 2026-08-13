@@ -227,6 +227,93 @@ p{margin:.55rem 0;}
 }
 .groupname::after{content:"";flex:1;height:1px;background:var(--rule);}
 
+/* ── 지역 배치 그림 ────────────────────────────────── */
+.mapgrid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:.4rem;
+  max-width:26rem;margin:0 auto;
+}
+.mapcell{
+  font-family:var(--sans);text-align:center;border:1px solid var(--rule);
+  border-radius:.25rem;padding:.7rem .35rem;cursor:pointer;color:var(--ink);
+  line-height:1.3;background:var(--paper);
+  transition:transform .14s,box-shadow .14s,border-color .14s;
+}
+.mapcell:hover{transform:translateY(-2px);box-shadow:var(--shadow);border-color:var(--ink);}
+.mapcell b{display:block;font-family:var(--serif);font-size:.98rem;font-weight:700;}
+.mapcell span{
+  display:block;font-size:.74rem;margin-top:.15rem;
+  font-variant-numeric:tabular-nums;opacity:.75;
+}
+.mapcell.dark{color:#fff;border-color:transparent;}
+.mapcell.dark span{opacity:.85;}
+.maplegend{
+  display:flex;align-items:center;justify-content:center;gap:.5rem;
+  margin-top:1rem;font-size:.72rem;color:var(--ink-4);letter-spacing:.02em;
+}
+.maplegend i{display:block;width:1.6rem;height:.55rem;border-radius:1px;}
+.mapnote{text-align:center;font-size:.72rem;color:var(--ink-4);margin-top:.8rem;}
+
+/* ── 오늘의 인물 ───────────────────────────────────── */
+.today{
+  border:1px solid var(--rule);border-left:3px solid var(--accent);
+  border-radius:.25rem;padding:1.1rem 1.25rem;margin-top:1.4rem;
+  background:var(--bg);text-align:left;width:100%;font-family:var(--sans);
+  cursor:pointer;transition:background .14s,border-color .14s;
+}
+.today:hover{background:var(--bg-2);border-color:var(--rule-2);border-left-color:var(--accent);}
+.today .tl{
+  font-size:.66rem;letter-spacing:.14em;color:var(--ink-4);font-weight:700;
+  display:block;margin-bottom:.4rem;
+}
+.today .tn{
+  font-family:var(--serif);font-size:1.45rem;font-weight:700;color:var(--ink);
+  display:block;line-height:1.3;
+}
+.today .tn small{font-family:var(--sans);font-size:.8rem;color:var(--ink-4);font-weight:400;}
+.today .tm{font-size:.8rem;color:var(--ink-3);display:block;margin-top:.3rem;}
+
+/* ── 발자취 ──────────────────────────────────────────
+   막대 트랙(.bar .track)과 이름이 겹치지 않도록 .trail 을 쓴다. */
+.trail{margin-top:1.3rem;padding-top:1.2rem;border-top:1px solid var(--rule);}
+.trail .tt{
+  font-size:.66rem;letter-spacing:.14em;color:var(--ink-4);font-weight:700;
+  display:block;margin-bottom:.55rem;
+}
+.trail .meter{
+  background:var(--bg-2);border-radius:1px;height:.6rem;overflow:hidden;margin-bottom:.5rem;
+}
+.trail .meter i{display:block;height:100%;background:var(--accent);}
+.trail .tnum{font-size:.82rem;color:var(--ink-3);font-variant-numeric:tabular-nums;}
+.trail .tnum b{color:var(--ink);font-weight:700;}
+
+/* ── 찾아보기 과제 ─────────────────────────────────── */
+.quest{
+  border:1px solid var(--rule);border-radius:.25rem;padding:1.15rem 1.25rem;
+  margin-bottom:.7rem;background:var(--paper);
+}
+.quest .qn{
+  font-size:.66rem;letter-spacing:.14em;color:var(--ink-4);font-weight:700;
+  display:block;margin-bottom:.45rem;
+}
+.quest .qq{
+  font-family:var(--serif);font-size:1.08rem;font-weight:700;color:var(--ink);
+  line-height:1.55;display:block;
+}
+.quest .qh{font-size:.78rem;color:var(--ink-3);margin-top:.5rem;line-height:1.6;}
+.quest .qrow{display:flex;gap:.5rem;margin-top:.9rem;flex-wrap:wrap;}
+.quest .qbtn{
+  font-family:var(--sans);font-size:.82rem;padding:.5rem .95rem;border-radius:.25rem;
+  border:1px solid var(--rule-2);background:var(--paper);color:var(--ink-2);cursor:pointer;
+  transition:border-color .14s,background .14s;
+}
+.quest .qbtn:hover{border-color:var(--ink-3);background:var(--bg-2);}
+.quest .qa{
+  margin-top:.9rem;padding:.75rem 1rem;background:var(--ok-bg);
+  border:1px solid var(--ok);border-radius:.25rem;font-size:.9rem;color:var(--ink);
+  line-height:1.65;
+}
+.quest .qa b{font-family:var(--serif);font-size:1.05rem;}
+
 /* ── 막대 ──────────────────────────────────────────── */
 .bars{margin-top:.3rem;}
 .bar{
@@ -238,7 +325,7 @@ p{margin:.55rem 0;}
   text-overflow:ellipsis;letter-spacing:.01em;
 }
 .bar .track{background:var(--bg-2);border-radius:1px;height:.85rem;overflow:hidden;}
-.bar .fill{background:var(--ink-2);height:100%;border-radius:1px;transition:width .3s;}
+.bar .fill{background:var(--ink-2);height:100%;border-radius:1px;}
 .bar .fill.alt{background:var(--accent-2);}
 .bar .num{
   text-align:right;color:var(--ink);font-variant-numeric:tabular-nums;
@@ -487,6 +574,8 @@ dl.facts dd{
     <span class="count" id="homeCount"></span>
     <span class="count-lbl">수록 인원</span>
     <div class="bars" id="homeStats" style="margin-top:1.4rem;"></div>
+    <button class="today" id="todayCard"></button>
+    <div class="trail" id="trackBox"></div>
     <p class="note" id="homeNote"></p>
   </div>
 
@@ -529,6 +618,10 @@ dl.facts dd{
       <button data-go="find">
         <span class="mt">이름으로 찾기</span>
         <span class="md">알고 있는 분의 이름을 적어 찾아봅니다.</span>
+      </button>
+      <button data-go="quest">
+        <span class="mt">찾아보기 과제</span>
+        <span class="md">물음에 답을 앱에서 직접 찾아봅니다. 답은 눌러서 맞춰 봅니다.</span>
       </button>
       <button data-go="quizsetup">
         <span class="mt">확인해 보기</span>
@@ -648,6 +741,19 @@ dl.facts dd{
   </div>
 </section>
 
+<!-- ═══ 찾아보기 과제 ═══════════════════════════════ -->
+<section class="screen" id="s-quest">
+  <div class="crumb" id="cr-quest"></div>
+  <div class="card">
+    <h2>찾아보기 과제</h2>
+    <p class="lead">답을 알려 주지 않습니다. 앱을 뒤져서 직접 찾아보세요.</p>
+    <div id="questList"></div>
+    <div class="btnrow no-print">
+      <button class="btn ghost" id="questNew">다른 물음으로 바꾸기</button>
+    </div>
+  </div>
+</section>
+
 <!-- ═══ 퀴즈 준비 ═══════════════════════════════════ -->
 <section class="screen" id="s-quizsetup">
   <div class="crumb" id="cr-quizsetup"></div>
@@ -720,6 +826,7 @@ function shuffle(a){
   return r;
 }
 function uniq(a){ var s={},o=[]; a.forEach(function(x){ if(!s[x]){s[x]=1;o.push(x);} }); return o; }
+function pick(a){ return a[Math.floor(Math.random()*a.length)]; }
 function tally(arr){
   var c={}; arr.forEach(function(k){ c[k]=(c[k]||0)+1; });
   return Object.keys(c).map(function(k){ return {k:k,n:c[k]}; })
@@ -845,7 +952,9 @@ function buildHome(){
   });
 
   $("homeCount").textContent = nf(PEOPLE.length);
-  $("homeLead").textContent = "일곱 가지 방법으로 살펴볼 수 있습니다.";
+  $("homeLead").textContent = "여덟 가지 방법으로 살펴볼 수 있습니다.";
+  drawToday();
+  drawTrack();
   $("homeNote").textContent =
     "독립기념관 한국독립운동인명사전에 실린 분들 가운데, " +
     ORDER_LIST.join(" · ") + " 서훈자입니다." +
@@ -862,35 +971,131 @@ function buildHome(){
   });
 }
 
-function goHome(){ show("s-home"); }
+function goHome(){ drawToday(); drawTrack(); show("s-home"); }
+
+/* ── 오늘의 인물 ──────────────────────────────────────
+   날짜에서 번호를 뽑으므로 같은 날에는 반 전체가 같은 분을 만납니다.
+   날이 바뀌면 다른 분이 나옵니다. */
+function todayPerson(){
+  var d = new Date();
+  var key = d.getFullYear() * 10000 + (d.getMonth()+1) * 100 + d.getDate();
+  var h = 0;
+  String(key).split("").forEach(function(c){ h = (h * 31 + c.charCodeAt(0)) % 999983; });
+  return PEOPLE[h % PEOPLE.length];
+}
+function drawToday(){
+  var p = todayPerson();
+  state._today = p;
+  $("todayCard").innerHTML =
+    '<span class="tl">오늘 만나는 분</span>' +
+    '<span class="tn">' + esc(p.name) +
+      (p.hanja ? ' <small>' + esc(p.hanja) + '</small>' : '') + '</span>' +
+    '<span class="tm">' + esc(p.birthplace) + ' · ' + esc(p.movement) + ' · ' +
+      esc(p.order) + (p.awardYear ? ' ' + esc(p.awardYear) + '년' : '') + '</span>';
+}
+
+/* ── 발자취 ───────────────────────────────────────────
+   '모으기'가 아니라 '어디까지 만났는지' 를 보여 줍니다. */
+function drawTrack(){
+  var seen = loadSeen();
+  var n = seen.length;
+  var pct = Math.min(100, n / PEOPLE.length * 100);
+
+  var regions = {};
+  seen.forEach(function(id){
+    var p = BY_ID[id];
+    if(p) regions[p._region] = true;
+  });
+  var rn = Object.keys(regions).length;
+  var totalRegions = uniq(PEOPLE.map(function(p){ return p._region; })).length;
+
+  var msg;
+  if(!n){
+    msg = "아직 만난 분이 없습니다. 아래에서 하나를 골라 보세요.";
+  } else {
+    msg = "<b>" + nf(n) + "</b>명을 만났습니다. " +
+          "앞으로 " + nf(PEOPLE.length - n) + "분이 남았습니다. " +
+          "고장은 " + rn + " / " + totalRegions + " 곳을 둘러보았습니다.";
+  }
+  $("trackBox").innerHTML =
+    '<span class="tt">나의 발자취</span>' +
+    '<div class="meter"><i style="width:' + pct.toFixed(2) + '%"></i></div>' +
+    '<div class="tnum">' + msg + '</div>';
+}
 
 /* ══════════════════════════════════════════════════
    지역
    ══════════════════════════════════════════════════ */
+/* 도(道)를 실제 위치와 비슷하게 놓기 위한 자리표.
+   [행, 열] — 3칸짜리 격자에 놓습니다. 정확한 지도가 아니라 자리 그림입니다. */
+var MAP_POS = {
+  "함북":[1,3],
+  "평북":[2,1], "평안":[2,2], "함남":[2,3],
+  "평남":[3,1],
+  "황해":[4,1], "경기":[4,2], "강원":[4,3],
+                "서울":[5,2],
+  "충남":[6,1], "충북":[6,2], "경북":[6,3],
+  "전북":[7,1],               "경남":[7,3],
+  "전남":[8,1]
+};
+
 function goRegion(){
   homeCrumb($("cr-region"), "우리 고장의 독립운동가");
   $("regionLead").textContent =
-    "고장을 하나 고르면, 그곳에서 태어난 분들의 명단이 나옵니다.";
+    "고장을 누르면 그곳에서 태어난 분들의 명단이 나옵니다. 색이 짙을수록 많은 분이 계십니다.";
 
   var rows = tally(PEOPLE.map(function(p){ return p._region; }));
-  var byGroup = {};
-  rows.forEach(function(r){
-    var g = REGION_GROUP[r.k] || "미상";
-    (byGroup[g] = byGroup[g] || []).push(r);
-  });
+  var max = rows.reduce(function(m,r){ return Math.max(m, r.n); }, 1);
+  var byName = {};
+  rows.forEach(function(r){ byName[r.k] = r.n; });
 
-  var html = "";
-  GROUP_ORDER.forEach(function(g){
-    if(!byGroup[g]) return;
-    var sum = byGroup[g].reduce(function(a,r){ return a + r.n; }, 0);
-    html += '<div class="groupname">' + esc(g) + ' — 모두 ' + sum + '명</div><div class="tiles">';
-    byGroup[g].forEach(function(r){
+  /* 색 짙기로 인원을 나타낸다 */
+  function cell(name){
+    var n = byName[name] || 0;
+    if(!n) return "";
+    var t = Math.sqrt(n / max);                 /* 작은 수도 보이도록 */
+    var dark = t > 0.55;
+    var bg = "rgba(28,37,48," + (0.06 + t * 0.88).toFixed(3) + ")";
+    return '<button class="mapcell' + (dark ? " dark" : "") + '" data-region="' + esc(name) +
+             '" style="background:' + bg + ';grid-row:' + MAP_POS[name][0] +
+             ';grid-column:' + MAP_POS[name][1] + ';">' +
+             '<b>' + esc(name) + '</b><span>' + n + '명</span></button>';
+  }
+
+  var html = '<div class="mapgrid">';
+  Object.keys(MAP_POS).forEach(function(k){ html += cell(k); });
+  html += '</div>';
+  html += '<div class="maplegend">' +
+            '<span>적음</span>' +
+            '<i style="background:rgba(28,37,48,.10)"></i>' +
+            '<i style="background:rgba(28,37,48,.35)"></i>' +
+            '<i style="background:rgba(28,37,48,.62)"></i>' +
+            '<i style="background:rgba(28,37,48,.92)"></i>' +
+            '<span>많음</span></div>';
+  html += '<p class="mapnote">도(道)의 자리를 본떠 놓은 그림입니다. 실제 지도는 아닙니다.</p>';
+
+  /* 격자에 없는 곳 — 나라 밖·미상 */
+  var others = rows.filter(function(r){ return !MAP_POS[r.k]; });
+  if(others.length){
+    var sum = others.reduce(function(a,r){ return a + r.n; }, 0);
+    html += '<div class="groupname">나라 밖에서 태어난 분 · 미상 — 모두 ' + sum + '명</div>' +
+            '<div class="tiles">';
+    others.forEach(function(r){
       html += '<button class="tile" data-region="' + esc(r.k) + '">' +
                 '<b>' + esc(r.k) + '</b><span>' + r.n + '명</span></button>';
     });
     html += '</div>';
-  });
+  }
   $("regionTiles").innerHTML = html;
+
+  Array.prototype.forEach.call($("regionTiles").querySelectorAll(".mapcell"), function(b){
+    b.addEventListener("click", function(){
+      var rg = b.dataset.region;
+      openList(rg + "에서 태어난 분들",
+               PEOPLE.filter(function(p){ return p._region === rg; }),
+               goRegion, "우리 고장의 독립운동가");
+    });
+  });
 
   Array.prototype.forEach.call($("regionTiles").querySelectorAll(".tile"), function(b){
     b.addEventListener("click", function(){
@@ -1215,6 +1420,146 @@ function renderFind(q){
 }
 
 /* ══════════════════════════════════════════════════
+   찾아보기 과제
+   답을 미리 주지 않고, 학생이 앱을 뒤져 찾아내게 합니다.
+   물음과 답은 모두 자료에서 바로 계산합니다.
+   ══════════════════════════════════════════════════ */
+function countWhere(fn){ return PEOPLE.filter(fn).length; }
+function topOf(list, keyFn){
+  var t = tally(list.map(keyFn));
+  return t.length ? t[0] : null;
+}
+
+function makeQuests(){
+  var out = [];
+  var regions = tally(PEOPLE.map(function(p){ return p._region; }))
+                  .filter(function(r){ return MAP_POS[r.k]; });
+  var fams = tally(PEOPLE.map(function(p){ return p.movement; }));
+  var decades = tally(PEOPLE.filter(function(p){ return /^\d{4}$/.test(p.awardYear||""); })
+                            .map(function(p){ return Math.floor(+p.awardYear/10)*10; }));
+
+  /* ① 어느 고장에 몇 분 */
+  var rg = pick(regions.slice(0, 12));
+  out.push({
+    q: rg.k + "에서 태어난 분은 모두 몇 분일까요?",
+    hint: "‘우리 고장의 독립운동가’에서 " + rg.k + " 칸을 눌러 보세요.",
+    go: goRegion, goLabel: "우리 고장으로 가기",
+    a: rg.n + "명"
+  });
+
+  /* ② 어느 계열에 몇 분 */
+  var fm = pick(fams.slice(0, 10));
+  out.push({
+    q: "‘" + fm.k + "’ 계열에는 모두 몇 분이 계실까요?",
+    hint: "‘어떤 일을 하셨을까’에서 막대를 살펴보세요.",
+    go: goFamily, goLabel: "운동계열로 가기",
+    a: fm.n + "명"
+  });
+
+  /* ③ 어느 시기에 몇 분 */
+  var dc = pick(decades.slice(0, 8));
+  out.push({
+    q: dc.k + "년대에 훈장이 드려진 분은 몇 분일까요?",
+    hint: "‘기억의 연표’에서 막대를 살펴보세요.",
+    go: goYears, goLabel: "연표로 가기",
+    a: dc.n + "명"
+  });
+
+  /* ④ 가장 많은 고장 */
+  var topR = regions[0];
+  out.push({
+    q: "가장 많은 분이 태어난 도(道)는 어디일까요?",
+    hint: "‘우리 고장의 독립운동가’에서 색이 가장 짙은 칸을 찾아보세요.",
+    go: goRegion, goLabel: "우리 고장으로 가기",
+    a: topR.k + " (" + topR.n + "명)"
+  });
+
+  /* ⑤ 가장 늦게 훈장을 받으신 분 */
+  var dated = PEOPLE.filter(function(p){ return /^\d{4}$/.test(p.awardYear||""); });
+  var latest = dated.slice().sort(function(a,b){ return +b.awardYear - +a.awardYear; })[0];
+  out.push({
+    q: "이 사전에서 훈장이 가장 늦게 드려진 분은 누구일까요?",
+    hint: "‘기억의 연표’에서 가장 마지막 시기를 눌러 보세요.",
+    go: goYears, goLabel: "연표로 가기",
+    a: latest.name + " (" + latest.awardYear + "년)"
+  });
+
+  /* ⑥ 이름을 여럿 쓰신 분 */
+  var aliasN = countWhere(function(p){ return p.alias; });
+  out.push({
+    q: "본래 이름 말고 다른 이름을 함께 쓰신 분은 몇 분일까요?",
+    hint: "‘이름을 여럿 가진 사람들’에 적혀 있습니다.",
+    go: goNames, goLabel: "이름 이야기로 가기",
+    a: aliasN + "명 (전체의 " + Math.round(aliasN/PEOPLE.length*100) + "%)"
+  });
+
+  /* ⑦ 계열마다 고향이 다르다 */
+  var fm2 = pick(fams.slice(0, 6));
+  var grp = PEOPLE.filter(function(p){ return p.movement === fm2.k; });
+  var topIn = topOf(grp, function(p){ return p._region; });
+  out.push({
+    q: "‘" + fm2.k + "’ 계열에서 가장 많은 분이 태어난 곳은 어디일까요?",
+    hint: "‘어떤 일을 하셨을까’에서 " + fm2.k + " 막대를 눌러 보세요.",
+    go: goFamily, goLabel: "운동계열로 가기",
+    a: topIn.k + " (" + topIn.n + "명)"
+  });
+
+  /* ⑧ 나라 밖에서 태어난 분 */
+  var abroad = countWhere(function(p){ return !MAP_POS[p._region] && p._region !== "미상"; });
+  out.push({
+    q: "우리나라 밖에서 태어난 분은 모두 몇 분일까요?",
+    hint: "‘우리 고장의 독립운동가’ 화면 맨 아래를 보세요.",
+    go: goRegion, goLabel: "우리 고장으로 가기",
+    a: abroad + "명"
+  });
+
+  /* ⑨ 한 분을 직접 찾아보기 */
+  var who = pick(PEOPLE.filter(function(p){ return p.order === "대한민국장"; }));
+  out.push({
+    q: "‘" + who.name + "’ 님은 어느 고장에서 태어나셨을까요?",
+    hint: "‘이름으로 찾기’에 이름을 적어 보세요.",
+    go: goFind, goLabel: "이름으로 찾기",
+    a: who.birthplace
+  });
+
+  return shuffle(out).slice(0, 5);
+}
+
+function goQuest(){
+  homeCrumb($("cr-quest"), "찾아보기 과제");
+  renderQuests();
+  show("s-quest");
+}
+function renderQuests(){
+  var qs = makeQuests();
+  var box = $("questList");
+  box.innerHTML = "";
+
+  qs.forEach(function(q, i){
+    var el = document.createElement("div");
+    el.className = "quest";
+    el.innerHTML =
+      '<span class="qn">과제 ' + (i+1) + '</span>' +
+      '<span class="qq">' + esc(q.q) + '</span>' +
+      '<p class="qh">' + esc(q.hint) + '</p>' +
+      '<div class="qrow">' +
+        '<button class="qbtn" data-act="go">' + esc(q.goLabel) + '</button>' +
+        '<button class="qbtn" data-act="ans">답 맞춰보기</button>' +
+      '</div>' +
+      '<div class="qa" style="display:none;">답: <b>' + esc(q.a) + '</b></div>';
+
+    el.querySelector('[data-act="go"]').addEventListener("click", q.go);
+    el.querySelector('[data-act="ans"]').addEventListener("click", function(){
+      var a = el.querySelector(".qa");
+      var open = a.style.display !== "none";
+      a.style.display = open ? "none" : "block";
+      this.textContent = open ? "답 맞춰보기" : "답 감추기";
+    });
+    box.appendChild(el);
+  });
+}
+
+/* ══════════════════════════════════════════════════
    확인해 보기 (문제)
    ══════════════════════════════════════════════════ */
 function goQuizSetup(){
@@ -1519,10 +1864,14 @@ function beginQuiz(){
    ══════════════════════════════════════════════════ */
 var GO = {
   region:goRegion, family:goFamily, years:goYears, names:goNames,
-  roll:goRoll, find:goFind, quizsetup:goQuizSetup
+  roll:goRoll, find:goFind, quest:goQuest, quizsetup:goQuizSetup
 };
 
 $("homeBtn").addEventListener("click", goHome);
+$("todayCard").addEventListener("click", function(){
+  openPerson(state._today, goHome, "처음");
+});
+$("questNew").addEventListener("click", renderQuests);
 $("bigToggle").addEventListener("click", function(){
   var on = document.documentElement.classList.toggle("big");
   this.setAttribute("aria-pressed", on ? "true":"false");
